@@ -27,7 +27,12 @@ Thumbs.db
 # Logs
 *.log
 
-# Model files (opzionale - decommenta se non vuoi includere i modelli)
-# *.pth
-# *.pt
-# *.h5
+# Model files - escludi modelli addestrati (sono molto grandi)
+*.pth
+*.pt
+*.h5
+*.ckpt
+
+# File CSV molto grandi (dati audio)
+# Se vuoi includere alcuni CSV, rimuovi questa riga
+# COLLEAGUE_BSc_Thesis/Data/csv/audio_loopback_csv/*.csv
