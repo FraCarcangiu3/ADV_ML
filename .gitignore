@@ -33,8 +33,5 @@ Thumbs.db
 *.h5
 *.ckpt
 
-# File CSV molto grandi (dati audio)
-# Se vuoi includere alcuni CSV, rimuovi questa riga
-# COLLEAGUE_BSc_Thesis/Data/csv/audio_loopback_csv/*.csv
-# File CSV molto grandi - dati audio (saranno aggiunti separatamente)
+# File CSV molto grandi (dati audio) - saranno aggiunti separatamente con Git LFS
 COLLEAGUE_BSc_Thesis/Data/csv/audio_loopback_csv/*.csv
