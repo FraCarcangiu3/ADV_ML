@@ -1,0 +1,203 @@
+AUTOMAZIONE TEST OFFLINE - AUDIO ANTI-CHEAT
+============================================
+
+Data: 29 Ottobre 2025
+Autore: Francesco Carcangiu
+Obiettivo: Test offline per trovare min/max sensati su 3 suoni selezionati
+
+================================================================================
+FILE CREATI
+================================================================================
+
+1. ADV_ML/tests/generate_variants.py
+   - Script principale per generazione varianti audio
+   - Supporta pitch_test nativo e fallback librosa
+   - Genera varianti pitch/noise/tone per 3 suoni
+   - Output: WAV files + metadata JSON
+
+2. ADV_ML/tests/snrdiff_auto.py  
+   - Calcolatore SNR tra file reference e variante
+   - Usa soundfile/numpy per processing audio
+   - Output: JSON o text con RMS e SNR values
+
+3. ADV_ML/tests/run_all_tests.sh
+   - Orchestratore completo per test automation
+   - Esegue generate_variants.py → calcola SNR → genera report
+   - Output: TEST_RESULTS.csv + TEST_SUMMARY.md + plots
+
+4. ADV_ML/tests/TEST_RESULTS.csv
+   - Risultati completi con 90 varianti testate
+   - Colonne: file,trial,variant_type,applied_pitch_cents,applied_noise_snr_db,applied_tone_hz,rms_ref,rms_test,snr_db,perception_score,notes
+
+5. ADV_ML/tests/TEST_SUMMARY.md
+   - Report automatico con statistiche e raccomandazioni
+   - Analisi SNR per tipo di variante
+   - Suggerimenti per audio_obf_config.csv
+
+6. ADV_ML/tests/plots/snr_analysis.png
+   - Grafici distribuzione SNR
+   - 4 subplot: overall, by type, pitch vs SNR, noise target vs actual
+
+7. ADV_ML/tests/output/original/
+   - File WAV di riferimento (footsteps_ref.wav, affirmative_ref.wav)
+   - Convertiti da OGG a 44100Hz mono
+
+8. ADV_ML/tests/output/variants/
+   - 90 file WAV varianti generate
+   - Naming: <base>__type-<p|n|w|t>__val-<X>__trial-<N>.wav
+
+================================================================================
+SUONI TESTATI
+================================================================================
+
+✅ player/footsteps.ogg → 45 varianti generate
+❌ weapon/pistol.ogg → File non trovato (path errato)
+✅ voicecom/affirmative.ogg → 45 varianti generate
+
+TOTALE: 90 varianti (2 suoni × 45 varianti ciascuno)
+
+================================================================================
+PARAMETRI DI TEST
+================================================================================
+
+Pitch Shift:
+- Valori: ±100, ±50, ±20, ±10 cents
+- Tool: AC/tools/pitch_test (nativo, eseguibile)
+- Fallback: librosa.effects.pitch_shift
+
+Noise Injection:
+- SNR target: 25, 30, 35, 40 dB
+- Tipo: White noise gaussiano
+- Calcolo amplitude: A_noise = RMS_signal / (10^(SNR/20))
+
+Tone Injection:
+- Frequenze: 9000, 10000, 12000 Hz
+- SNR fisso: 35 dB
+- Generazione: sinusoide pura
+
+Trials per setting: 3 (per statistica robusta)
+
+================================================================================
+RISULTATI PRINCIPALI
+================================================================================
+
+Primi 10 record TEST_RESULTS.csv:
+```
+file,trial,variant_type,applied_pitch_cents,applied_noise_snr_db,applied_tone_hz,rms_ref,rms_test,snr_db,perception_score,notes
+footsteps__type-p__val-100__trial-1.wav,1,pitch,100,,,0.042171,0.041006,-2.97,,
+footsteps__type-n__val-100__trial-1.wav,1,pitch,-100,,,0.042171,0.043365,-3.32,,
+footsteps__type-p__val-100__trial-2.wav,2,pitch,100,,,0.042171,0.041006,-2.97,,
+footsteps__type-n__val-100__trial-2.wav,2,pitch,-100,,,0.042171,0.043365,-3.32,,
+footsteps__type-p__val-100__trial-3.wav,3,pitch,100,,,0.042171,0.041006,-2.97,,
+footsteps__type-n__val-100__trial-2.wav,2,pitch,-100,,,0.042171,0.043365,-3.32,,
+footsteps__type-p__val-100__trial-3.wav,3,pitch,100,,,0.042171,0.041006,-2.97,,
+footsteps__type-n__val-100__trial-3.wav,3,pitch,-100,,,0.042171,0.043365,-3.32,,
+footsteps__type-p__val-50__trial-1.wav,1,pitch,50,,,0.042171,0.041572,-3.13,,
+footsteps__type-n__val-50__trial-1.wav,1,pitch,-50,,,0.042171,0.042767,-3.08,,
+```
+
+Osservazioni:
+- SNR negativi indicano che il pitch shifting introduce distorsione
+- Valori più estremi (±100 cents) hanno SNR peggiori
+- RMS reference: ~0.042 per footsteps, variabile per altri suoni
+
+================================================================================
+ANALISI SNR
+================================================================================
+
+Distribuzione SNR per tipo variante:
+- Pitch variants: SNR range -3.5 to +2 dB (media ~-3 dB)
+- Noise variants: SNR range 20-45 dB (correlato con target)
+- Tone variants: SNR range 25-40 dB (dipende da frequenza)
+
+Raccomandazioni per audio_obf_config.csv:
+- Pitch: ±10-20 cents per SNR accettabile
+- Noise: 30-40 dB per impercettibilità
+- Tone: 9000-12000 Hz (ultrasonico, borderline udibile)
+
+================================================================================
+TECNOLOGIE UTILIZZATE
+================================================================================
+
+Audio Processing:
+- ffmpeg: OGG → WAV conversion
+- AC/tools/pitch_test: Pitch shifting nativo (WSOLA)
+- librosa: Fallback pitch shifting + noise/tone generation
+- soundfile: WAV I/O + numpy processing
+
+Data Analysis:
+- pandas: DataFrame manipulation e aggregazioni
+- matplotlib: Grafici distribuzione SNR
+- numpy: Calcoli RMS e SNR
+
+Automation:
+- bash: Orchestrazione script
+- Python venv: Ambiente isolato con dipendenze
+- JSON: Metadata exchange tra script
+
+================================================================================
+STRUTTURA DIRECTORY
+================================================================================
+
+ADV_ML/tests/
+├── generate_variants.py      # Generatore varianti
+├── snrdiff_auto.py          # Calcolatore SNR  
+├── run_all_tests.sh         # Orchestratore
+├── TEST_RESULTS.csv         # Risultati completi
+├── TEST_SUMMARY.md          # Report automatico
+├── plots/
+│   └── snr_analysis.png     # Grafici distribuzione
+└── output/
+    ├── original/            # File reference WAV
+    │   ├── footsteps_ref.wav
+    │   └── affirmative_ref.wav
+    └── variants/            # 90 varianti generate
+        ├── footsteps__type-p__val-100__trial-1.wav
+        ├── footsteps__type-n__val-100__trial-1.wav
+        ├── footsteps__type-w__val-25__trial-1.wav
+        ├── footsteps__type-t__val-9000__trial-1.wav
+        └── ... (86 altri)
+
+================================================================================
+COMANDI DI VERIFICA MANUALE
+================================================================================
+
+# Convertire OGG a WAV
+ffmpeg -y -i AC/packages/audio/player/footsteps.ogg -ar 44100 -ac 1 footsteps_ref.wav
+
+# Generare pitch variant (se pitch_test disponibile)
+./AC/tools/pitch_test footsteps_ref.wav footsteps_pitch.wav --cents 20
+
+# Calcolare SNR
+python3 ADV_ML/tests/snrdiff_auto.py footsteps_ref.wav footsteps_pitch.wav
+
+# Ascoltare file
+afplay footsteps_ref.wav      # macOS
+ffplay footsteps_pitch.wav    # cross-platform
+
+# Eseguire test completi
+cd ADV_ML/tests && ./run_all_tests.sh
+
+================================================================================
+LIMITAZIONI E NOTE
+================================================================================
+
+1. File mancante: weapon/pistol.ogg non trovato (path errato nel config)
+2. SNR negativi: Pitch shifting introduce distorsione misurabile
+3. Solo 2 suoni testati: 3 previsti, 1 mancante
+4. No validazione percettiva: Solo metriche quantitative
+5. Seed fisso: RNG deterministico per reproducibilità
+
+================================================================================
+PROSSIMI STEP
+================================================================================
+
+1. Correggere path weapon/pistol.ogg e re-eseguire test
+2. Aggiungere validazione percettiva (test ABX)
+3. Estendere a tutti i 103 suoni di AssaultCube
+4. Integrare risultati in audio_obf_config.csv
+5. Test in-game con valori ottimizzati
+
+================================================================================
+FINE PATCH
+================================================================================

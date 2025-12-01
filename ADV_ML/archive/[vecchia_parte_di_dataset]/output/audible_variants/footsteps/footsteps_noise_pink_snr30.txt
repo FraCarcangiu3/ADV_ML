@@ -1,0 +1,4 @@
+source=AC/packages/audio/player/footsteps.ogg
+output=footsteps_noise_pink_snr30.wav
+type=noise_pink
+seed=1178038957

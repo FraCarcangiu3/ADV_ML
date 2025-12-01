@@ -1,0 +1,4 @@
+source=AC/packages/audio/player/footsteps.ogg
+output=footsteps_pitch_p25.wav
+type=pitch
+seed=4119098539

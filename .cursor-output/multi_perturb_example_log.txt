@@ -1,0 +1,108 @@
+# Example Log Output - Multi-Perturbation Audio Obfuscation
+# Generated: 30 October 2025
+# Configuration: AC/audio_obf_profiles.yaml
+# Mode: Deterministic (Step 2, midpoint values)
+
+========================================
+STARTUP LOG
+========================================
+
+[AUDIO_OBF] Initializing multi-perturbation system...
+[AUDIO_OBF] Config file: AC/audio_obf_profiles.yaml
+[AUDIO_OBF] Sample rate: 44100 Hz
+[AUDIO_OBF] Chain order: pitch → eq_tilt → hp_lp → comb_notch → jitter → transient → noise_white → noise_pink
+[AUDIO_OBF] Loaded 3 sound-specific profiles (weapon/auto, player/footsteps, voicecom/affirmative)
+[AUDIO_OBF] Global defaults configured for 103 total sounds
+[AUDIO_OBF] Status: ENABLED (deterministic mode, midpoint values)
+
+========================================
+EXAMPLE 1: YAML CONFIG (DEFAULTS)
+========================================
+
+Command: ./ac_client --audio-obf on
+
+[AUDIO_OBF] weapon/auto.ogg → pitch:+137c; eq:+1.5dB; hp_lp:off; comb:off; jitter:off; transient:off; noise:off
+[AUDIO_OBF] player/footsteps.ogg → pitch:+150c; eq:+1.5dB; hp_lp:off; comb:off; jitter:off; transient:off; noise:off
+[AUDIO_OBF] voicecom/affirmative.ogg → pitch:+75c; eq:+0.0dB; hp_lp:off; comb:off; jitter:off; transient:off; noise:off
+
+Explanation:
+- weapon/auto: midpoint(75, 200) = 137.5 ≈ 137 cents; midpoint(-3, +6) = 1.5 dB
+- footsteps: midpoint(100, 200) = 150 cents; midpoint(-3, +6) = 1.5 dB
+- affirmative: midpoint(50, 100) = 75 cents; midpoint(-3, +3) = 0.0 dB
+
+========================================
+EXAMPLE 2: CLI SELECT (ONLY PITCH)
+========================================
+
+Command: ./ac_client --audio-obf on --obf-select pitch
+
+[AUDIO_OBF] CLI select: pitch (other effects forced OFF)
+[AUDIO_OBF] weapon/auto.ogg → pitch:+137c; eq:off; hp_lp:off; comb:off; jitter:off; transient:off; noise:off
+[AUDIO_OBF] player/footsteps.ogg → pitch:+150c; eq:off; hp_lp:off; comb:off; jitter:off; transient:off; noise:off
+[AUDIO_OBF] voicecom/affirmative.ogg → pitch:+75c; eq:off; hp_lp:off; comb:off; jitter:off; transient:off; noise:off
+
+========================================
+EXAMPLE 3: CLI OVERRIDE (CUSTOM VALUES)
+========================================
+
+Command: ./ac_client --audio-obf on --obf-select pitch,eq_tilt --obf-override pitch=150 --obf-override eq_tilt=3
+
+[AUDIO_OBF] CLI select: pitch,eq_tilt
+[AUDIO_OBF] CLI override: pitch=150 cents, eq_tilt=+3 dB
+[AUDIO_OBF] weapon/auto.ogg → pitch:+150c; eq:+3.0dB; hp_lp:off; comb:off; jitter:off; transient:off; noise:off
+[AUDIO_OBF] player/footsteps.ogg → pitch:+150c; eq:+3.0dB; hp_lp:off; comb:off; jitter:off; transient:off; noise:off
+[AUDIO_OBF] voicecom/affirmative.ogg → pitch:+150c; eq:+3.0dB; hp_lp:off; comb:off; jitter:off; transient:off; noise:off
+
+Note: Override applies uniformly to ALL sounds (ignores YAML per-sound config)
+
+========================================
+EXAMPLE 4: WHITE NOISE TEST
+========================================
+
+Command: ./ac_client --audio-obf on --obf-select noise_white --obf-override snr=35
+
+[AUDIO_OBF] CLI select: noise_white
+[AUDIO_OBF] CLI override: snr=35 dB
+[AUDIO_OBF] weapon/auto.ogg → pitch:off; eq:off; hp_lp:off; comb:off; jitter:off; transient:off; noise:white@35dB
+[AUDIO_OBF] player/footsteps.ogg → pitch:off; eq:off; hp_lp:off; comb:off; jitter:off; transient:off; noise:white@35dB
+[AUDIO_OBF] voicecom/affirmative.ogg → pitch:off; eq:off; hp_lp:off; comb:off; jitter:off; transient:off; noise:white@35dB
+
+========================================
+EXAMPLE 5: MULTI-EFFECT COMBINATION
+========================================
+
+Command: ./ac_client --audio-obf on --obf-select pitch,eq_tilt,noise_white --obf-override pitch=120 --obf-override eq_tilt=4 --obf-override snr=40
+
+[AUDIO_OBF] CLI select: pitch,eq_tilt,noise_white
+[AUDIO_OBF] CLI override: pitch=120 cents, eq_tilt=+4 dB, snr=40 dB
+[AUDIO_OBF] weapon/auto.ogg → pitch:+120c; eq:+4.0dB; hp_lp:off; comb:off; jitter:off; transient:off; noise:white@40dB
+[AUDIO_OBF] player/footsteps.ogg → pitch:+120c; eq:+4.0dB; hp_lp:off; comb:off; jitter:off; transient:off; noise:white@40dB
+[AUDIO_OBF] voicecom/affirmative.ogg → pitch:+120c; eq:+4.0dB; hp_lp:off; comb:off; jitter:off; transient:off; noise:white@40dB
+
+========================================
+EXAMPLE 6: ENV VARS
+========================================
+
+Command: AC_AUDIO_OBF=1 AC_OBF_SELECT="pitch,eq_tilt" AC_OBF_OVERRIDE="pitch:200; eq_tilt:5" ./ac_client
+
+[AUDIO_OBF] ENV select: pitch,eq_tilt
+[AUDIO_OBF] ENV override: pitch=200 cents, eq_tilt=+5 dB
+[AUDIO_OBF] weapon/auto.ogg → pitch:+200c; eq:+5.0dB; hp_lp:off; comb:off; jitter:off; transient:off; noise:off
+[AUDIO_OBF] player/footsteps.ogg → pitch:+200c; eq:+5.0dB; hp_lp:off; comb:off; jitter:off; transient:off; noise:off
+[AUDIO_OBF] voicecom/affirmative.ogg → pitch:+200c; eq:+5.0dB; hp_lp:off; comb:off; jitter:off; transient:off; noise:off
+
+========================================
+SUMMARY STATISTICS (EXAMPLE SESSION)
+========================================
+
+Total sounds processed: 103
+Sounds with custom profiles: 3 (weapon/auto, player/footsteps, voicecom/affirmative)
+Sounds using global defaults: 100
+Effects enabled: pitch, eq_tilt
+Average processing time per sound: 8.3 ms
+Total init overhead: 124 ms
+
+========================================
+END OF LOG
+========================================
+

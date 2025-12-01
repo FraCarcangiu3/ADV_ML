@@ -1,0 +1,1892 @@
+[
+  {
+    "file": "auto__fine__type-n__val-20.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-20.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-20.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-18.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-18.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-18.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-16.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-16.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-16.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-14.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-14.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-14.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-12.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-12.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-12.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-10.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-10.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-10.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-8.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-8.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-8.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-6.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-6.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-6.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-4.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-4.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-4.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-2.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-2.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-n__val-2.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-0.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 0.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-0.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 0.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-0.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 0.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-2.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-2.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-2.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-4.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-4.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-4.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-6.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-6.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-6.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-8.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-8.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-8.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-10.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-10.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-10.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-12.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-12.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-12.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-14.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-14.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-14.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-16.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-16.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-16.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-18.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-18.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-18.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-20.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-20.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "auto__fine__type-p__val-20.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/weapon/auto.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/auto/auto_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-20.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-20.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-20.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-18.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-18.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-18.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-16.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-16.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-16.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-14.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-14.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-14.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-12.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-12.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-12.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-10.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-10.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-10.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-8.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-8.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-8.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-6.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-6.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-6.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-4.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-4.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-4.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-2.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-2.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-n__val-2.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-0.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 0.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-0.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 0.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-0.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 0.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-2.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-2.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-2.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-4.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-4.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-4.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-6.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-6.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-6.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-8.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-8.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-8.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-10.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-10.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-10.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-12.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-12.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-12.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-14.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-14.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-14.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-16.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-16.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-16.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-18.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-18.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-18.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-20.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-20.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "footsteps__fine__type-p__val-20.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/player/footsteps.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/footsteps/footsteps_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-20.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-20.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-20.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-18.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-18.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-18.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-16.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-16.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-16.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-14.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-14.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-14.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-12.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-12.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-12.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-10.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-10.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-10.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-8.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-8.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-8.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-6.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-6.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-6.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-4.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-4.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-4.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-2.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-2.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-n__val-2.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": -2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-0.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 0.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-0.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 0.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-0.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 0.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-2.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-2.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-2.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 2.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-4.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-4.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-4.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 4.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-6.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-6.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-6.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 6.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-8.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-8.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-8.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 8.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-10.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-10.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-10.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 10.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-12.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-12.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-12.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 12.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-14.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-14.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-14.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 14.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-16.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-16.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-16.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 16.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-18.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-18.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-18.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 18.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-20.0__trial-1.wav",
+    "trial": 1,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-20.0__trial-2.wav",
+    "trial": 2,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  },
+  {
+    "file": "affirmative__fine__type-p__val-20.0__trial-3.wav",
+    "trial": 3,
+    "variant_type": "pitch",
+    "applied_pitch_cents": 20.0,
+    "applied_noise_snr_db": null,
+    "base_sound": "AC/packages/audio/voicecom/affirmative.ogg",
+    "sweep_type": "fine",
+    "ref_file": "ADV_ML/tests/output/coarse/affirmative/affirmative_ref.wav"
+  }
+]

@@ -1,0 +1,216 @@
+# Comandi per Generare Tutti i Dataset Perturbati
+# 
+# Questo file contiene tutti i comandi per generare i CSV di test.
+# Puoi copiare e incollare i comandi uno alla volta, oppure usare lo script:
+#   ./ADV_ML/generate_all_perturbations.sh
+
+# ==========================================
+# PITCH SHIFT (P1, P2, P3)
+# ==========================================
+
+# P1 - Pitch ±100 cents (leggero)
+python ADV_ML/offline_perturb.py \
+  --dataset-root COLLEAGUE_BSc_Thesis/Data/audio/audio_loopback_flac \
+  --perturbation pitch \
+  --mode random \
+  --min-cents -100 \
+  --max-cents 100 \
+  --num-samples 50 \
+  --output-csv ADV_ML/output/pistol_pitch_P1_light.csv \
+  --verbose
+
+# P2 - Pitch ±150 cents (medio)
+python ADV_ML/offline_perturb.py \
+  --dataset-root COLLEAGUE_BSc_Thesis/Data/audio/audio_loopback_flac \
+  --perturbation pitch \
+  --mode random \
+  --min-cents -150 \
+  --max-cents 150 \
+  --num-samples 50 \
+  --output-csv ADV_ML/output/pistol_pitch_P2_medium.csv \
+  --verbose
+
+# P3 - Pitch ±200 cents (forte)
+python ADV_ML/offline_perturb.py \
+  --dataset-root COLLEAGUE_BSc_Thesis/Data/audio/audio_loopback_flac \
+  --perturbation pitch \
+  --mode random \
+  --min-cents -200 \
+  --max-cents 200 \
+  --num-samples 50 \
+  --output-csv ADV_ML/output/pistol_pitch_P3_strong.csv \
+  --verbose
+
+# ==========================================
+# WHITE NOISE (W1, W2, W3)
+# ==========================================
+
+# W1 - White Noise [35-38] dB (leggero)
+python ADV_ML/offline_perturb.py \
+  --dataset-root COLLEAGUE_BSc_Thesis/Data/audio/audio_loopback_flac \
+  --perturbation white_noise \
+  --mode random \
+  --min-snr 35 \
+  --max-snr 38 \
+  --num-samples 50 \
+  --output-csv ADV_ML/output/pistol_noiseW_W1_light.csv \
+  --verbose
+
+# W2 - White Noise [38-42] dB (medio)
+python ADV_ML/offline_perturb.py \
+  --dataset-root COLLEAGUE_BSc_Thesis/Data/audio/audio_loopback_flac \
+  --perturbation white_noise \
+  --mode random \
+  --min-snr 38 \
+  --max-snr 42 \
+  --num-samples 50 \
+  --output-csv ADV_ML/output/pistol_noiseW_W2_medium.csv \
+  --verbose
+
+# W3 - White Noise [42-45] dB (forte)
+python ADV_ML/offline_perturb.py \
+  --dataset-root COLLEAGUE_BSc_Thesis/Data/audio/audio_loopback_flac \
+  --perturbation white_noise \
+  --mode random \
+  --min-snr 42 \
+  --max-snr 45 \
+  --num-samples 50 \
+  --output-csv ADV_ML/output/pistol_noiseW_W3_strong.csv \
+  --verbose
+
+# ==========================================
+# PINK NOISE (K1, K2)
+# ==========================================
+
+# K1 - Pink Noise [16-20] dB (leggero)
+python ADV_ML/offline_perturb.py \
+  --dataset-root COLLEAGUE_BSc_Thesis/Data/audio/audio_loopback_flac \
+  --perturbation pink_noise \
+  --mode random \
+  --min-snr 16 \
+  --max-snr 20 \
+  --num-samples 50 \
+  --output-csv ADV_ML/output/pistol_noiseK_K1_light.csv \
+  --verbose
+
+# K2 - Pink Noise [20-24] dB (forte)
+python ADV_ML/offline_perturb.py \
+  --dataset-root COLLEAGUE_BSc_Thesis/Data/audio/audio_loopback_flac \
+  --perturbation pink_noise \
+  --mode random \
+  --min-snr 20 \
+  --max-snr 24 \
+  --num-samples 50 \
+  --output-csv ADV_ML/output/pistol_noiseK_K2_strong.csv \
+  --verbose
+
+# ==========================================
+# EQ TILT (E1, E2, E3)
+# ==========================================
+
+# E1 - EQ Tilt leggero [-6, -4] dB cut o [3, 4] dB boost
+python ADV_ML/offline_perturb.py \
+  --dataset-root COLLEAGUE_BSc_Thesis/Data/audio/audio_loopback_flac \
+  --perturbation eq_tilt \
+  --mode random \
+  --cut-min -6 \
+  --cut-max -4 \
+  --boost-min 3 \
+  --boost-max 4 \
+  --num-samples 50 \
+  --output-csv ADV_ML/output/pistol_eqtilt_E1_light.csv \
+  --verbose
+
+# E2 - EQ Tilt medio [-4, -3] dB cut o [4, 5] dB boost
+python ADV_ML/offline_perturb.py \
+  --dataset-root COLLEAGUE_BSc_Thesis/Data/audio/audio_loopback_flac \
+  --perturbation eq_tilt \
+  --mode random \
+  --cut-min -4 \
+  --cut-max -3 \
+  --boost-min 4 \
+  --boost-max 5 \
+  --num-samples 50 \
+  --output-csv ADV_ML/output/pistol_eqtilt_E2_medium.csv \
+  --verbose
+
+# E3 - EQ Tilt forte [-5, -3] dB cut o [5, 6] dB boost
+python ADV_ML/offline_perturb.py \
+  --dataset-root COLLEAGUE_BSc_Thesis/Data/audio/audio_loopback_flac \
+  --perturbation eq_tilt \
+  --mode random \
+  --cut-min -5 \
+  --cut-max -3 \
+  --boost-min 5 \
+  --boost-max 6 \
+  --num-samples 50 \
+  --output-csv ADV_ML/output/pistol_eqtilt_E3_strong.csv \
+  --verbose
+
+# ==========================================
+# HIGH-PASS FILTER (H1, H2)
+# ==========================================
+
+# H1 - High-Pass [150, 200] Hz (leggero)
+python ADV_ML/offline_perturb.py \
+  --dataset-root COLLEAGUE_BSc_Thesis/Data/audio/audio_loopback_flac \
+  --perturbation highpass \
+  --mode random \
+  --min-hz 150 \
+  --max-hz 200 \
+  --num-samples 50 \
+  --output-csv ADV_ML/output/pistol_hp_H1_light.csv \
+  --verbose
+
+# H2 - High-Pass [200, 250] Hz (forte)
+python ADV_ML/offline_perturb.py \
+  --dataset-root COLLEAGUE_BSc_Thesis/Data/audio/audio_loopback_flac \
+  --perturbation highpass \
+  --mode random \
+  --min-hz 200 \
+  --max-hz 250 \
+  --num-samples 50 \
+  --output-csv ADV_ML/output/pistol_hp_H2_strong.csv \
+  --verbose
+
+# ==========================================
+# LOW-PASS FILTER (L1, L2)
+# ==========================================
+
+# L1 - Low-Pass [8000, 9000] Hz (leggero)
+python ADV_ML/offline_perturb.py \
+  --dataset-root COLLEAGUE_BSc_Thesis/Data/audio/audio_loopback_flac \
+  --perturbation lowpass \
+  --mode random \
+  --min-hz 8000 \
+  --max-hz 9000 \
+  --num-samples 50 \
+  --output-csv ADV_ML/output/pistol_lp_L1_light.csv \
+  --verbose
+
+# L2 - Low-Pass [9000, 10000] Hz (forte)
+python ADV_ML/offline_perturb.py \
+  --dataset-root COLLEAGUE_BSc_Thesis/Data/audio/audio_loopback_flac \
+  --perturbation lowpass \
+  --mode random \
+  --min-hz 9000 \
+  --max-hz 10000 \
+  --num-samples 50 \
+  --output-csv ADV_ML/output/pistol_lp_L2_strong.csv \
+  --verbose
+
+# ==========================================
+# RIEPILOGO
+# ==========================================
+# Totale: 13 file CSV
+# - Pitch: 3 file (P1, P2, P3)
+# - White Noise: 3 file (W1, W2, W3)
+# - Pink Noise: 2 file (K1, K2)
+# - EQ Tilt: 3 file (E1, E2, E3)
+# - High-Pass: 2 file (H1, H2)
+# - Low-Pass: 2 file (L1, L2)
+
+
+
+
+

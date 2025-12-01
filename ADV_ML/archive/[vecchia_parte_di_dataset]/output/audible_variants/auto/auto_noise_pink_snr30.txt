@@ -1,0 +1,4 @@
+source=AC/packages/audio/weapon/auto.ogg
+output=auto_noise_pink_snr30.wav
+type=noise_pink
+seed=3325640294

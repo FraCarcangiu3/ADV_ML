@@ -1,0 +1,11 @@
+{
+  "audio": {
+    "encoding": "flac_file",
+    "file": "Data/audio/audio_loopback_flac/audio_event_f248ca4c-c5cf-451f-a95b-09ad4693e6d3.flac",
+    "files": {
+      "flac": "Data/audio/audio_loopback_flac/audio_event_f248ca4c-c5cf-451f-a95b-09ad4693e6d3.flac"
+    },
+    "sr": 96000,
+    "channels": 8
+  }
+}

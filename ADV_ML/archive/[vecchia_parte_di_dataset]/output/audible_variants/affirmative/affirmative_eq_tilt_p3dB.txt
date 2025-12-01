@@ -1,0 +1,4 @@
+source=AC/packages/audio/voicecom/affirmative.ogg
+output=affirmative_eq_tilt_p3dB.wav
+type=eq_tilt
+seed=1778899045

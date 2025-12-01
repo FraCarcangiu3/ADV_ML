@@ -1,0 +1,4 @@
+source=AC/packages/audio/voicecom/affirmative.ogg
+output=affirmative_tone_12000hz.wav
+type=tone
+seed=1204297291

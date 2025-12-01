@@ -1,0 +1,4 @@
+source=AC/packages/audio/voicecom/affirmative.ogg
+output=affirmative_combo_pitchn10_tone10khz.wav
+type=combo
+seed=2194748958

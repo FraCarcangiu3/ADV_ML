@@ -1,0 +1,8 @@
+=== PATCH THRESHOLDS MULTI DIFF ===
+
+Updated files:
+- ADV_ML/tests/generate_variants.py (SOUNDS + logging)
+- AC/audio_obf_config.csv (added 3 lines)
+- TESI_ANTICHEAT.md (added section 16.X)
+
+Run log: .cursor-output/thresholds_run_multi.log

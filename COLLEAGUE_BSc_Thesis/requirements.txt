@@ -1,0 +1,14 @@
+numpy
+pynput
+soundcard
+matplotlib
+Pillow
+#pyobjc
+PySide6
+setproctitle
+opencv-python
+soundfile
+pandas
+scikit-learn
+librosa
+xgboost

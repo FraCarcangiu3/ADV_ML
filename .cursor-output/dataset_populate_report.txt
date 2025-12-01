@@ -1,0 +1,31 @@
+DATASET POPULATION REPORT
+==================================================
+Data: 2025-10-23 15:54:45
+Script: audio_converter.py
+Pitch shift: +100 cents (+1.0 semitones)
+Sample rate: 44100 Hz
+Channels: Mono
+
+FILE CREATI:
+------------------------------
+
+ORIGINAL FILES (3):
+  /Users/francesco03/Documents/GitHub/AssaultCube Server/ADV_ML/dataset/original/shotgun_ref.wav (91.5 KB)
+    Source: weapon/shotgun.ogg
+  /Users/francesco03/Documents/GitHub/AssaultCube Server/ADV_ML/dataset/original/footsteps_ref.wav (395.3 KB)
+    Source: player/footsteps.ogg
+  /Users/francesco03/Documents/GitHub/AssaultCube Server/ADV_ML/dataset/original/vc_affirmative_ref.wav (87.6 KB)
+    Source: voicecom/affirmative.ogg
+
+OBFUSCATED FILES (3):
+  /Users/francesco03/Documents/GitHub/AssaultCube Server/ADV_ML/dataset/obfuscated/shotgun_ref_p100.wav (91.5 KB)
+    Source: weapon/shotgun.ogg
+  /Users/francesco03/Documents/GitHub/AssaultCube Server/ADV_ML/dataset/obfuscated/footsteps_ref_p100.wav (395.3 KB)
+    Source: player/footsteps.ogg
+  /Users/francesco03/Documents/GitHub/AssaultCube Server/ADV_ML/dataset/obfuscated/vc_affirmative_ref_p100.wav (87.6 KB)
+    Source: voicecom/affirmative.ogg
+
+TOTALE FILE: 6
+TOTALE DIMENSIONE: 1.1 MB
+
+✅ NESSUN ERRORE

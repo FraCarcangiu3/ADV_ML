@@ -1,0 +1,4 @@
+source=AC/packages/audio/weapon/auto.ogg
+output=auto_pitch_p0.wav
+type=pitch
+seed=3537864891

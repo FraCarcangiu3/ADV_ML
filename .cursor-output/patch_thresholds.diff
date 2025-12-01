@@ -1,0 +1,12 @@
+=== PATCH THRESHOLDS DIFF ===
+
+New files added for coarse→fine threshold calibration:
+
+1. ADV_ML/tests/generate_variants.py - Coarse→fine variant generation
+2. ADV_ML/tests/snrdiff_auto.py - SNR calculation and batch processing
+3. ADV_ML/tests/run_all_tests.sh - Complete test orchestration
+4. ADV_ML/tests/generate_reports.py - Report and plot generation
+5. ADV_ML/tests/README.md - Manual verification guide
+
+Updated files:
+1. TESI_ANTICHEAT.md - Added section 16.6 Threshold Calibration

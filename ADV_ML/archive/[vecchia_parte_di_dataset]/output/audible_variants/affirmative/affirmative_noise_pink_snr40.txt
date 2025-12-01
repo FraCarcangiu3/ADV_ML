@@ -1,0 +1,4 @@
+source=AC/packages/audio/voicecom/affirmative.ogg
+output=affirmative_noise_pink_snr40.wav
+type=noise_pink
+seed=1771464740

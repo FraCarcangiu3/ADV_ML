@@ -1,0 +1,4 @@
+source=AC/packages/audio/player/footsteps.ogg
+output=footsteps_tone_10000hz.wav
+type=tone
+seed=1656307214

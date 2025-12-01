@@ -1,0 +1,233 @@
+═══════════════════════════════════════════════════════════════════════════════
+HUMAN TEST PACKAGE SUMMARY — Audio Obfuscation Threshold Calibration
+═══════════════════════════════════════════════════════════════════════════════
+
+Autore: Francesco Carcangiu
+Data: 30 Ottobre 2025
+Workspace: /Users/francesco03/Documents/GitHub/AssaultCube Server
+
+═══════════════════════════════════════════════════════════════════════════════
+📦 FILES GENERATED
+═══════════════════════════════════════════════════════════════════════════════
+
+Scripts:
+✓ ADV_ML/tests/generate_audible_variants.py  - Genera varianti audio ampie
+✓ ADV_ML/tests/human_test_cli.py             - Test CLI interattivo guidato
+✓ ADV_ML/tests/run_abx.py                    - Test ABX discriminazione
+✓ ADV_ML/tests/subjective_results_template.csv - Template risultati CSV
+
+Documentation:
+✓ ADV_ML/tests/README_PER_UBI.md             - Guida completa per utente
+✓ .cursor-output/human_test_package_summary.txt - Questo file
+
+Audio Variants (66 total):
+✓ ADV_ML/tests/output/audible_variants/auto/         - 22 files (ref + 21 variants)
+✓ ADV_ML/tests/output/audible_variants/footsteps/    - 22 files (ref + 21 variants)
+✓ ADV_ML/tests/output/audible_variants/affirmative/  - 22 files (ref + 21 variants)
+
+Logs:
+✓ .cursor-output/audible_variants_generation.log
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 QUICK START COMMANDS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. TEST GUIDATO (Listening Test) — Consigliato per iniziare
+   ────────────────────────────────────────────────────────────────────────
+
+   # Auto (weapon)
+   python3 ADV_ML/tests/human_test_cli.py \
+       ADV_ML/tests/output/audible_variants/auto \
+       --subject Francesco
+
+   # Footsteps
+   python3 ADV_ML/tests/human_test_cli.py \
+       ADV_ML/tests/output/audible_variants/footsteps \
+       --subject Francesco
+
+   # Affirmative (voice)
+   python3 ADV_ML/tests/human_test_cli.py \
+       ADV_ML/tests/output/audible_variants/affirmative \
+       --subject Francesco
+
+   Output: ADV_ML/tests/subjective_results.csv
+
+
+2. TEST ABX (Discriminazione) — Per conferma rigorosa
+   ────────────────────────────────────────────────────────────────────────
+
+   # Auto (15 trials)
+   python3 ADV_ML/tests/run_abx.py \
+       ADV_ML/tests/output/audible_variants/auto \
+       --subject Francesco \
+       --trials 15
+
+   # Footsteps (20 trials, più sensibile)
+   python3 ADV_ML/tests/run_abx.py \
+       ADV_ML/tests/output/audible_variants/footsteps \
+       --subject Francesco \
+       --trials 20
+
+   Output: ADV_ML/tests/subjective_results_abx.csv
+
+
+3. ANALISI RISULTATI
+   ────────────────────────────────────────────────────────────────────────
+
+   # Visualizza detection rate per tipo
+   python3 -c "
+   import pandas as pd
+   df = pd.read_csv('ADV_ML/tests/subjective_results.csv')
+   print('Detection rate per type:')
+   print(df.groupby('type')['perceived_change'].value_counts(normalize=True))
+   print('\nAverage severity (when detected):')
+   print(df[df['severity'] > 0].groupby('type')['severity'].mean())
+   "
+
+   # Per ABX results
+   python3 -c "
+   import pandas as pd
+   df = pd.read_csv('ADV_ML/tests/subjective_results_abx.csv')
+   print('ABX Accuracy:')
+   print(df.groupby('type')['correct'].mean() * 100)
+   "
+
+═══════════════════════════════════════════════════════════════════════════════
+🎧 TESTING ENVIRONMENT SETUP
+═══════════════════════════════════════════════════════════════════════════════
+
+Required:
+- Cuffie chiuse o in-ear di buona qualità (NO speaker)
+- Ambiente silenzioso (no distrazioni)
+- Volume confortevole (70-80% del max)
+- Pause ogni 15-20 minuti (evitare affaticamento uditivo)
+
+Software:
+- macOS: afplay (incluso, default)
+- Linux/Windows: ffplay (brew install ffmpeg)
+- Python 3.8+ con: soundfile, librosa, numpy
+
+═══════════════════════════════════════════════════════════════════════════════
+📊 VARIANT TYPES GENERATED
+═══════════════════════════════════════════════════════════════════════════════
+
+Per ogni suono (auto, footsteps, affirmative):
+
+PITCH SHIFT (11 variants):
+  0, ±10, ±25, ±50, ±75, ±100 cents
+  Files: *_pitch_p10.wav, *_pitch_n25.wav, etc.
+
+WHITE NOISE (5 variants):
+  SNR = 40, 35, 30, 25, 20 dB
+  Files: *_noise_snr35.wav, etc.
+
+PURE TONE (5 variants):
+  Freq = 8000, 9000, 10000, 11000, 12000 Hz (SNR 35 dB)
+  Files: *_tone_9000hz.wav, etc.
+
+REFERENCE (1 file):
+  *_ref.wav (originale convertito da OGG)
+
+TOTAL per sound: 22 files
+TOTAL overall: 66 files
+
+═══════════════════════════════════════════════════════════════════════════════
+🔍 THRESHOLD ESTIMATION GUIDELINES
+═══════════════════════════════════════════════════════════════════════════════
+
+MIN_PERC (Minimum Perceptible):
+  → Valore più PICCOLO dove hai risposto Y (perceived change)
+  → Oppure: 60% accuracy nel test ABX
+  
+  Esempio: se percepisci pitch ±10c ma NON ±5c
+           → min_perc ≈ 10 cents
+
+MAX_OK (Maximum Acceptable):
+  → Valore più GRANDE dove severity ≤ 2 (appena percepito, non disturba)
+  → Oppure: ultima variante con qualità ancora accettabile
+  
+  Esempio: se severity 1-2 fino a ±30c, severity 3-5 per ±50c+
+           → max_ok ≈ 30 cents
+
+EXPECTED RANGES (basati su letteratura psicoacustica):
+  - weapon/auto.ogg:         min_perc ~10-15c,  max_ok ~25-40c  (robusto)
+  - player/footsteps.ogg:    min_perc ~3-7c,    max_ok ~10-20c  (sensibile)
+  - voicecom/affirmative.ogg: min_perc ~5-10c,   max_ok ~15-25c  (voce critica)
+
+═══════════════════════════════════════════════════════════════════════════════
+📝 WORKFLOW CONSIGLIATO (3 giorni)
+═══════════════════════════════════════════════════════════════════════════════
+
+GIORNO 1 - Auto (weapon)
+  1. Test guidato completo (~30 min)
+  2. Analizza risultati, identifica range
+  3. Opzionale: ABX su range critico per conferma
+
+GIORNO 2 - Footsteps
+  1. Test guidato (~30 min)
+  2. Aspettati min_perc più basso (passi brevi, sensibili)
+
+GIORNO 3 - Affirmative (voice)
+  1. Test guidato (~30 min)
+  2. Voice è pitch-critica, aspettati threshold bassi
+
+FINALE - Update config
+  1. Compila tabella decisionale
+  2. Aggiorna AC/audio_obf_config.csv
+  3. Documenta in TESI_ANTICHEAT.md
+
+═══════════════════════════════════════════════════════════════════════════════
+📚 DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Guida completa:
+  → ADV_ML/tests/README_PER_UBI.md
+  
+  Include:
+  - Setup ambiente ascolto
+  - Procedura dettagliata per test CLI e ABX
+  - Interpretazione risultati
+  - Troubleshooting
+  - Riferimenti scientifici (JND, ITU-R BS.1116)
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ VERIFICATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Check files exist:
+  ls -lh ADV_ML/tests/output/audible_variants/*/
+
+Check script permissions:
+  ls -l ADV_ML/tests/*.py
+
+Play a test file (macOS):
+  afplay ADV_ML/tests/output/audible_variants/auto/auto_ref.wav
+  afplay ADV_ML/tests/output/audible_variants/auto/auto_pitch_p25.wav
+
+Quick manual comparison:
+  # Play reference
+  afplay ADV_ML/tests/output/audible_variants/auto/auto_ref.wav
+  
+  # Play obvious variant (should be clearly audible)
+  afplay ADV_ML/tests/output/audible_variants/auto/auto_pitch_p100.wav
+  
+  # Play subtle variant (might be hard to detect)
+  afplay ADV_ML/tests/output/audible_variants/auto/auto_pitch_p10.wav
+
+═══════════════════════════════════════════════════════════════════════════════
+🚀 NEXT STEPS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Leggi ADV_ML/tests/README_PER_UBI.md
+2. Setup ambiente (cuffie, silenzio)
+3. Run human_test_cli.py per auto
+4. Analizza subjective_results.csv
+5. Ripeti per footsteps e affirmative
+6. Opzionale: run_abx.py per conferma
+7. Compila audio_obf_config.csv con i tuoi valori
+8. Documenta in TESI_ANTICHEAT.md
+
+═══════════════════════════════════════════════════════════════════════════════
+END OF SUMMARY
+═══════════════════════════════════════════════════════════════════════════════
+

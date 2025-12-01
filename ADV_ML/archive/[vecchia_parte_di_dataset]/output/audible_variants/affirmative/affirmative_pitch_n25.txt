@@ -1,0 +1,4 @@
+source=AC/packages/audio/voicecom/affirmative.ogg
+output=affirmative_pitch_n25.wav
+type=pitch
+seed=4196328888

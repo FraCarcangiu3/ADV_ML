@@ -1,0 +1,205 @@
+diff --git a/AC/source/src/audio_runtime_obf.h b/AC/source/src/audio_runtime_obf.h
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/AC/source/src/audio_runtime_obf.h
+@@ -0,0 +1,111 @@
++// audio_runtime_obf.h
++// Framework runtime per applicare trasformazioni audio al PCM decodificato
++// 
++// Step 1: Infrastruttura base + logging (trasformazioni placeholder)
++// Step successivi: Implementazione completa pitch/noise/tone
++//
++// Autore: Francesco Carcangiu
++// Data: 29 Ottobre 2025
++
++#pragma once
++
++#include <string>
++#include <cstdint>
++
++// ========================================================================
++// Struttura di configurazione per le trasformazioni audio
++// ========================================================================
++
++struct ARO_Profile {
++    bool enabled = false;         // obfuscation globale ON/OFF
++    
++    // Pitch shift (Step 1: parametri pronti, applicazione opzionale)
++    bool use_pitch = false;       // abilita pitch shifting
++    int  pitch_cents = 0;         // +/- cents (100 cents = 1 semitono)
++    
++    // Noise injection (Step futuro - placeholder)
++    bool use_noise = false;       // abilita aggiunta rumore
++    float noise_snr_db = 0.f;     // target SNR in decibel
++    
++    // Tone injection (Step futuro - placeholder)
++    bool use_tone = false;        // abilita aggiunta tono
++    float tone_freq_hz = 0.f;     // frequenza tono in Hz
++    float tone_level_db = 0.f;    // livello tono in dB
++};
++
++// ========================================================================
++// API pubblica
++// ========================================================================
++
++void aro_init_from_env_and_cli(int argc, char** argv);
++void aro_set_enabled(bool on);
++bool aro_is_enabled();
++void aro_process_pcm_int16(const std::string& logical_name, int16_t* pcm, int frames, int channels, int samplerate);
++void aro_log_loaded();
++void aro_log_apply(const std::string& logical_name, const ARO_Profile& p);
+
+diff --git a/AC/source/src/audio_runtime_obf.cpp b/AC/source/src/audio_runtime_obf.cpp
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/AC/source/src/audio_runtime_obf.cpp
+@@ -0,0 +1,217 @@
++// audio_runtime_obf.cpp
++// Implementazione framework runtime per trasformazioni audio
++//
++// Step 1: Infrastruttura + logging (no trasformazioni reali ancora)
++//
++// Autore: Francesco Carcangiu
++// Data: 29 Ottobre 2025
++
++#include "audio_runtime_obf.h"
++#include <cstdlib>
++#include <cstring>
++#include <cstdio>
++#include <algorithm>
++#include <vector>
++
++// Stato globale interno
++static ARO_Profile g_profile;
++static const char* g_config_source = "DEFAULT";
++static bool g_initialized = false;
++
++// Helper interni per conversione PCM int16 ↔ float
++static void int16_to_float(const int16_t* src, float* dst, int samples) { /* ... */ }
++static void float_to_int16(const float* src, int16_t* dst, int samples) { /* ... */ }
++
++void aro_init_from_env_and_cli(int argc, char** argv)
++{
++    // Parsing ENV: AC_AUDIO_OBF=0|1
++    // Parsing CLI: --audio-obf on|off (precedenza su ENV)
++    // Inizializza g_profile
++}
++
++void aro_set_enabled(bool on) { g_profile.enabled = on; }
++bool aro_is_enabled() { return g_profile.enabled; }
++
++void aro_process_pcm_int16(const std::string& logical_name, int16_t* pcm, int frames, int channels, int samplerate)
++{
++    if (!g_profile.enabled) return;
++    
++    ARO_Profile profile = g_profile;
++    aro_log_apply(logical_name, profile);
++    
++    // TODO Step 2+: Applicazione trasformazioni reali
++    // Per Step 1: no-op (solo logging)
++}
++
++void aro_log_loaded()
++{
++    printf("[AUDIO_OBF] enabled=%d", g_profile.enabled ? 1 : 0);
++    if (g_profile.enabled) printf(" from=%s", g_config_source);
++    printf(" use_pitch=%d use_noise=%d use_tone=%d\n", 
++           g_profile.use_pitch ? 1 : 0, 
++           g_profile.use_noise ? 1 : 0, 
++           g_profile.use_tone ? 1 : 0);
++    fflush(stdout);
++}
++
++void aro_log_apply(const std::string& logical_name, const ARO_Profile& p)
++{
++    printf("[AUDIO_OBF] %s → pitch:%+d cents, noise:SNR=%.1f dB, tone:%.0f Hz @ %.1f dB\n",
++           logical_name.c_str(), p.pitch_cents, p.noise_snr_db, p.tone_freq_hz, p.tone_level_db);
++    fflush(stdout);
++}
+
+diff --git a/AC/source/src/main.cpp b/AC/source/src/main.cpp
+index 0000000..0000000
+--- a/AC/source/src/main.cpp
++++ b/AC/source/src/main.cpp
+@@ -1208,6 +1208,13 @@ int main(int argc, char **argv)
+ {
+     DEBUGCODE(sanitychecks());
+     
++    // Initialize audio obfuscation system (pitch shift)
++    // Must be called before any audio operations
+     extern void ac_audio_obf_init(int, char**);
+     ac_audio_obf_init(argc, argv);
++    
++    // Initialize new audio runtime obfuscation framework (Step 1)
++    extern void aro_init_from_env_and_cli(int, char**);
++    extern void aro_log_loaded();
++    aro_init_from_env_and_cli(argc, argv);
++    aro_log_loaded();
+
+diff --git a/AC/source/src/openal.cpp b/AC/source/src/openal.cpp
+index 0000000..0000000
+--- a/AC/source/src/openal.cpp
++++ b/AC/source/src/openal.cpp
+@@ -3,6 +3,7 @@
+ #include "cube.h"
+ #include "audio_obf.h"  // Audio obfuscation / pitch shift (vecchio sistema)
++#include "audio_runtime_obf.h"  // Audio runtime obfuscation framework (nuovo)
+ 
+ #define DEBUGCOND (audiodebug==1)
+ 
+@@ -314,6 +315,20 @@
+                         apply_pitch_inplace(pcm_data, frames, channels, samplerate, cents);
+                     }
+                     
++                    // Nuovo framework runtime obfuscation (Step 1) - OGG path
++                    // Hook: processa il PCM prima di alBufferData
++                    {
++                        int16_t* pcm_data = (int16_t*)buf.getbuf();
++                        int channels = info->channels;
++                        int samplerate = info->rate;
++                        int bytes_total = buf.length();
++                        int frames = bytes_total / (sizeof(int16_t) * channels);
++                        
++                        std::string logical_name = name ? std::string(name) : "OGG::<unknown>";
++                        
++                        aro_process_pcm_int16(logical_name, pcm_data, frames, channels, samplerate);
++                    }
++                    
+                     alBufferData(id, info->channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16, buf.getbuf(), buf.length(), info->rate);
+                     ov_clear(&oggfile);
+                 }
+@@ -353,6 +368,20 @@
+                         return false;
+                 }
+ 
++                // Nuovo framework runtime obfuscation (Step 1) - WAV path
++                // Hook: processa il PCM prima di alBufferData
++                if (wavspec.format == AUDIO_S16 || wavspec.format == AUDIO_U16)
++                {
++                    int16_t* pcm_data = (int16_t*)wavbuf;
++                    int channels = wavspec.channels;
++                    int samplerate = wavspec.freq;
++                    int frames = wavlen / (sizeof(int16_t) * channels);
++                    
++                    std::string logical_name = name ? std::string(name) : "WAV::<unknown>";
++                    
++                    aro_process_pcm_int16(logical_name, pcm_data, frames, channels, samplerate);
++                }
++
+                 alBufferData(id, format, wavbuf, wavlen, wavspec.freq);
+                 SDL_FreeWAV(wavbuf);
+
+diff --git a/AC/source/src/Makefile b/AC/source/src/Makefile
+index 0000000..0000000
+--- a/AC/source/src/Makefile
++++ b/AC/source/src/Makefile
+@@ -118,6 +118,7 @@ CLIENT_OBJS= \
+ 	worldrender.o \
+ 	zip.o \
+ 	audio_obf.o \
++	audio_runtime_obf.o \
+ 	bot/bot.o \
+ 	bot/botmanager.o \
+ 	bot/bot_ai.o \

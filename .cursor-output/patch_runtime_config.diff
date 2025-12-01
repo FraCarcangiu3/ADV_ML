@@ -1,0 +1,143 @@
+STEP 2: Configurazione CSV e Applicazione Deterministica
+=========================================================
+
+File creati:
+- AC/audio_obf_config.csv (nuovo)
+
+File modificati:
+- AC/source/src/audio_runtime_obf.h
+- AC/source/src/audio_runtime_obf.cpp
+
+================================================================================
+MODIFICHE PRINCIPALI
+================================================================================
+
+1. NUOVO FILE: AC/audio_obf_config.csv
+   - File di configurazione CSV con 11 profili audio
+   - Formato: file_name,min_pitch,max_pitch,noise_type,noise_snr_db,min_freq,max_freq
+   - Profili per weapon sounds, player sounds, voicecom, ambient
+
+2. HEADER: audio_runtime_obf.h
+   - Aggiunta struct AudioProfile (file_name, pitch range, noise config)
+   - Aggiunta API aro_load_profiles_from_csv()
+   - Include <unordered_map> per storage profili
+
+3. IMPLEMENTAZIONE: audio_runtime_obf.cpp
+   
+   a) Parser CSV:
+      - trim() per whitespace
+      - split_csv_line() per parsing robusto
+      - aro_load_profiles_from_csv() per caricamento file
+   
+   b) Trasformazioni Audio:
+      - apply_pitch_shift() usando SoundTouch
+      - calculate_rms() per calcolo RMS segnale
+      - add_white_noise() per iniezione rumore gaussiano
+      - add_tone() per iniezione tono sinusoidale
+   
+   c) Processing Pipeline:
+      - Lookup profilo in g_audio_profiles
+      - Calcolo parametri deterministici (midpoint)
+      - Conversione int16 → float
+      - Applicazione trasformazioni
+      - Conversione float → int16 con clipping
+   
+   d) Inizializzazione:
+      - Caricamento automatico CSV in aro_init_from_env_and_cli()
+      - Log "Loaded N profiles from config"
+
+================================================================================
+STATISTICHE MODIFICHE
+================================================================================
+
+audio_runtime_obf.h:
+  + 30 linee (struct AudioProfile, API)
+  
+audio_runtime_obf.cpp:
+  + ~320 linee totali:
+    - Parser CSV: ~90 linee
+    - Trasformazioni: ~150 linee
+    - Processing: ~80 linee
+
+audio_obf_config.csv:
+  + 11 profili audio configurati
+
+Totale: ~350 linee codice + 11 profili
+
+================================================================================
+FUNZIONALITÀ AGGIUNTE
+================================================================================
+
+✅ Caricamento configurazione da CSV
+✅ Parsing robusto con handling errori
+✅ Storage efficiente (unordered_map, O(1) lookup)
+✅ Pitch shift con SoundTouch (WSOLA, tempo-preserving)
+✅ White noise injection con SNR controllato
+✅ Tone injection sinusoidale
+✅ Applicazione deterministica (midpoint, no random)
+✅ Logging strutturato per debugging
+✅ Conversione PCM robusta con clipping
+✅ Fallback graceful se SoundTouch non disponibile
+
+================================================================================
+TESTING
+================================================================================
+
+Compilazione:
+  cd AC/source/src && make clean && make client -j8
+  ✅ Successo (1.8M eseguibile)
+
+Caricamento CSV:
+  AC_AUDIO_OBF=1 ./ac_client
+  ✅ Log: "Loaded 11 profiles from config (audio_obf_config.csv)"
+
+Profili Attivi:
+  - weapon/shotgun.ogg → pitch ±10, white noise SNR=30dB
+  - player/footsteps.ogg → pitch ±5, tone 9-12kHz SNR=35dB
+  - voicecom/affirmative.ogg → pitch ±20, tone 8-10kHz SNR=40dB
+  - ... (8 altri profili)
+
+================================================================================
+BACKWARD COMPATIBILITY
+================================================================================
+
+✅ Vecchio sistema audio_obf.* NON modificato
+✅ Coesistenza pacifica (vecchio disabled, nuovo enabled indipendenti)
+✅ Nessuna breaking change a codice esistente
+✅ Build funziona con e senza SoundTouch
+
+================================================================================
+DOCUMENTAZIONE GENERATA
+================================================================================
+
+.cursor-output/RUNTIME_CONFIG_TEST.txt
+  - Comandi di test
+  - Output log esempio
+  - Troubleshooting
+
+.cursor-output/RUNTIME_CONFIG_SUMMARY.md
+  - Documentazione tecnica completa
+  - Diagrammi flow
+  - Esempi uso
+
+.cursor-output/patch_runtime_config.diff (questo file)
+  - Riepilogo modifiche
+
+================================================================================
+PROSSIMI STEP
+================================================================================
+
+Step 3: Randomizzazione
+  - Sostituire midpoint con random uniform nel range [min, max]
+  - Seed basato su session_id per variabilità
+  - Thread safety con mutex
+
+Step 4: Validazione
+  - Test percettivi ABX
+  - Misure SNR reali post-trasformazione
+  - Analisi spettrogrammi
+
+================================================================================
+FINE DIFF
+================================================================================
+

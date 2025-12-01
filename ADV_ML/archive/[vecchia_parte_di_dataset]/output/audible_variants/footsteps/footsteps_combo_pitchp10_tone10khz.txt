@@ -1,0 +1,4 @@
+source=AC/packages/audio/player/footsteps.ogg
+output=footsteps_combo_pitchp10_tone10khz.wav
+type=combo
+seed=1901012994

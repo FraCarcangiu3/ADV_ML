@@ -1,0 +1,164 @@
+================================================================================
+STEP 2: TEST CONFIGURAZIONE CSV E APPLICAZIONE DETERMINISTICA
+================================================================================
+
+Data: 29 Ottobre 2025
+Autore: Francesco Carcangiu
+
+================================================================================
+COMANDI DI TEST
+================================================================================
+
+# 1) Compilazione
+cd "/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src"
+make clean && make client -j8
+
+# Risultato atteso:
+# - Compilazione riuscita
+# - Eseguibile ac_client creato (~1.8M)
+
+# 2) Verifica file CSV presente
+cd "/Users/francesco03/Documents/GitHub/AssaultCube Server/AC"
+ls -lh audio_obf_config.csv
+
+# Risultato atteso:
+# -rw-r--r-- 1 user staff ~1.5K audio_obf_config.csv
+
+# 3) Avvio client con obfuscation abilitato
+cd "/Users/francesco03/Documents/GitHub/AssaultCube Server/AC"
+AC_AUDIO_OBF=1 ./ac_client 2>&1 | tee obf_config_test.log
+
+# 4) Estrazione log AUDIO_OBF (primi 30)
+grep "AUDIO_OBF" obf_config_test.log | head -30
+
+# 5) Verifica caricamento CSV
+grep "Loaded.*profiles" obf_config_test.log
+
+# 6) Verifica applicazione profili
+grep "applying profile" obf_config_test.log | head -10
+
+================================================================================
+OUTPUT EFFETTIVO DEL TEST
+================================================================================
+
+$ AC_AUDIO_OBF=1 ./ac_client 2>&1 | head -30
+
+[audio_obf] Pitch shift DISABLED (default)
+[AUDIO_OBF] Loaded 11 profiles from config (audio_obf_config.csv)
+[AUDIO_OBF] enabled=1 from=ENV use_pitch=0 use_noise=0 use_tone=0
+info: no support for d_type, listing directories may be slow
+Using home directory: profile/
+writing to file: profile/clientlog.txt
+init: sdl (2.32.10)
+init: net (1.3.6)
+init: world (-(1302))
+init: video: sdl
+init: video: mode
+init: video: misc
+init: gl
+init: console
+init: sound
+Audio devices: OpenAL Soft
+Sound: OpenAL Soft / OpenAL Soft (OpenAL Community)
+Driver: 1.1 ALSOFT 1.24.3
+init: cfg
+...
+
+================================================================================
+VERIFICA CARICAMENTO PROFILI
+================================================================================
+
+✅ SUCCESSO: CSV caricato correttamente
+   Log: "[AUDIO_OBF] Loaded 11 profiles from config (audio_obf_config.csv)"
+
+✅ SUCCESSO: Framework abilitato
+   Log: "[AUDIO_OBF] enabled=1 from=ENV use_pitch=0 use_noise=0 use_tone=0"
+
+✅ SUCCESSO: Vecchio sistema disabilitato (no conflitti)
+   Log: "[audio_obf] Pitch shift DISABLED (default)"
+
+================================================================================
+PROFILI CARICATI (da audio_obf_config.csv)
+================================================================================
+
+1. weapon/shotgun.ogg       → pitch: [-10,+10], noise: white, SNR=30dB
+2. weapon/pistol.ogg         → pitch: [-15,+15], noise: none
+3. weapon/subgun.ogg         → pitch: [-20,+20], noise: white, SNR=35dB
+4. player/footsteps.ogg      → pitch: [-5,+5],   noise: tone, SNR=35dB, freq=[9000,12000]Hz
+5. player/pain1.ogg          → pitch: [-10,+10], noise: white, SNR=32dB
+6. player/jump.ogg           → pitch: [-8,+8],   noise: none
+7. voicecom/affirmative.ogg  → pitch: [-20,+20], noise: tone, SNR=40dB, freq=[8000,10000]Hz
+8. voicecom/negative.ogg     → pitch: [-15,+15], noise: white, SNR=38dB
+9. voicecom/thanks.ogg       → pitch: [-10,+10], noise: none
+10. ambience/wind.ogg        → pitch: [0,0],     noise: white, SNR=45dB
+11. misc/itemspawn.ogg       → pitch: [-5,+5],   noise: tone, SNR=33dB, freq=[11000,13000]Hz
+
+================================================================================
+APPLICAZIONE DETERMINISTICA (MIDPOINT)
+================================================================================
+
+Per Step 2, i parametri sono calcolati come MIDPOINT (no random):
+
+- Pitch:      (min_pitch + max_pitch) / 2
+- Tone freq:  (min_freq + max_freq) / 2
+- Noise SNR:  valore fisso da CSV
+
+Esempi:
+- weapon/shotgun.ogg  → pitch: 0 cents    ((-10+10)/2=0)
+- weapon/pistol.ogg   → pitch: 0 cents    ((-15+15)/2=0)
+- player/footsteps.ogg → pitch: 0 cents   ((-5+5)/2=0), tone: 10500 Hz
+- voicecom/affirmative.ogg → pitch: 0 cents ((-20+20)/2=0), tone: 9000 Hz
+
+Nota: Per testare valori non-zero, modificare il CSV con range asimmetrici
+      (es. min_pitch=-10, max_pitch=20 → midpoint=5 cents)
+
+================================================================================
+LOG APPLICAZIONE PROFILI (ESEMPIO)
+================================================================================
+
+Quando il client carica un suono con profilo definito nel CSV, dovrebbe apparire:
+
+[AUDIO_OBF] weapon/shotgun.ogg -> applying profile: pitch:+0 cents, noise:SNR=30.0 dB (white), tone:0 Hz
+[AUDIO_OBF] player/footsteps.ogg -> applying profile: pitch:+0 cents, noise:SNR=35.0 dB (tone), tone:10500 Hz
+[AUDIO_OBF] voicecom/affirmative.ogg -> applying profile: pitch:+0 cents, noise:SNR=40.0 dB (tone), tone:9000 Hz
+
+Nota: I suoni non presenti nel CSV vengono skippati silenziosamente (no log).
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problema: "config file audio_obf_config.csv not found"
+Soluzione: Il file CSV deve essere nella directory AC/ (root del gioco)
+          Verifica con: ls -l AC/audio_obf_config.csv
+
+Problema: Nessun log "applying profile"
+Causa: I nomi dei suoni nel CSV potrebbero non matchare i nomi reali usati dal gioco
+Soluzione: Avvia con AC_AUDIO_OBF=1 e cerca i nomi esatti nei log, poi aggiornali nel CSV
+
+Problema: "SoundTouch not available — pitch skipped"
+Causa: SoundTouch non linkato o HAVE_SOUNDTOUCH non definito
+Soluzione: Verifica Makefile: -DHAVE_SOUNDTOUCH e -lSoundTouch devono essere presenti
+
+Problema: Audio distorto
+Causa: SNR troppo basso o pitch troppo estremo
+Soluzione: Aumenta SNR (es. 40+ dB) o riduci pitch (es. ±10 cents)
+
+================================================================================
+PROSSIMO STEP
+================================================================================
+
+Step 3: Randomizzazione
+- Sostituire midpoint deterministico con valori random nel range [min, max]
+- Aggiungere seed basato su session_id o timestamp per variabilità
+- Testare distribuzione statistica dei parametri generati
+
+Step 4: Validazione percettiva
+- Test ABX per identificare soglie di percettibilità
+- Misurare SNR reale post-trasformazione
+- Analisi spettrogrammi per verificare artefatti
+
+================================================================================
+FINE TEST
+================================================================================
+

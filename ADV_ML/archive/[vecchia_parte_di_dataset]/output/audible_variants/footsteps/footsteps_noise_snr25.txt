@@ -1,0 +1,4 @@
+source=AC/packages/audio/player/footsteps.ogg
+output=footsteps_noise_snr25.wav
+type=noise_white
+seed=3393353752

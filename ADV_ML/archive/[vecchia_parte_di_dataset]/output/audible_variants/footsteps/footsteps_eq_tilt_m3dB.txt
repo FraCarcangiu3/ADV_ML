@@ -1,0 +1,4 @@
+source=AC/packages/audio/player/footsteps.ogg
+output=footsteps_eq_tilt_m3dB.wav
+type=eq_tilt
+seed=923288118

@@ -1,0 +1,4 @@
+source=AC/packages/audio/weapon/auto.ogg
+output=auto_tone_8000hz.wav
+type=tone
+seed=2870459347

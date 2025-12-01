@@ -1,0 +1,4 @@
+source=AC/packages/audio/weapon/auto.ogg
+output=auto_combo_pitchn10_tone10khz.wav
+type=combo
+seed=2873048022

@@ -1,0 +1,4 @@
+source=AC/packages/audio/voicecom/affirmative.ogg
+output=affirmative_noise_snr20.wav
+type=noise_white
+seed=1689491367

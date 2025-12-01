@@ -1,0 +1,150 @@
+================================================================================
+ESEMPIO LOG RUNTIME - Audio Runtime Obfuscation Framework (Step 1)
+================================================================================
+
+SCENARIO 1: Sistema Disabilitato (default)
+--------------------------------------------------------------------------------
+$ cd AC
+$ ./ac_client
+
+[AUDIO_OBF] enabled=0
+
+(... nessun altro log relativo ad audio obfuscation)
+
+
+================================================================================
+
+SCENARIO 2: Sistema Abilitato (ENV)
+--------------------------------------------------------------------------------
+$ cd AC
+$ AC_AUDIO_OBF=1 ./ac_client
+
+[AUDIO_OBF] enabled=1 from=ENV use_pitch=0 use_noise=0 use_tone=0
+init: sdl (2.28.5)
+init: net (1.3.18)
+init: world (1262)
+init: video: sdl
+init: video: mode
+init: video: misc
+init: gl
+init: console
+init: sound
+[AUDIO_OBF] misc/menu.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] misc/itemspawn.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] misc/underwater.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] player/footsteps.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] player/pain1.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] player/pain2.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] player/die1.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] player/die2.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] player/jump.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] player/land.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/knife_slash.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/knife_stab.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/pistol_shoot.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/pistol_reload.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/carbine_shoot.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/carbine_reload.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/shotgun_shoot.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/shotgun_reload.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/subgun_shoot.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/subgun_reload.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/sniper_shoot.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/sniper_reload.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/assault_shoot.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/assault_reload.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/grenade_pull.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/grenade_throw.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/grenade_bounce.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] weapon/grenade_explode.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] ctf/flagpickup.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] ctf/flagdrop.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] ctf/flagscore.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] ctf/flagreturn.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] ambience/wind.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+[AUDIO_OBF] ambience/water.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+init: cfg
+...
+
+
+================================================================================
+
+SCENARIO 3: Sistema Abilitato (CLI, precedenza su ENV)
+--------------------------------------------------------------------------------
+$ cd AC
+$ AC_AUDIO_OBF=0 ./ac_client --audio-obf on
+
+[AUDIO_OBF] enabled=1 from=CLI use_pitch=0 use_noise=0 use_tone=0
+init: sdl (2.28.5)
+...
+[AUDIO_OBF] misc/menu.ogg → pitch:+0 cents, noise:SNR=0.0 dB, tone:0 Hz @ 0.0 dB
+...
+
+(Nota: CLI ha precedenza su ENV, quindi sistema abilitato anche se AC_AUDIO_OBF=0)
+
+
+================================================================================
+
+SCENARIO 4: Sistema Disabilitato Esplicitamente (CLI)
+--------------------------------------------------------------------------------
+$ cd AC
+$ AC_AUDIO_OBF=1 ./ac_client --audio-obf off
+
+[AUDIO_OBF] enabled=0
+
+(Nota: CLI ha precedenza su ENV, quindi sistema disabilitato anche se AC_AUDIO_OBF=1)
+
+
+================================================================================
+
+INTERPRETAZIONE DEI LOG
+--------------------------------------------------------------------------------
+
+1. Log di Bootstrap (sempre presente):
+   [AUDIO_OBF] enabled=<0|1> [from=<ENV|CLI>] [use_pitch=<0|1>] ...
+   
+   - enabled=0: Sistema disabilitato, nessun processing
+   - enabled=1: Sistema abilitato, processing attivo
+   - from=ENV: Configurazione da variabile d'ambiente AC_AUDIO_OBF
+   - from=CLI: Configurazione da argomento --audio-obf
+   - use_pitch/noise/tone: Flag per trasformazioni (Step 1: tutte a 0)
+
+2. Log per Singolo Suono (solo se enabled=1):
+   [AUDIO_OBF] <soundname> → pitch:±N cents, noise:SNR=X.X dB, tone:FFFF Hz @ LL.L dB
+   
+   - <soundname>: Nome del file audio (es. "player/footsteps.ogg")
+   - pitch:±N cents: Shift di pitch in cents (Step 1: sempre 0)
+   - noise:SNR=X.X dB: SNR del rumore aggiunto (Step 1: sempre 0.0)
+   - tone:FFFF Hz @ LL.L dB: Tono sinusoidale aggiunto (Step 1: sempre 0 Hz @ 0.0 dB)
+
+3. Formato Parsabile:
+   I log sono progettati per essere facilmente parsati da script:
+   
+   grep "^\[AUDIO_OBF\]" logfile.txt
+   
+   Per statistiche:
+   grep -c "AUDIO_OBF.*→" logfile.txt  # conta suoni processati
+
+
+================================================================================
+
+NOTE STEP 1
+--------------------------------------------------------------------------------
+
+In Step 1, il framework è SOLO infrastruttura + logging.
+
+NESSUNA MODIFICA al buffer PCM viene applicata, quindi:
+- L'audio suona identico a prima
+- I log mostrano pitch:+0, noise:0.0, tone:0 Hz
+- Performance impact: minimo (solo una chiamata di funzione no-op)
+
+Gli step successivi implementeranno le trasformazioni reali:
+- Step 2: Pitch shifting effettivo (use_pitch=1, pitch_cents!=0)
+- Step 3: Noise injection (use_noise=1, noise_snr_db>0)
+- Step 4: Tone injection (use_tone=1, tone_freq_hz>0)
+
+
+================================================================================
+FINE ESEMPIO LOG
+================================================================================
+

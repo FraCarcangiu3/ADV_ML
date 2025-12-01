@@ -1,0 +1,2 @@
+preset,n_samples,dir_base,dir_pert,dir_drop,dist_base,dist_pert,dist_drop,joint_base,joint_pert,joint_drop,mae_base,mae_pert,mae_increase
+pitch_+150c,20,0.4000,0.4000,+0.0000,0.4500,0.6000,-0.1500,0.2000,0.2500,-0.0500,69.40,64.25,-5.14

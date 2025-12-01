@@ -1,0 +1,452 @@
+From f89eba321eec33175e6ea3e483244dba395a75cf Mon Sep 17 00:00:00 2001
+From: Francesco Carcangiu <f.carcangiu5@studenti.unica.it>
+Date: Wed, 15 Oct 2025 17:34:26 +0200
+Subject: [PATCH] feat(audio): PoC pitch-shift hook after decode (client-side,
+ opt-in)
+
+- Add audio_obf.{h,cpp} with SoundTouch-based pitch shifting (fallback to simple resampling)
+- Runtime controls via env/argv: AC_ANTICHEAT_PITCH_ENABLED, AC_ANTICHEAT_PITCH_CENTS or --pitch-enable/--pitch-cents
+- Hook placed before alBufferData to transform PCM once per buffer (OGG and WAV paths)
+- Disabled by default; no behavior change unless enabled
+- Initialization in main() before audio system startup
+---
+ source/src/audio_obf.cpp | 230 +++++++++++++++++++++++++++++++++++++++
+ source/src/audio_obf.h   |  83 ++++++++++++++
+ source/src/main.cpp      |   7 ++
+ source/src/openal.cpp    |  61 +++++++++++
+ 4 files changed, 381 insertions(+)
+ create mode 100644 source/src/audio_obf.cpp
+ create mode 100644 source/src/audio_obf.h
+
+diff --git a/source/src/audio_obf.cpp b/source/src/audio_obf.cpp
+new file mode 100644
+index 00000000..8d3d9632
+--- /dev/null
++++ b/source/src/audio_obf.cpp
+@@ -0,0 +1,230 @@
++// audio_obf.cpp
++// Implementazione sistema di obfuscation audio (pitch shift)
++//
++// Autore: Francesco Carcangiu
++// Data: 15 Ottobre 2024
++
++#include "audio_obf.h"
++#include <cstdlib>
++#include <cstring>
++#include <cstdio>
++#include <vector>
++#include <algorithm>
++
++// Tenta di usare SoundTouch se disponibile
++// Se non presente al momento del build, usa fallback
++#ifdef HAVE_SOUNDTOUCH
++#include <soundtouch/SoundTouch.h>
++using namespace soundtouch;
++#endif
++
++// ========================================================================
++// Stato globale (interno)
++// ========================================================================
++
++static bool g_pitch_enabled = false;
++static int  g_pitch_cents = 0;
++static bool g_initialized = false;
++
++// ========================================================================
++// Implementazione inizializzazione
++// ========================================================================
++
++void ac_audio_obf_init(int argc, char **argv)
++{
++    if (g_initialized) return; // Evita doppia inizializzazione
++    g_initialized = true;
++
++    // Step 1: Leggi variabili d'ambiente
++    const char* env_enabled = std::getenv("AC_ANTICHEAT_PITCH_ENABLED");
++    const char* env_cents = std::getenv("AC_ANTICHEAT_PITCH_CENTS");
++
++    if (env_enabled && (strcmp(env_enabled, "1") == 0 || strcmp(env_enabled, "true") == 0)) {
++        g_pitch_enabled = true;
++    }
++
++    if (env_cents) {
++        g_pitch_cents = atoi(env_cents);
++    }
++
++    // Step 2: Parsing argomenti CLI (sovrascrive env vars)
++    for (int i = 1; i < argc; ++i) {
++        if (strcmp(argv[i], "--pitch-enable") == 0) {
++            g_pitch_enabled = true;
++        }
++        else if (strcmp(argv[i], "--pitch-cents") == 0 && i + 1 < argc) {
++            g_pitch_cents = atoi(argv[++i]);
++        }
++    }
++
++    // Step 3: Validazione e clamping
++    // Range sicuro: -100..+100 cents (±1 semitono)
++    // Range esteso test: fino a ±200 cents (2 semitoni) ma con warning
++    if (g_pitch_cents < -200) {
++        fprintf(stderr, "[audio_obf] WARNING: pitch_cents=%d troppo basso, clamped a -200\n", g_pitch_cents);
++        g_pitch_cents = -200;
++    }
++    if (g_pitch_cents > 200) {
++        fprintf(stderr, "[audio_obf] WARNING: pitch_cents=%d troppo alto, clamped a +200\n", g_pitch_cents);
++        g_pitch_cents = 200;
++    }
++
++    // Step 4: Log stato
++    if (g_pitch_enabled) {
++        fprintf(stdout, "[audio_obf] Pitch shift ENABLED: %+d cents\n", g_pitch_cents);
++#ifdef HAVE_SOUNDTOUCH
++        fprintf(stdout, "[audio_obf] Using SoundTouch library for high-quality pitch shift\n");
++#else
++        fprintf(stdout, "[audio_obf] WARNING: SoundTouch not available, fallback mode active\n");
++        fprintf(stdout, "[audio_obf]          (Fallback: AL_PITCH will be used if supported)\n");
++#endif
++    } else {
++        fprintf(stdout, "[audio_obf] Pitch shift DISABLED (default)\n");
++    }
++}
++
++// ========================================================================
++// Getters pubblici
++// ========================================================================
++
++bool ac_pitch_is_enabled()
++{
++    return g_pitch_enabled;
++}
++
++int ac_pitch_cents()
++{
++    return g_pitch_cents;
++}
++
++// ========================================================================
++// Implementazione trasformazione pitch
++// ========================================================================
++
++#ifdef HAVE_SOUNDTOUCH
++
++// Percorso A: SoundTouch disponibile (high-quality)
++bool apply_pitch_inplace(int16_t* samples, int frames, int channels, int samplerate, int cents)
++{
++    if (!g_pitch_enabled || cents == 0 || frames == 0) {
++        return false; // Nessuna trasformazione necessaria
++    }
++
++    try {
++        // Inizializza SoundTouch
++        SoundTouch st;
++        st.setSampleRate(samplerate);
++        st.setChannels(channels);
++        
++        // Converti cents in semitoni (100 cents = 1 semitono)
++        float semitones = cents / 100.0f;
++        st.setPitchSemiTones(semitones);
++
++        // SoundTouch lavora con float, convertiamo int16 → float [-1,1]
++        std::vector<float> float_samples(frames * channels);
++        for (int i = 0; i < frames * channels; ++i) {
++            float_samples[i] = samples[i] / 32768.0f; // int16 range: -32768..32767
++        }
++
++        // Feed samples a SoundTouch
++        st.putSamples(float_samples.data(), frames);
++        st.flush();
++
++        // Receive processed samples
++        std::vector<float> output;
++        output.reserve(frames * channels * 2); // Reserve extra space
++        
++        const int RECV_BUFF_SIZE = 4096;
++        float temp_buff[RECV_BUFF_SIZE];
++        int nSamples;
++        
++        do {
++            nSamples = st.receiveSamples(temp_buff, RECV_BUFF_SIZE / channels);
++            if (nSamples > 0) {
++                for (int i = 0; i < nSamples * channels; ++i) {
++                    output.push_back(temp_buff[i]);
++                }
++            }
++        } while (nSamples != 0);
++
++        // Converti output float → int16 e scrivi in buffer originale
++        // NOTA: il pitch shift può cambiare leggermente la lunghezza.
++        // Per semplicità, tronchiamo o zero-paddiamo al frame count originale.
++        int output_frames = output.size() / channels;
++        int copy_frames = std::min(output_frames, frames);
++
++        for (int i = 0; i < copy_frames * channels; ++i) {
++            float val = output[i] * 32768.0f;
++            // Clamp to int16 range
++            if (val > 32767.0f) val = 32767.0f;
++            if (val < -32768.0f) val = -32768.0f;
++            samples[i] = (int16_t)val;
++        }
++
++        // Se output è più corto, zero-pad
++        for (int i = copy_frames * channels; i < frames * channels; ++i) {
++            samples[i] = 0;
++        }
++
++        return true;
++
++    } catch (...) {
++        fprintf(stderr, "[audio_obf] ERROR: SoundTouch exception during pitch shift\n");
++        return false;
++    }
++}
++
++#else
++
++// Percorso B: Fallback senza SoundTouch
++// OPZIONE 1: Usare AL_PITCH (non modifica PCM, ma imposta parametro sorgente OpenAL)
++// OPZIONE 2: Resampling semplice (cambia durata, non pitch puro)
++// 
++// Qui implementiamo OPZIONE 2 come PoC minimo (nearest-neighbor resampling)
++// NOTA: questo NON è pitch shift vero (cambia anche la durata), ma serve
++//       per dimostrare che il sistema funziona senza SoundTouch.
++
++bool apply_pitch_inplace(int16_t* samples, int frames, int channels, int samplerate, int cents)
++{
++    if (!g_pitch_enabled || cents == 0 || frames == 0) {
++        return false;
++    }
++
++    // Calcola pitch factor: cents → ratio
++    // pitch_factor = 2^(cents/1200)
++    // Esempio: +100 cents (1 semitono) → factor ~1.059
++    float semitones = cents / 100.0f;
++    float pitch_factor = pow(2.0f, semitones / 12.0f);
++
++    fprintf(stderr, "[audio_obf] Fallback resampling (pitch_factor=%.3f)\n", pitch_factor);
++    fprintf(stderr, "[audio_obf] NOTE: This is NOT true pitch shift (changes duration)\n");
++    fprintf(stderr, "[audio_obf] Rebuild with SoundTouch for proper pitch shifting.\n");
++
++    // Resampling semplice: leggi sample a step variabile
++    int new_frames = (int)(frames / pitch_factor);
++    if (new_frames > frames) new_frames = frames; // Safety clamp
++
++    std::vector<int16_t> temp(new_frames * channels);
++    for (int i = 0; i < new_frames; ++i) {
++        float src_pos = i * pitch_factor;
++        int src_frame = (int)src_pos;
++        if (src_frame >= frames) src_frame = frames - 1;
++
++        for (int ch = 0; ch < channels; ++ch) {
++            temp[i * channels + ch] = samples[src_frame * channels + ch];
++        }
++    }
++
++    // Copy back to original buffer
++    memcpy(samples, temp.data(), new_frames * channels * sizeof(int16_t));
++
++    // Zero-pad remainder
++    for (int i = new_frames * channels; i < frames * channels; ++i) {
++        samples[i] = 0;
++    }
++
++    return true;
++}
++
++#endif // HAVE_SOUNDTOUCH
++
+diff --git a/source/src/audio_obf.h b/source/src/audio_obf.h
+new file mode 100644
+index 00000000..d9e3491a
+--- /dev/null
++++ b/source/src/audio_obf.h
+@@ -0,0 +1,83 @@
++// audio_obf.h
++// Audio Obfuscation / Anti-Cheat PoC
++// Fornisce pitch shift parametrico per asset audio (opzionale, runtime)
++//
++// Autore: Francesco Carcangiu
++// Data: 15 Ottobre 2024
++// Scopo: Dimostrare fattibilità tecnica di trasformazioni audio client-side
++//        per contrastare cheat basati su riconoscimento audio automatizzato.
++
++#ifndef AUDIO_OBF_H
++#define AUDIO_OBF_H
++
++#include <stdbool.h>
++#include <stdint.h>
++
++// ========================================================================
++// API pubblica per controllo runtime del pitch shift
++// ========================================================================
++
++/**
++ * Inizializza il sottosistema di obfuscation audio.
++ * Legge variabili d'ambiente e argomenti da riga di comando.
++ * 
++ * Variabili d'ambiente:
++ *   AC_ANTICHEAT_PITCH_ENABLED=0|1    (default: 0 disabilitato)
++ *   AC_ANTICHEAT_PITCH_CENTS=<int>    (default: 0, range: -100..+100)
++ * 
++ * Argomenti CLI (sovrascrivono env vars se presenti):
++ *   --pitch-enable
++ *   --pitch-cents <N>
++ * 
++ * @param argc Numero argomenti da main()
++ * @param argv Array argomenti da main()
++ */
++void ac_audio_obf_init(int argc, char **argv);
++
++/**
++ * Restituisce true se il pitch shift è abilitato a runtime.
++ * Se disabilitato, nessuna trasformazione viene applicata.
++ */
++bool ac_pitch_is_enabled();
++
++/**
++ * Restituisce il valore di pitch shift in cents (centesimi di semitono).
++ * 100 cents = 1 semitono.
++ * Valori positivi → pitch più alto (frequenze aumentate).
++ * Valori negativi → pitch più basso (frequenze diminuite).
++ * 
++ * Range consigliato per impercettibilità: -10..+10 cents.
++ * Range test: -100..+100 cents.
++ */
++int ac_pitch_cents();
++
++/**
++ * Applica pitch shift in-place a un buffer PCM.
++ * 
++ * Questa è la funzione principale da chiamare dopo il decode audio
++ * e prima di passare i dati a OpenAL (alBufferData).
++ * 
++ * NOTA IMPORTANTE: Se SoundTouch non è disponibile, la funzione
++ * può usare un fallback (AL_PITCH a livello OpenAL, che non modifica
++ * il buffer PCM, oppure un semplice resampling). Il comportamento
++ * dipende dalla configurazione di build.
++ * 
++ * @param samples       Buffer PCM in formato int16 (mono/stereo interleaved).
++ *                      Il buffer verrà modificato in-place.
++ * @param frames        Numero di frame audio (samples / channels).
++ * @param channels      Numero di canali (1=mono, 2=stereo).
++ * @param samplerate    Sample rate in Hz (es. 22050, 44100).
++ * @param cents         Pitch shift in cents (può essere negativo).
++ * 
++ * @return true se trasformazione applicata, false se fallback/skip.
++ */
++bool apply_pitch_inplace(int16_t* samples, int frames, int channels, int samplerate, int cents);
++
++/**
++ * Variante per buffer float (se necessario in futuro).
++ * Attualmente non implementata (usa versione int16).
++ */
++// bool apply_pitch_inplace_float(float* samples, int frames, int channels, int samplerate, int cents);
++
++#endif // AUDIO_OBF_H
++
+diff --git a/source/src/main.cpp b/source/src/main.cpp
+index e3d42881..7a5a3b4d 100644
+--- a/source/src/main.cpp
++++ b/source/src/main.cpp
+@@ -1208,6 +1208,13 @@ void sanitychecks()
+ int main(int argc, char **argv)
+ {
+     DEBUGCODE(sanitychecks());
++    
++    // Initialize audio obfuscation system (pitch shift PoC)
++    // Deve essere chiamato prima di qualsiasi operazione audio
++    // Legge env vars e argv per configurazione runtime
++    extern void ac_audio_obf_init(int, char**);
++    ac_audio_obf_init(argc, argv);
++    
+     extern struct servercommandline scl;
+     #ifdef WIN32
+     //atexit((void (__cdecl *)(void))_CrtDumpMemoryLeaks);
+diff --git a/source/src/openal.cpp b/source/src/openal.cpp
+index 65e2ab77..3989dadb 100644
+--- a/source/src/openal.cpp
++++ b/source/src/openal.cpp
+@@ -1,6 +1,7 @@
+ // simple OpenAL call wrappers
+ 
+ #include "cube.h"
++#include "audio_obf.h"  // Audio obfuscation / pitch shift PoC
+ 
+ #define DEBUGCOND (audiodebug==1)
+ 
+@@ -292,6 +293,38 @@ bool sbuffer::load(bool trydl)
+                         loopi(bytes) buf.add(buffer[i]);
+                     } while(bytes > 0);
+ 
++                    // ========================================================================
++                    // HOOK: Audio Obfuscation (Pitch Shift) - OGG Path
++                    // ========================================================================
++                    // Il buffer PCM è stato decodificato da OGG ed è ora in buf.getbuf().
++                    // Formato: int16 (signed 16-bit PCM), mono o stereo interleaved.
++                    // Applichiamo pitch shift se abilitato a runtime.
++                    //
++                    // NOTA: buf.getbuf() restituisce char*, ma i dati sono int16.
++                    // buf.length() è in bytes, quindi frames = length / (2 * channels).
++                    
++                    if (ac_pitch_is_enabled())
++                    {
++                        int16_t* pcm_data = (int16_t*)buf.getbuf();
++                        int channels = info->channels;
++                        int samplerate = info->rate;
++                        int bytes_total = buf.length();
++                        int frames = bytes_total / (sizeof(int16_t) * channels);
++                        int cents = ac_pitch_cents();
++
++                        // Log prima trasformazione (solo debug)
++                        static bool first_ogg_transform = true;
++                        if (first_ogg_transform) {
++                            fprintf(stdout, "[openal.cpp] Applying pitch shift to OGG: %d frames, %d ch, %d Hz, %+d cents\n",
++                                    frames, channels, samplerate, cents);
++                            first_ogg_transform = false;
++                        }
++
++                        // Applica trasformazione in-place
++                        apply_pitch_inplace(pcm_data, frames, channels, samplerate, cents);
++                    }
++                    // ========================================================================
++
+                     alBufferData(id, info->channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16, buf.getbuf(), buf.length(), info->rate);
+                     ov_clear(&oggfile);
+                 }
+@@ -331,6 +364,34 @@ bool sbuffer::load(bool trydl)
+                         return false;
+                 }
+ 
++                // ========================================================================
++                // HOOK: Audio Obfuscation (Pitch Shift) - WAV Path
++                // ========================================================================
++                // Il buffer PCM WAV è in wavbuf, formato determinato da wavspec.format.
++                // Applichiamo pitch shift solo se formato è 16-bit (AUDIO_S16/AUDIO_U16).
++                // Per formati 8-bit (rari), skip trasformazione per semplicità PoC.
++                
++                if (ac_pitch_is_enabled() && (wavspec.format == AUDIO_S16 || wavspec.format == AUDIO_U16))
++                {
++                    int16_t* pcm_data = (int16_t*)wavbuf;
++                    int channels = wavspec.channels;
++                    int samplerate = wavspec.freq;
++                    int frames = wavlen / (sizeof(int16_t) * channels);
++                    int cents = ac_pitch_cents();
++
++                    // Log prima trasformazione (solo debug)
++                    static bool first_wav_transform = true;
++                    if (first_wav_transform) {
++                        fprintf(stdout, "[openal.cpp] Applying pitch shift to WAV: %d frames, %d ch, %d Hz, %+d cents\n",
++                                frames, channels, samplerate, cents);
++                        first_wav_transform = false;
++                    }
++
++                    // Applica trasformazione in-place
++                    apply_pitch_inplace(pcm_data, frames, channels, samplerate, cents);
++                }
++                // ========================================================================
++
+                 alBufferData(id, format, wavbuf, wavlen, wavspec.freq);
+                 SDL_FreeWAV(wavbuf);
+                 delete f;
+-- 
+2.50.1 (Apple Git-155)
+

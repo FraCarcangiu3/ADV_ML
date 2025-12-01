@@ -1,0 +1,179 @@
+=================================================================
+NEXT STEPS — Pitch Shift Client Integration
+=================================================================
+
+Aggiornato: 15 Ottobre 2024
+Branch: feat/pitch-shift-client (in AC/)
+
+-----------------------------------------------------------------
+1. COMPILAZIONE E TEST INIZIALE
+-----------------------------------------------------------------
+
+A. Build client con SoundTouch (raccomandato):
+
+   macOS (Homebrew):
+   $ brew install sound-touch libsndfile openal-soft
+   $ export SOUNDTOUCH_INC=/opt/homebrew/opt/sound-touch/include
+   $ export SOUNDTOUCH_LIB=/opt/homebrew/opt/sound-touch/lib
+   $ cd AC/source
+   $ # Aggiungi flags al Makefile (vedi INGAME_PITCH_TEST_PROCEDURE.md sezione B.3)
+   $ make clean && make -j$(sysctl -n hw.ncpu)
+
+   Linux (Debian/Ubuntu):
+   $ sudo apt install libsoundtouch-dev libsndfile1-dev libopenal-dev
+   $ cd AC/source
+   $ make clean && make -j$(nproc)
+
+B. Verifica eseguibile:
+
+   $ cd AC
+   $ ./assaultcube_client
+   # Dovrebbe avviarsi normalmente (pitch DISABLED di default)
+
+-----------------------------------------------------------------
+2. TEST IN-GAME CON PITCH ABILITATO
+-----------------------------------------------------------------
+
+Serie consigliata (ordine crescente percezione):
+
+Test 1 - Impercettibilità (target obfuscation):
+   $ AC_ANTICHEAT_PITCH_ENABLED=1 AC_ANTICHEAT_PITCH_CENTS=5 ./assaultcube_client
+   → Giocare 5-10 min, annotare: percettibile? qualità audio? lag?
+
+Test 2 - Obfuscation moderata:
+   $ ./assaultcube_client --pitch-enable --pitch-cents 10
+   → Stessa procedura
+
+Test 3 - Percettibilità limite:
+   $ ./assaultcube_client --pitch-enable --pitch-cents 20
+   → Aspettativa: leggermente percettibile su voicecom, meno su spari
+
+Test 4 - Stress test (evidentemente percettibile):
+   $ ./assaultcube_client --pitch-enable --pitch-cents 60
+   → Verifica assenza crash, artefatti, clip audio
+
+Test 5 - Shift negativo:
+   $ ./assaultcube_client --pitch-enable --pitch-cents -20
+   → Suoni più gravi (pitch down)
+
+Per CIASCUN test, compilare tabella in INGAME_PITCH_TEST_PROCEDURE.md
+sezione C.4 (evento, cents, percettibile?, qualità 1-5, note).
+
+-----------------------------------------------------------------
+3. DISABILITARE RAPIDAMENTE (per gameplay normale)
+-----------------------------------------------------------------
+
+Metodo 1 (no env vars, no args):
+   $ ./assaultcube_client
+   # Pitch shift OFF per default
+
+Metodo 2 (esplicito):
+   $ AC_ANTICHEAT_PITCH_ENABLED=0 ./assaultcube_client
+
+-----------------------------------------------------------------
+4. RACCOLTA DATI PER RELATORE/TESI
+-----------------------------------------------------------------
+
+A. Percezione soggettiva (minimo):
+   - Tabella compilata (evento, cents, percettibile?, qualità).
+   - Almeno 3 asset diversi (weapon, player, voicecom).
+   - Almeno 3 valori cents (±5, ±20, ±60).
+
+B. SNR in-game (opzionale ma consigliato):
+   - Registra audio loopback (BlackHole su macOS, PulseAudio su Linux).
+   - Estrai clip singoli eventi (shotgun, footsteps).
+   - Calcola SNR: python3 AC/tools/snrdiff.py original.wav ingame_clip.wav
+   - Aspettativa: SNR >20 dB (ambiente rumoroso in-game).
+
+C. Latency/CPU (opzionale):
+   - Strumenti: Instruments (macOS), perf (Linux).
+   - Cerca overhead in apply_pitch_inplace, sbuffer::load.
+   - Target: <5% tempo totale init.
+
+D. Log e screenshot:
+   - Salva log startup (conferma pitch enabled, cents).
+   - Screenshot in-game (dimostra funzionamento).
+
+-----------------------------------------------------------------
+5. REPORT MINIMO AL RELATORE
+-----------------------------------------------------------------
+
+Elementi essenziali:
+
+✓ Tabella percezione soggettiva (come in sezione C.4 INGAME_PITCH_TEST_PROCEDURE.md)
+✓ Almeno 1 valore SNR (se hai registrato audio)
+✓ Breve paragrafo osservazioni (2-3 frasi):
+  - "Shift ±5 cents impercettibile in contesto di gioco."
+  - "Shift ±20 cents leggermente percettibile su voicecom."
+  - "Nessun crash, artefatto, o lag percepibile."
+
+✓ File allegati (se richiesti):
+  - patch_pitch_client.diff (in .cursor-output/)
+  - Clip audio registrato (1-2 file WAV, ~30s ciascuno)
+
+-----------------------------------------------------------------
+6. TROUBLESHOOTING RAPIDO
+-----------------------------------------------------------------
+
+Problema: "libSoundTouch not found" al runtime
+Soluzione: export DYLD_LIBRARY_PATH=/opt/homebrew/opt/sound-touch/lib:$DYLD_LIBRARY_PATH
+
+Problema: Audio rumoroso/clip
+Soluzione: Ridurre cents a ±5-10, verificare clamp in audio_obf.cpp
+
+Problema: Nessuna differenza percettibile anche con +60 cents
+Soluzione: Verificare log startup mostra "[audio_obf] Pitch shift ENABLED"
+           Se NO → ricompilare, verificare hook in openal.cpp
+
+Problema: Crash al caricamento asset
+Soluzione: Eseguire con debugger (lldb/gdb), backtrace, verificare try/catch
+
+Per dettagli: vedi INGAME_PITCH_TEST_PROCEDURE.md sezione E (Troubleshooting).
+
+-----------------------------------------------------------------
+7. FILE GENERATI E DOCUMENTAZIONE
+-----------------------------------------------------------------
+
+Codice sorgente:
+  AC/source/src/audio_obf.h        (85 righe, API pubblica)
+  AC/source/src/audio_obf.cpp      (260 righe, implementazione SoundTouch + fallback)
+  AC/source/src/openal.cpp         (modificato: hook OGG/WAV linee 296-393)
+  AC/source/src/main.cpp           (modificato: init linee 1212-1216)
+
+Patch:
+  .cursor-output/patch_pitch_client.diff   (diff Git unified)
+  .cursor-output/patch_pitch_client.patch  (format-patch, applicabile con git am)
+
+Documentazione:
+  PROJECT_FULL_LOG.md              (aggiornato: sezione 12 Client Integration)
+  INGAME_PITCH_TEST_PROCEDURE.md   (nuovo: guida completa test in-game)
+  OFFLINE_PITCH_TEST_PROCEDURE.md  (esistente: test offline baseline)
+
+Report:
+  .cursor-output/NEXT_STEPS.txt    (questo file)
+
+-----------------------------------------------------------------
+8. COSA FARE DOPO I TEST
+-----------------------------------------------------------------
+
+Quando hai completato i test (sezione 2-4):
+
+A. Aggiorna PROJECT_FULL_LOG.md sezione "Risultati preliminari" con:
+   - Tabella percezione compilata
+   - Valori SNR misurati (se disponibili)
+   - Breve paragrafo osservazioni
+
+B. (Opzionale) Merge branch:
+   $ cd AC
+   $ git checkout main  # o branch di sviluppo principale
+   $ git merge feat/pitch-shift-client
+   # SOLO SE test positivi e approvazione relatore
+
+C. (Opzionale) Disabilita pitch per gameplay normale:
+   - Rimuovi env vars da .bashrc/.zshrc
+   - Ricompila senza -DHAVE_SOUNDTOUCH se vuoi build "pulita"
+
+=================================================================
+FINE
+=================================================================
+

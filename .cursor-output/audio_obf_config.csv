@@ -1,0 +1,31 @@
+# Audio Obfuscation Configuration File
+# Format: file_name,min_pitch,max_pitch,noise_type,noise_snr_db,min_freq,max_freq
+#
+# file_name: Path relativo in packages/audio/ (es. weapon/shotgun.ogg)
+# min_pitch, max_pitch: Range pitch shift in cents (100 cents = 1 semitono)
+# noise_type: "none", "white", "pink", "tone"
+# noise_snr_db: Target SNR in dB (solo se noise_type != none)
+# min_freq, max_freq: Range frequenza tono in Hz (solo se noise_type = tone)
+#
+# Note: Campi vuoti = non usati. Step 2 usa midpoint deterministico.
+
+# Weapon sounds - percussivi brevi
+weapon/shotgun.ogg,-10,10,white,30,,
+weapon/pistol.ogg,-15,15,none,,,
+weapon/subgun.ogg,-20,20,white,35,,
+
+# Player sounds - footsteps, pain, jump
+player/footsteps.ogg,-5,15,tone,35,9000,12000
+player/pain1.ogg,-10,10,white,32,,
+player/jump.ogg,-8,8,none,,,
+
+# Voicecom - voce umana (più sensibile)
+voicecom/affirmative.ogg,-10,20,none,,,
+voicecom/negative.ogg,-15,15,white,38,,
+voicecom/thanks.ogg,-10,10,none,,,
+
+# Ambient sounds
+ambience/wind.ogg,0,0,white,45,,
+misc/itemspawn.ogg,-5,5,tone,33,11000,13000
+
+weapon/auto.ogg,-15,30,white,35,,

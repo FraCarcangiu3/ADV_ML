@@ -1,0 +1,4 @@
+source=AC/packages/audio/weapon/auto.ogg
+output=auto_eq_tilt_p1dB.wav
+type=eq_tilt
+seed=2087385967

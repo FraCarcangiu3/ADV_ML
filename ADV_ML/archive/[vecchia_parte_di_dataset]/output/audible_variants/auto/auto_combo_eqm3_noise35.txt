@@ -1,0 +1,4 @@
+source=AC/packages/audio/weapon/auto.ogg
+output=auto_combo_eqm3_noise35.wav
+type=combo
+seed=1939175896

@@ -1,0 +1,4 @@
+source=AC/packages/audio/weapon/auto.ogg
+output=auto_noise_snr40.wav
+type=noise_white
+seed=1063486115

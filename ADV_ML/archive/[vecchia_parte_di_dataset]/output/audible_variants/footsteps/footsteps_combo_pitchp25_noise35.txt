@@ -1,0 +1,4 @@
+source=AC/packages/audio/player/footsteps.ogg
+output=footsteps_combo_pitchp25_noise35.wav
+type=combo
+seed=1450688178

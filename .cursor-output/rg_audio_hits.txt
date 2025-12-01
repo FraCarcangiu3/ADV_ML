@@ -1,0 +1,1283 @@
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/include/AL/al.h:225: * Source is Streaming if one or more Buffers have been attached using alSourceQueueBuffers
+L221:
+L222:/*
+L223: * Source type (Static, Streaming or undetermined)
+L224: * Source is Static if a Buffer has been attached using AL_BUFFER
+L225: * Source is Streaming if one or more Buffers have been attached using alSourceQueueBuffers
+L226: * Source is undetermined when it has the NULL buffer attached
+L227: */
+L228:#define AL_SOURCE_TYPE                            0x1027
+L229:#define AL_STATIC                                 0x1028
+L230:#define AL_STREAMING                              0x1029
+L231:#define AL_UNDETERMINED                           0x1030
+L232:
+L233:/** Sound samples: format specifier. */
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/include/AL/al.h:543: AL_API void AL_APIENTRY alSourcePlayv( ALsizei ns, const ALuint *sids );
+L539: * Source vector based playback calls
+L540: */
+L541:
+L542:/* Play, replay, or resume (if paused) a list of Sources */
+L543:AL_API void AL_APIENTRY alSourcePlayv( ALsizei ns, const ALuint *sids );
+L544:
+L545:/* Stop a list of Sources */
+L546:AL_API void AL_APIENTRY alSourceStopv( ALsizei ns, const ALuint *sids );
+L547:
+L548:/* Rewind a list of Sources */
+L549:AL_API void AL_APIENTRY alSourceRewindv( ALsizei ns, const ALuint *sids );
+L550:
+L551:/* Pause a list of Sources */
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/include/AL/al.h:559: AL_API void AL_APIENTRY alSourcePlay( ALuint sid );
+L555: * Source based playback calls
+L556: */
+L557:
+L558:/* Play, replay, or resume a Source */
+L559:AL_API void AL_APIENTRY alSourcePlay( ALuint sid );
+L560:
+L561:/* Stop a Source */
+L562:AL_API void AL_APIENTRY alSourceStop( ALuint sid );
+L563:
+L564:/* Rewind a Source (set playback postiton to beginning) */
+L565:AL_API void AL_APIENTRY alSourceRewind( ALuint sid );
+L566:
+L567:/* Pause a Source */
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/include/AL/al.h:573: AL_API void AL_APIENTRY alSourceQueueBuffers( ALuint sid, ALsizei numEntries, const ALuint *bids );
+L569:
+L570:/*
+L571: * Source Queuing 
+L572: */
+L573:AL_API void AL_APIENTRY alSourceQueueBuffers( ALuint sid, ALsizei numEntries, const ALuint *bids );
+L574:
+L575:AL_API void AL_APIENTRY alSourceUnqueueBuffers( ALuint sid, ALsizei numEntries, ALuint *bids );
+L576:
+L577:
+L578:/**
+L579: * BUFFER
+L580: * Buffer objects are storage space for sample data.
+L581: * Buffers are referred to by Sources. One Buffer can be used
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/include/AL/al.h:602: AL_API void AL_APIENTRY alBufferData( ALuint bid, ALenum format, const ALvoid* data, ALsizei size, ALsizei freq );
+L598:/* Verify a handle is a valid Buffer */
+L599:AL_API ALboolean AL_APIENTRY alIsBuffer( ALuint bid );
+L600:
+L601:/* Specify the data to be copied into a buffer */
+L602:AL_API void AL_APIENTRY alBufferData( ALuint bid, ALenum format, const ALvoid* data, ALsizei size, ALsizei freq );
+L603:
+L604:/*
+L605: * Set Buffer parameters
+L606: */
+L607:AL_API void AL_APIENTRY alBufferf( ALuint bid, ALenum param, ALfloat value );
+L608:
+L609:AL_API void AL_APIENTRY alBuffer3f( ALuint bid, ALenum param, ALfloat value1, ALfloat value2, ALfloat value3 );
+L610:
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/include/AL/xram.h:69: // alBufferData(...);
+L65://
+L66:// ALuint uiBuffer;
+L67:// alGenBuffers(1, &uiBuffer);
+L68:// eaxSetBufferMode(1, &uiBuffer, alGetEnumValue("AL_STORAGE_HARDWARE"));
+L69:// alBufferData(...);
+L70://
+L71://////////////////////////////////////////////////////////////////////////////
+L72:
+L73:
+L74://////////////////////////////////////////////////////////////////////////////
+L75:// Force an Open AL Buffer into 'accessible' (currently host) RAM (good for streaming buffers)
+L76://
+L77:// ALuint uiBuffer;
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/include/AL/xram.h:80: // alBufferData(...);
+L76://
+L77:// ALuint uiBuffer;
+L78:// alGenBuffers(1, &uiBuffer);
+L79:// eaxSetBufferMode(1, &uiBuffer, alGetEnumValue("AL_STORAGE_ACCESSIBLE"));
+L80:// alBufferData(...);
+L81://
+L82://////////////////////////////////////////////////////////////////////////////
+L83:
+L84:
+L85://////////////////////////////////////////////////////////////////////////////
+L86:// Put an Open AL Buffer into X-RAM if memory is available, otherwise use
+L87:// host RAM.  This is the default mode.
+L88://
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/include/AL/xram.h:92: // alBufferData(...);
+L88://
+L89:// ALuint uiBuffer;
+L90:// alGenBuffers(1, &uiBuffer);
+L91:// eaxSetBufferMode(1, &uiBuffer, alGetEnumValue("AL_STORAGE_AUTOMATIC"));
+L92:// alBufferData(...);
+L93://
+L94://////////////////////////////////////////////////////////////////////////////
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/sound.h:438: location *_playsound(int n, const worldobjreference &r, int priority, float offset = 0.0f, bool loop = false);
+L434:    void musicfadeout(int id);
+L435:    void setmusicvol(int musicvol);
+L436:
+L437:    // sound handling
+L438:    location *_playsound(int n, const worldobjreference &r, int priority, float offset = 0.0f, bool loop = false);
+L439:    void playsound(int n, int priority = SP_NORMAL);
+L440:    void playsound(int n, class physent *p, int priority = SP_NORMAL);
+L441:    void playsound(int n, struct entity *e, int priority = SP_NORMAL);
+L442:    void playsound(int n, const vec *v, int priority = SP_NORMAL);
+L443:    void playsoundname(char *s, const vec *loc, int vol);
+L444:    void playsoundc(int n, physent *p = NULL, int priority = SP_NORMAL);
+L445:    void sound(int n);
+L446:    int findsound(const char *name, int vol, vector<soundconfig> &sounds);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/sound.h:439: void playsound(int n, int priority = SP_NORMAL);
+L435:    void setmusicvol(int musicvol);
+L436:
+L437:    // sound handling
+L438:    location *_playsound(int n, const worldobjreference &r, int priority, float offset = 0.0f, bool loop = false);
+L439:    void playsound(int n, int priority = SP_NORMAL);
+L440:    void playsound(int n, class physent *p, int priority = SP_NORMAL);
+L441:    void playsound(int n, struct entity *e, int priority = SP_NORMAL);
+L442:    void playsound(int n, const vec *v, int priority = SP_NORMAL);
+L443:    void playsoundname(char *s, const vec *loc, int vol);
+L444:    void playsoundc(int n, physent *p = NULL, int priority = SP_NORMAL);
+L445:    void sound(int n);
+L446:    int findsound(const char *name, int vol, vector<soundconfig> &sounds);
+L447:    void detachsounds(class playerent *owner);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/sound.h:440: void playsound(int n, class physent *p, int priority = SP_NORMAL);
+L436:
+L437:    // sound handling
+L438:    location *_playsound(int n, const worldobjreference &r, int priority, float offset = 0.0f, bool loop = false);
+L439:    void playsound(int n, int priority = SP_NORMAL);
+L440:    void playsound(int n, class physent *p, int priority = SP_NORMAL);
+L441:    void playsound(int n, struct entity *e, int priority = SP_NORMAL);
+L442:    void playsound(int n, const vec *v, int priority = SP_NORMAL);
+L443:    void playsoundname(char *s, const vec *loc, int vol);
+L444:    void playsoundc(int n, physent *p = NULL, int priority = SP_NORMAL);
+L445:    void sound(int n);
+L446:    int findsound(const char *name, int vol, vector<soundconfig> &sounds);
+L447:    void detachsounds(class playerent *owner);
+L448:
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/sound.h:441: void playsound(int n, struct entity *e, int priority = SP_NORMAL);
+L437:    // sound handling
+L438:    location *_playsound(int n, const worldobjreference &r, int priority, float offset = 0.0f, bool loop = false);
+L439:    void playsound(int n, int priority = SP_NORMAL);
+L440:    void playsound(int n, class physent *p, int priority = SP_NORMAL);
+L441:    void playsound(int n, struct entity *e, int priority = SP_NORMAL);
+L442:    void playsound(int n, const vec *v, int priority = SP_NORMAL);
+L443:    void playsoundname(char *s, const vec *loc, int vol);
+L444:    void playsoundc(int n, physent *p = NULL, int priority = SP_NORMAL);
+L445:    void sound(int n);
+L446:    int findsound(const char *name, int vol, vector<soundconfig> &sounds);
+L447:    void detachsounds(class playerent *owner);
+L448:
+L449:    // update
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/sound.h:442: void playsound(int n, const vec *v, int priority = SP_NORMAL);
+L438:    location *_playsound(int n, const worldobjreference &r, int priority, float offset = 0.0f, bool loop = false);
+L439:    void playsound(int n, int priority = SP_NORMAL);
+L440:    void playsound(int n, class physent *p, int priority = SP_NORMAL);
+L441:    void playsound(int n, struct entity *e, int priority = SP_NORMAL);
+L442:    void playsound(int n, const vec *v, int priority = SP_NORMAL);
+L443:    void playsoundname(char *s, const vec *loc, int vol);
+L444:    void playsoundc(int n, physent *p = NULL, int priority = SP_NORMAL);
+L445:    void sound(int n);
+L446:    int findsound(const char *name, int vol, vector<soundconfig> &sounds);
+L447:    void detachsounds(class playerent *owner);
+L448:
+L449:    // update
+L450:    void updateplayerfootsteps(class playerent *p);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/menus.cpp:114: audiomgr.playsound(S_MENUSELECT, SP_HIGHEST);
+L110:            if(sel!=oldsel)
+L111:            {
+L112:                if(m.items.inrange(oldsel)) m.items[oldsel]->focus(false);
+L113:                if(!m.items[sel]->greyedout) m.items[sel]->focus(true);
+L114:                audiomgr.playsound(S_MENUSELECT, SP_HIGHEST);
+L115:                if(m.persistentselection)
+L116:                {
+L117:                    defformatstring(val)("%d", sel);
+L118:                    alias(persistentmenuselectionalias(m.name), val);
+L119:                }
+L120:            }
+L121:        }
+L122:    }
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/menus.cpp:1250: if(!m.greyedout && m.select() != -1) audiomgr.playsound(S_MENUENTER, SP_HIGHEST);
+L1246:        if(!curmenu->allowinput || !curmenu->items.inrange(menusel)) return false;
+L1247:        mitem &m = *curmenu->items[menusel];
+L1248:        if(code==SDLK_RETURN || code==SDLK_KP_ENTER || code==SDLK_SPACE || code==SDL_AC_BUTTON_LEFT || code==SDL_AC_BUTTON_MIDDLE)
+L1249:        {
+L1250:            if(!m.greyedout && m.select() != -1) audiomgr.playsound(S_MENUENTER, SP_HIGHEST);
+L1251:            return true;
+L1252:        }
+L1253:        return false;
+L1254:    }
+L1255:}
+L1256:
+L1257:void rendermenumdl()
+L1258:{
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/weapon.cpp:621: audiomgr.playsound(S_PAIN6, SP_HIGH);
+L617:            d->damageroll(damage);
+L618:            if(d != at) updatedmgindicator(player1, at->o);
+L619:            damageblend(damage, d);
+L620:            damageeffect(damage, d);
+L621:            audiomgr.playsound(S_PAIN6, SP_HIGH);
+L622:        }
+L623:        else
+L624:        {
+L625:            h.dir = ivec(int(vel.x*DNF), int(vel.y*DNF), int(vel.z*DNF));
+L626://             damageeffect(damage, d);
+L627://             audiomgr.playsound(S_PAIN1+rnd(5), d);
+L628:        }
+L629:    }
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/weapon.cpp:627: //             audiomgr.playsound(S_PAIN1+rnd(5), d);
+L623:        else
+L624:        {
+L625:            h.dir = ivec(int(vel.x*DNF), int(vel.y*DNF), int(vel.z*DNF));
+L626://             damageeffect(damage, d);
+L627://             audiomgr.playsound(S_PAIN1+rnd(5), d);
+L628:        }
+L629:    }
+L630:}
+L631:
+L632:void hitpush(int damage, playerent *d, playerent *at, vec &from, vec &to, int gun, bool gib, int info)
+L633:{
+L634:    vec v(to);
+L635:    v.sub(from);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/weapon.cpp:736: audiomgr.playsound(S_GIB, d);
+L732:
+L733:void addgib(playerent *d)
+L734:{
+L735:    if(!d || !gib || !gibttl) return;
+L736:    audiomgr.playsound(S_GIB, d);
+L737:    d->nocorpse = true; // don't render regular corpse: it was gibbed
+L738:
+L739:    loopi(gibnum)
+L740:    {
+L741:        bounceent *p = bounceents.add(new bounceent);
+L742:        p->owner = d;
+L743:        p->millis = lastmillis;
+L744:        p->timetolive = gibttl+rnd(10)*100;
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/weapon.cpp:965: audiomgr.playsound(info.sound, owner, local ? SP_HIGH : SP_NORMAL);
+L961:void weapon::attacksound()
+L962:{
+L963:    if(info.sound == S_NULL) return;
+L964:    bool local = (owner == player1);
+L965:    audiomgr.playsound(info.sound, owner, local ? SP_HIGH : SP_NORMAL);
+L966:}
+L967:
+L968:bool weapon::reload(bool autoreloaded)
+L969:{
+L970:    if(mag>=info.magsize || ammo<=0) return false;
+L971:    updatelastaction(owner);
+L972:    reloading = lastmillis;
+L973:    gunwait += info.reloadtime;
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/weapon.cpp:980: if(info.reload != S_NULL) audiomgr.playsound(info.reload, owner, local ? SP_HIGH : SP_NORMAL);
+L976:    mag += numbullets;
+L977:    ammo -= numbullets;
+L978:
+L979:    bool local = (player1 == owner);
+L980:    if(info.reload != S_NULL) audiomgr.playsound(info.reload, owner, local ? SP_HIGH : SP_NORMAL);
+L981:    if(local)
+L982:    {
+L983:        addmsg(SV_RELOAD, "ri2", lastmillis, owner->weaponsel->type);
+L984:        exechook(HOOK_SP, "onReload", "%d", (int)autoreloaded);
+L985:    }
+L986:    return true;
+L987:}
+L988:
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/weapon.cpp:1067: if(sound) audiomgr.playsound(S_GUNCHANGE, owner, local ? SP_HIGH : SP_NORMAL);
+L1063:void weapon::onselecting(bool sound)
+L1064:{
+L1065:    updatelastaction(owner);
+L1066:    bool local = (owner == player1);
+L1067:    if(sound) audiomgr.playsound(S_GUNCHANGE, owner, local ? SP_HIGH : SP_NORMAL);
+L1068:}
+L1069:
+L1070:void weapon::renderhudmodel() { renderhudmodel(owner->lastaction); }
+L1071:void weapon::renderaimhelp(bool teamwarning)
+L1072:{
+L1073:    if(!editmode) drawcrosshair(owner, teamwarning ? CROSSHAIR_TEAMMATE : owner->weaponsel->type);
+L1074:    else drawcrosshair(owner, CROSSHAIR_EDIT);
+L1075:}
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/weapon.cpp:1130: audiomgr.playsound(S_FEXPLODE, &o);
+L1126:    hits.setsize(0);
+L1127:    splash();
+L1128:    if(local)
+L1129:        addmsg(SV_EXPLODE, "ri3iv", lastmillis, GUN_GRENADE, millis, hits.length(), hits.length()*sizeof(hitmsg)/sizeof(int), hits.getbuf());
+L1130:    audiomgr.playsound(S_FEXPLODE, &o);
+L1131:    if(((grenades *)owner->weapons[GUN_GRENADE])->state == GST_NONE) owner->weapons[GUN_GRENADE]->reset();
+L1132:}
+L1133:
+L1134:void grenadeent::splash()
+L1135:{
+L1136:    particle_splash(PART_SPARK, 50, 300, o);
+L1137:    particle_fireball(PART_FIREBALL, o);
+L1138:    addscorchmark(o);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/weapon.cpp:1165: audiomgr.playsound(S_GRENADEPULL, SP_HIGH);
+L1161:
+L1162:    if(local)
+L1163:    {
+L1164:        addmsg(SV_SHOOT, "ri2i3i", millis, owner->weaponsel->type, (int)(vel.x*DMF), (int)(vel.y*DMF), (int)(vel.z*DMF), 0); // server reads all weapons with DMF precision
+L1165:        audiomgr.playsound(S_GRENADEPULL, SP_HIGH);
+L1166:        player1->pstatshots[GUN_GRENADE]++;
+L1167:    }
+L1168:}
+L1169:
+L1170:void grenadeent::_throw(const vec &from, const vec &vel)
+L1171:{
+L1172:    if(nadestate!=NS_ACTIVATED) return;
+L1173:    nadestate = NS_THROWN;
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/weapon.cpp:1181: audiomgr.playsound(S_GRENADETHROW, SP_HIGH);
+L1177:    inwater = waterlevel > o.z;
+L1178:    if(local)
+L1179:    {
+L1180:        addmsg(SV_THROWNADE, "ri7", int(o.x*DNF), int(o.y*DNF), int(o.z*DNF), int(vel.x*DNF), int(vel.y*DNF), int(vel.z*DNF), lastmillis-millis);
+L1181:        audiomgr.playsound(S_GRENADETHROW, SP_HIGH);
+L1182:    }
+L1183:    else audiomgr.playsound(S_GRENADETHROW, owner);
+L1184:}
+L1185:
+L1186:void grenadeent::moveoutsidebbox(const vec &direction, playerent *boundingbox)
+L1187:{
+L1188:    vel = direction;
+L1189:    o = boundingbox->o;
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/weapon.cpp:1183: else audiomgr.playsound(S_GRENADETHROW, owner);
+L1179:    {
+L1180:        addmsg(SV_THROWNADE, "ri7", int(o.x*DNF), int(o.y*DNF), int(o.z*DNF), int(vel.x*DNF), int(vel.y*DNF), int(vel.z*DNF), lastmillis-millis);
+L1181:        audiomgr.playsound(S_GRENADETHROW, SP_HIGH);
+L1182:    }
+L1183:    else audiomgr.playsound(S_GRENADETHROW, owner);
+L1184:}
+L1185:
+L1186:void grenadeent::moveoutsidebbox(const vec &direction, playerent *boundingbox)
+L1187:{
+L1188:    vel = direction;
+L1189:    o = boundingbox->o;
+L1190:    inwater = waterlevel > o.z;
+L1191:
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/weapon.cpp:1202: if(distsincebounce>=1.5f) audiomgr.playsound(rnd(2) ? S_GRENADEBOUNCE1 : S_GRENADEBOUNCE2, &o);
+L1198:bool grenadeent::applyphysics() { return nadestate==NS_THROWN; }
+L1199:
+L1200:void grenadeent::oncollision()
+L1201:{
+L1202:    if(distsincebounce>=1.5f) audiomgr.playsound(rnd(2) ? S_GRENADEBOUNCE1 : S_GRENADEBOUNCE2, &o);
+L1203:    distsincebounce = 0.0f;
+L1204:}
+L1205:
+L1206:void grenadeent::onmoved(const vec &dist)
+L1207:{
+L1208:    distsincebounce += dist.magnitude();
+L1209:}
+L1210:
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/weapon.cpp:1268: audiomgr.playsound(S_GRENADEPULL, owner);
+L1264:    cookingmillis = millis;
+L1265:    if(millis == 0 || millis == -1)
+L1266:    {
+L1267:        state = GST_INHAND;
+L1268:        audiomgr.playsound(S_GRENADEPULL, owner);
+L1269:    }
+L1270:    else if(millis > 0) // throw
+L1271:    {
+L1272:        grenadeent *g = new grenadeent(owner, millis);
+L1273:        state = GST_THROWING;
+L1274:        bounceents.add(g);
+L1275:        g->_throw(from, vel);
+L1276:    }
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/weapon.cpp:1358: if(sound) audiomgr.playsound(S_GUNCHANGE, owner, local ? SP_HIGH : SP_NORMAL);
+L1354:{
+L1355:    reset();
+L1356:    updatelastaction(owner);
+L1357:    bool local = (owner == player1);
+L1358:    if(sound) audiomgr.playsound(S_GUNCHANGE, owner, local ? SP_HIGH : SP_NORMAL);
+L1359:}
+L1360:
+L1361:void grenades::onownerdies()
+L1362:{
+L1363:    reset();
+L1364:    if(owner==player1 && inhandnade) dropnade();
+L1365:}
+L1366:
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/weapon.cpp:1394: audiomgr.playsound(S_NOAMMO, owner, local ? SP_HIGH : SP_NORMAL);
+L1390:    updatelastaction(owner, attackmillis);
+L1391:    if(!mag)
+L1392:    {
+L1393:        bool local = (owner == player1);
+L1394:        audiomgr.playsound(S_NOAMMO, owner, local ? SP_HIGH : SP_NORMAL);
+L1395:        gunwait += 250;
+L1396:        owner->lastattackweapon = NULL;
+L1397:        shots = 0;
+L1398:        checkautoreload();
+L1399:        return false;
+L1400:    }
+L1401:
+L1402:    owner->lastattackweapon = this;
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/weapon.cpp:1749: if(!isdeadorspect) audiomgr.playsoundc(S_AKIMBOOUT);
+L1745:                    default: break;
+L1746:                */
+L1747:                }
+L1748:            }
+L1749:            if(!isdeadorspect) audiomgr.playsoundc(S_AKIMBOOUT);
+L1750:        }
+L1751:    }
+L1752:}
+L1753:
+L1754:void checkweaponstate()
+L1755:{
+L1756:    checkweaponswitch();
+L1757:    checkakimbo();
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/oggstream.cpp:174: alBufferData(bufid, format, pcm, size, info->rate);
+L170:            else return false;
+L171:        }
+L172:
+L173:        alclearerr();
+L174:        alBufferData(bufid, format, pcm, size, info->rate);
+L175:        return !ALERR;
+L176:    }
+L177:
+L178:    return false;
+L179:}
+L180:
+L181:bool oggstream::update()
+L182:{
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/oggstream.cpp:195: if(active) alSourceQueueBuffers(src->id, 1, &buffer);
+L191:    {
+L192:        ALuint buffer;
+L193:        alSourceUnqueueBuffers(src->id, 1, &buffer);
+L194:        active = stream(buffer);
+L195:        if(active) alSourceQueueBuffers(src->id, 1, &buffer);
+L196:    }
+L197:
+L198:    if(active)
+L199:    {
+L200:        // fade in
+L201:        if(startmillis > 0)
+L202:        {
+L203:            const float start = (lastmillis-startmillis)/(float)startfademillis;
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/entities.cpp:369: audiomgr.playsoundc(is->sound);
+L365:    if(is)
+L366:    {
+L367:        if(d==player1)
+L368:        {
+L369:            audiomgr.playsoundc(is->sound);
+L370:            if(identexists("onPickup"))
+L371:            {
+L372:                // onPickup arg1: 0: clips, ammo box, 2: grenade, health, 4: helmet, armour, 6: akimbo
+L373:                if(is) exechook(HOOK_SP, "onPickup", "%d %d", e.type - 3, m_lss && e.type == I_GRENADE ? 2 : is->add);
+L374:            }
+L375:        }
+L376:        else audiomgr.playsound(is->sound, d);
+L377:    }
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/entities.cpp:376: else audiomgr.playsound(is->sound, d);
+L372:                // onPickup arg1: 0: clips, ammo box, 2: grenade, health, 4: helmet, armour, 6: akimbo
+L373:                if(is) exechook(HOOK_SP, "onPickup", "%d %d", e.type - 3, m_lss && e.type == I_GRENADE ? 2 : is->add);
+L374:            }
+L375:        }
+L376:        else audiomgr.playsound(is->sound, d);
+L377:    }
+L378:
+L379:    weapon *w = NULL;
+L380:    switch(e.type)
+L381:    {
+L382:        case I_AKIMBO: w = d->weapons[GUN_AKIMBO]; break;
+L383:        case I_CLIPS: w = d->weapons[GUN_PISTOL]; break;
+L384:        case I_AMMO: w = d->primweap; break;
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clientgame.cpp:913: if( (hitsound == 1 || (hitsound && h != player1) ) && lasthit != lastmillis) audiomgr.playsound(S_HITSOUND, SP_HIGHEST);
+L909:    exechook(HOOK_SP, "onHit", "%d %d %d %d %d", actor->clientnum, pl->clientnum, damage, gun, gib ? 1 : 0);
+L910:
+L911:    if(actor==h && pl!=actor)
+L912:    {
+L913:        if( (hitsound == 1 || (hitsound && h != player1) ) && lasthit != lastmillis) audiomgr.playsound(S_HITSOUND, SP_HIGHEST);
+L914:        lasthit = lastmillis;
+L915:    }
+L916:
+L917:    if (pl != player1)
+L918:    {
+L919:        damageeffect(damage, pl);
+L920:        audiomgr.playsound(S_PAIN1+rnd(5), pl);
+L921:    }
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clientgame.cpp:920: audiomgr.playsound(S_PAIN1+rnd(5), pl);
+L916:
+L917:    if (pl != player1)
+L918:    {
+L919:        damageeffect(damage, pl);
+L920:        audiomgr.playsound(S_PAIN1+rnd(5), pl);
+L921:    }
+L922:
+L923:    if(local) damage = pl->dodamage(damage, gun);
+L924:    else if(actor==player1) return;
+L925:
+L926:    if(pl == h)
+L927:    {
+L928:        if(pl != actor) updatedmgindicator(pl, actor->o);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clientgame.cpp:934: else if(pl==player1) audiomgr.playsound(S_PAIN6, SP_HIGH);
+L930:        pl->damageroll(damage);
+L931:    }
+L932:
+L933:    if(pl->health<=0) { if(local) dokill(pl, actor, gib, gun >= 0 ? gun : actor->weaponsel->type); }
+L934:    else if(pl==player1) audiomgr.playsound(S_PAIN6, SP_HIGH);
+L935:    else audiomgr.playsound(S_PAIN1+rnd(5), pl);
+L936:}
+L937:
+L938:void dokill(playerent *pl, playerent *act, bool gib, int gun)
+L939:{
+L940:    if(pl->state!=CS_ALIVE || intermission) return;
+L941:
+L942:    exechook(HOOK_SP, "onKill", "%d %d %d %d", act->clientnum, pl->clientnum, gun, gib ? 1 : 0);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clientgame.cpp:935: else audiomgr.playsound(S_PAIN1+rnd(5), pl);
+L931:    }
+L932:
+L933:    if(pl->health<=0) { if(local) dokill(pl, actor, gib, gun >= 0 ? gun : actor->weaponsel->type); }
+L934:    else if(pl==player1) audiomgr.playsound(S_PAIN6, SP_HIGH);
+L935:    else audiomgr.playsound(S_PAIN1+rnd(5), pl);
+L936:}
+L937:
+L938:void dokill(playerent *pl, playerent *act, bool gib, int gun)
+L939:{
+L940:    if(pl->state!=CS_ALIVE || intermission) return;
+L941:
+L942:    exechook(HOOK_SP, "onKill", "%d %d %d %d", act->clientnum, pl->clientnum, gun, gib ? 1 : 0);
+L943:
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clientgame.cpp:973: if(pl!=act && gun == GUN_SNIPER) audiomgr.playsound(S_HEADSHOT, SP_LOW);
+L969:    else if(!m_mp(gamemode)) act->frags += ( gib && gun != GUN_GRENADE && gun != GUN_SHOTGUN) ? 2 : 1;
+L970:
+L971:    if(gib)
+L972:    {
+L973:        if(pl!=act && gun == GUN_SNIPER) audiomgr.playsound(S_HEADSHOT, SP_LOW);
+L974:        addgib(pl);
+L975:    }
+L976:
+L977:    deathstate(pl);
+L978:    pl->deaths++;
+L979:    audiomgr.playsound(rnd(2) ? S_DIE1 : S_DIE2, pl);
+L980:}
+L981:
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clientgame.cpp:979: audiomgr.playsound(rnd(2) ? S_DIE1 : S_DIE2, pl);
+L975:    }
+L976:
+L977:    deathstate(pl);
+L978:    pl->deaths++;
+L979:    audiomgr.playsound(rnd(2) ? S_DIE1 : S_DIE2, pl);
+L980:}
+L981:
+L982:void pstat_weap(int *cn)
+L983:{
+L984:    string weapstring = "";
+L985:    playerent *pl = getclient(*cn);
+L986:    if(pl) loopi(NUMGUNS) concatformatstring(weapstring, "%s%d %d", strlen(weapstring) ? " " : "", pl->pstatshots[i], pl->pstatdamage[i]);
+L987:    result(weapstring);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clientgame.cpp:1249: audiomgr.playsound(S_FLAGPICKUP, SP_HIGHEST);
+L1245:
+L1246:    switch(message)
+L1247:    {
+L1248:        case FM_PICKUP:
+L1249:            audiomgr.playsound(S_FLAGPICKUP, SP_HIGHEST);
+L1250:            if(firstperson)
+L1251:            {
+L1252:                hudoutf("\f2you have the %sflag", m_ctf ? "enemy " : "");
+L1253:                audiomgr.musicsuggest(M_FLAGGRAB, m_ctf ? 90*1000 : 900*1000, true);
+L1254:                musicplaying = flag;
+L1255:            }
+L1256:            else hudoutf("\f2%s%s has %s flag", flagteam, colorname(act), teamstr);
+L1257:            break;
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clientgame.cpp:1263: audiomgr.playsound(S_FLAGDROP, SP_HIGHEST);
+L1259:        case FM_LOST:
+L1260:        case FM_DROP:
+L1261:        {
+L1262:            const char *droplost = message == FM_LOST ? "lost" : "dropped";
+L1263:            audiomgr.playsound(S_FLAGDROP, SP_HIGHEST);
+L1264:            if(firstperson)
+L1265:            {
+L1266:                hudoutf("\f2you %s the flag", droplost);
+L1267:                firstpersondrop = true;
+L1268:            }
+L1269:            else hudoutf("\f2%s %s %s flag", colorname(act), droplost, teamstr);
+L1270:            break;
+L1271:        }
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clientgame.cpp:1273: audiomgr.playsound(S_FLAGRETURN, SP_HIGHEST);
+L1269:            else hudoutf("\f2%s %s %s flag", colorname(act), droplost, teamstr);
+L1270:            break;
+L1271:        }
+L1272:        case FM_RETURN:
+L1273:            audiomgr.playsound(S_FLAGRETURN, SP_HIGHEST);
+L1274:            if(firstperson) hudoutf("\f2you returned your flag");
+L1275:            else hudoutf("\f2%s returned %s flag", colorname(act), teamstr);
+L1276:            break;
+L1277:
+L1278:        case FM_SCORE:
+L1279:            audiomgr.playsound(S_FLAGSCORE, SP_HIGHEST);
+L1280:            if(firstperson)
+L1281:            {
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clientgame.cpp:1279: audiomgr.playsound(S_FLAGSCORE, SP_HIGHEST);
+L1275:            else hudoutf("\f2%s returned %s flag", colorname(act), teamstr);
+L1276:            break;
+L1277:
+L1278:        case FM_SCORE:
+L1279:            audiomgr.playsound(S_FLAGSCORE, SP_HIGHEST);
+L1280:            if(firstperson)
+L1281:            {
+L1282:                hudoutf("\f2you scored");
+L1283:                if(m_ctf) firstpersondrop = true;
+L1284:            }
+L1285:            else hudoutf("\f2%s scored for %s", colorname(act), neutral ? teamnames[act->team] : teammate ? "your team" : "the enemy team");
+L1286:            break;
+L1287:
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clientgame.cpp:1290: audiomgr.playsound(S_KTFSCORE, SP_HIGHEST);
+L1286:            break;
+L1287:
+L1288:        case FM_KTFSCORE:
+L1289:        {
+L1290:            audiomgr.playsound(S_KTFSCORE, SP_HIGHEST);
+L1291:            const char *ta = firstperson ? "you have" : colorname(act);
+L1292:            const char *tb = firstperson ? "" : " has";
+L1293:            const char *tc = firstperson ? "" : flagteam;
+L1294:            int m = flagtime / 60;
+L1295:            if(m)
+L1296:                hudoutf("\f2%s%s%s kept the flag for %d min %d s now", tc, ta, tb, m, flagtime % 60);
+L1297:            else
+L1298:                hudoutf("\f2%s%s%s kept the flag for %d s now", tc, ta, tb, flagtime);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clientgame.cpp:1306: audiomgr.playsound(S_FLAGRETURN, SP_HIGHEST);
+L1302:            hudoutf("\f2%s failed to score (own team flag not taken)", firstperson ? "you" : colorname(act));
+L1303:            break;
+L1304:
+L1305:        case FM_RESET:
+L1306:            audiomgr.playsound(S_FLAGRETURN, SP_HIGHEST);
+L1307:            hudoutf("the server reset the flag");
+L1308:            firstpersondrop = true;
+L1309:            break;
+L1310:    }
+L1311:    if(firstpersondrop && flag == musicplaying)
+L1312:    {
+L1313:        audiomgr.musicfadeout(M_FLAGGRAB);
+L1314:        musicplaying = -1;
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clientgame.cpp:1528: audiomgr.playsound(S_CALLVOTE, SP_HIGHEST);
+L1524:    if(!v) return;
+L1525:    DELETEP(curvote);
+L1526:    curvote = v;
+L1527:    conoutf("%s called a vote: %s", v->owner ? colorname(v->owner) : "", curvote->desc);
+L1528:    audiomgr.playsound(S_CALLVOTE, SP_HIGHEST);
+L1529:    curvote->localplayervoted = false;
+L1530:    votepending = 1;
+L1531:}
+L1532:
+L1533:void callvotesuc()
+L1534:{
+L1535:    if(!calledvote) return;
+L1536:    displayvote(calledvote);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clientgame.cpp:1556: if(multiplayer(NULL)) audiomgr.playsound(v == VOTE_YES ? S_VOTEPASS : S_VOTEFAIL, SP_HIGH);
+L1552:    {
+L1553:        curvote->result = v;
+L1554:        curvote->millis = totalmillis + 5000;
+L1555:        conoutf("vote %s", v == VOTE_YES ? "passed" : "failed");
+L1556:        if(multiplayer(NULL)) audiomgr.playsound(v == VOTE_YES ? S_VOTEPASS : S_VOTEFAIL, SP_HIGH);
+L1557:        exechook(HOOK_SP_MP, "onVoteEnd", "");
+L1558:        votepending = 0;
+L1559:    }
+L1560:}
+L1561:
+L1562:void clearvote() { DELETEP(curvote); DELETEP(calledvote); }
+L1563:
+L1564:const char *modestrings[] =
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/physics.cpp:532: else if(pl==player1 || pl->type!=ENT_PLAYER) audiomgr.playsoundc(S_JUMP, pl);
+L528:                            {
+L529:                                pl->vel.x /= 8.0f;
+L530:                                pl->vel.y /= 8.0f;
+L531:                            }
+L532:                            else if(pl==player1 || pl->type!=ENT_PLAYER) audiomgr.playsoundc(S_JUMP, pl);
+L533:                            pl->lastjump = lastmillis;
+L534:                        }
+L535:                        pl->timeinair = 0;
+L536:                        pl->crouchedinair = false;
+L537:                    }
+L538:                    else
+L539:                    {
+L540:                        pl->timeinair += curtime;
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/physics.cpp:553: if(pl==player1 || pl->type!=ENT_PLAYER) audiomgr.playsoundc(sound, pl);
+L549:                {
+L550:                    int sound = timeinair > 800 ? S_HARDLAND : S_SOFTLAND;
+L551:                    if(pl->state!=CS_DEAD)
+L552:                    {
+L553:                        if(pl==player1 || pl->type!=ENT_PLAYER) audiomgr.playsoundc(sound, pl);
+L554:                    }
+L555:                }
+L556:            }
+L557:
+L558:            const float gravity = 20.0f;
+L559:            float dropf = (gravity-1)+pl->timeinair/15.0f;         // incorrect, but works fine
+L560:            if(water) { dropf = 5; pl->timeinair = 0; }            // float slowly down in water
+L561:            if(pl->onladder) { dropf = 0; pl->timeinair = 0; }
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/physics.cpp:747: audiomgr.playsound(S_SPLASH2, &pl->o);
+L743:        if(!pl->inwater && water)
+L744:        {
+L745:            if(!pl->lastsplash || lastmillis-pl->lastsplash>500)
+L746:            {
+L747:                audiomgr.playsound(S_SPLASH2, &pl->o);
+L748:                pl->lastsplash = lastmillis;
+L749:            }
+L750:            if(pl==player1) pl->vel.z = 0;
+L751:        }
+L752:        else if(pl->inwater && !water)
+L753:        {
+L754:            audiomgr.playsound(S_SPLASH1, &pl->o);
+L755:            if(pl->type == ENT_BOUNCE) pl->maxspeed /= 8; // prevent nades from jumping out of water
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/physics.cpp:754: audiomgr.playsound(S_SPLASH1, &pl->o);
+L750:            if(pl==player1) pl->vel.z = 0;
+L751:        }
+L752:        else if(pl->inwater && !water)
+L753:        {
+L754:            audiomgr.playsound(S_SPLASH1, &pl->o);
+L755:            if(pl->type == ENT_BOUNCE) pl->maxspeed /= 8; // prevent nades from jumping out of water
+L756:        }
+L757:        pl->inwater = water;
+L758:    }
+L759:
+L760:    // store previous locations of all players/bots
+L761:    if(pl->type==ENT_PLAYER || pl->type==ENT_BOT)
+L762:    {
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/physics.cpp:876: if(p==player1) audiomgr.playsoundc(on ? S_CROUCH : S_UNCROUCH);
+L872:    if(p->state == CS_EDITING) return; // don't apply regular crouch physics in editfly
+L873:    const float crouchspeed = 0.6f;
+L874:    p->crouching = on;
+L875:    p->eyeheightvel = on ? -crouchspeed : crouchspeed;
+L876:    if(p==player1) audiomgr.playsoundc(on ? S_CROUCH : S_UNCROUCH);
+L877:}
+L878:
+L879:void crouch(bool on)
+L880:{
+L881:    if(player1->isspectating() && on) return;
+L882:    player1->trycrouch = on;
+L883:}
+L884:
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/renderparticles.cpp:638: audiomgr.playsound(o.z < waterlevel ? S_BULLETWATERHIT : S_BULLETHIT, &o, SP_LOW);
+L634:    o.add(vec(surface).normalize().mul(0.01f));
+L635:    newparticle(o, surface, bulletholettl, 7);
+L636:    if(noisy && bulletbouncesound && bulletbouncesoundrad && d!=player1 && o.dist(camera1->o) <= bulletbouncesoundrad)
+L637:    {
+L638:        audiomgr.playsound(o.z < waterlevel ? S_BULLETWATERHIT : S_BULLETHIT, &o, SP_LOW);
+L639:    }
+L640:    return true;
+L641:}
+L642:
+L643:
+L644:VARP(scorch, 0, 1, 1);
+L645:VARP(scorchttl, 0, 10000, 30000);
+L646:
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/renderparticles.cpp:693: audiomgr.playsound(rnd(2) ? S_BULLETAIR1 : S_BULLETAIR2, &soundpos, SP_LOW);
+L689:    vec soundpos(unitv);
+L690:    soundpos.mul(fd/(fd+td)*dist);
+L691:    soundpos.add(from);
+L692:    if(!bulletairsound || soundpos.dist(camera1->o) > bulletairsoundrad) return; // outside player radius
+L693:    audiomgr.playsound(rnd(2) ? S_BULLETAIR1 : S_BULLETAIR2, &soundpos, SP_LOW);
+L694:}
+L695:
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/openal.cpp:115: alSourceQueueBuffers(id, n, buffer_ids);
+L111:
+L112:bool source::queuebuffers(ALsizei n, const ALuint *buffer_ids)
+L113:{
+L114:    alclearerr();
+L115:    alSourceQueueBuffers(id, n, buffer_ids);
+L116:    return !ALERR;
+L117:}
+L118:
+L119:bool source::unqueueallbuffers()
+L120:{
+L121:    alclearerr();
+L122:    ALint queued;
+L123:    alGetSourcei(id, AL_BUFFERS_QUEUED, &queued);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/openal.cpp:211: bool source::playing()
+L207:    alerr(false);
+L208:    return s;
+L209:}
+L210:
+L211:bool source::playing()
+L212:{
+L213:    return (state() == AL_PLAYING);
+L214:}
+L215:
+L216:bool source::play()
+L217:{
+L218:    alclearerr();
+L219:    alSourcePlay(id);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/openal.cpp:216: bool source::play()
+L212:{
+L213:    return (state() == AL_PLAYING);
+L214:}
+L215:
+L216:bool source::play()
+L217:{
+L218:    alclearerr();
+L219:    alSourcePlay(id);
+L220:    return !ALERR;
+L221:}
+L222:
+L223:bool source::stop()
+L224:{
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/openal.cpp:219: alSourcePlay(id);
+L215:
+L216:bool source::play()
+L217:{
+L218:    alclearerr();
+L219:    alSourcePlay(id);
+L220:    return !ALERR;
+L221:}
+L222:
+L223:bool source::stop()
+L224:{
+L225:    alclearerr();
+L226:    alSourceStop(id);
+L227:    return !ALERR;
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/openal.cpp:259: bool sbuffer::load(bool trydl)
+L255:{
+L256:    unload();
+L257:}
+L258:
+L259:bool sbuffer::load(bool trydl)
+L260:{
+L261:    if(!name) return false;
+L262:    if(id) return true;
+L263:    alclearerr();
+L264:    alGenBuffers(1, &id);
+L265:    if(!ALERR)
+L266:    {
+L267:        const char *exts[] = { "", ".wav", ".ogg" };
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/openal.cpp:295: alBufferData(id, info->channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16, buf.getbuf(), buf.length(), info->rate);
+L291:                        bytes = ov_read(&oggfile, buffer, BUFSIZE, isbigendian(), 2, 1, &bitstream);
+L292:                        loopi(bytes) buf.add(buffer[i]);
+L293:                    } while(bytes > 0);
+L294:
+L295:                    alBufferData(id, info->channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16, buf.getbuf(), buf.length(), info->rate);
+L296:                    ov_clear(&oggfile);
+L297:                }
+L298:                else
+L299:                {
+L300:                    delete f;
+L301:                    continue;
+L302:                }
+L303:            }
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/openal.cpp:334: alBufferData(id, format, wavbuf, wavlen, wavspec.freq);
+L330:                        unload();
+L331:                        return false;
+L332:                }
+L333:
+L334:                alBufferData(id, format, wavbuf, wavlen, wavspec.freq);
+L335:                SDL_FreeWAV(wavbuf);
+L336:                delete f;
+L337:
+L338:                if(ALERR)
+L339:                {
+L340:                    unload();
+L341:                    return false;
+L342:                };
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clients2c.cpp:410: audiomgr.playsound(getint(p), d);
+L406:                break;
+L407:            }
+L408:
+L409:            case SV_SOUND:
+L410:                audiomgr.playsound(getint(p), d);
+L411:                break;
+L412:
+L413:            case SV_VOICECOMTEAM:
+L414:            {
+L415:                playerent *d = getclient(getint(p));
+L416:                if(d) d->lastvoicecom = lastmillis;
+L417:                int t = getint(p);
+L418:                if(!d || !(d->muted || d->ignored))
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clients2c.cpp:420: if ( voicecomsounds == 1 || (voicecomsounds == 2 && m_teammode) ) audiomgr.playsound(t, SP_HIGH);
+L416:                if(d) d->lastvoicecom = lastmillis;
+L417:                int t = getint(p);
+L418:                if(!d || !(d->muted || d->ignored))
+L419:                {
+L420:                    if ( voicecomsounds == 1 || (voicecomsounds == 2 && m_teammode) ) audiomgr.playsound(t, SP_HIGH);
+L421:                }
+L422:                break;
+L423:            }
+L424:            case SV_VOICECOM:
+L425:            {
+L426:                int t = getint(p);
+L427:                if(!d || !(d->muted || d->ignored))
+L428:                {
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clients2c.cpp:429: if ( voicecomsounds == 1 ) audiomgr.playsound(t, SP_HIGH);
+L425:            {
+L426:                int t = getint(p);
+L427:                if(!d || !(d->muted || d->ignored))
+L428:                {
+L429:                    if ( voicecomsounds == 1 ) audiomgr.playsound(t, SP_HIGH);
+L430:                }
+L431:                if(d) d->lastvoicecom = lastmillis;
+L432:                break;
+L433:            }
+L434:
+L435:            case SV_TEAMTEXTME:
+L436:            case SV_TEAMTEXT:
+L437:            {
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/clients2c.cpp:1137: //if(sm & AT_SHUFFLE) playsound(TEAMSHUFFLE);    // TODO
+L1133:                int sm = getint(p);
+L1134:                servstate.autoteam = sm & 1;
+L1135:                servstate.mastermode = (sm >> 2) & MM_MASK;
+L1136:                servstate.matchteamsize = sm >> 4;
+L1137:                //if(sm & AT_SHUFFLE) playsound(TEAMSHUFFLE);    // TODO
+L1138:                break;
+L1139:            }
+L1140:
+L1141:            case SV_PAUSEMODE:
+L1142:            {
+L1143:                ispaused = getint(p);
+L1144:                if (player1->state == CS_ALIVE) player1->attacking = false;
+L1145:                break;
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/audiomanager.cpp:379: _playsound(stepsound, ref, local ? SP_HIGH : SP_LOW, rndoffset);
+L375:        if(!isplaying)
+L376:        {
+L377:            // play
+L378:            float rndoffset = float(rnd(500))/500.0f;
+L379:            _playsound(stepsound, ref, local ? SP_HIGH : SP_LOW, rndoffset);
+L380:        }
+L381:    }
+L382:}
+L383:
+L384:// manage looping sounds
+L385:location *audiomanager::updateloopsound(int sound, bool active, float vol)
+L386:{
+L387:    location *l = locations.find(sound, NULL, gamesounds);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/audiomanager.cpp:388: if(!l && active) l = _playsound(sound, camerareference(), SP_HIGH, 0.0f, true);
+L384:// manage looping sounds
+L385:location *audiomanager::updateloopsound(int sound, bool active, float vol)
+L386:{
+L387:    location *l = locations.find(sound, NULL, gamesounds);
+L388:    if(!l && active) l = _playsound(sound, camerareference(), SP_HIGH, 0.0f, true);
+L389:    else if(l && !active) l->drop();
+L390:    if(l && vol != 1.0f) l->src->gain(vol);
+L391:    return l;
+L392:}
+L393:
+L394:VARP(mapsoundrefresh, 0, 10, 1000);
+L395:
+L396:void audiomanager::mutesound(int n, int off)
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/audiomanager.cpp:463: if(voicecomsounds > 0 && playvc) audiomgr.playsound(s, SP_HIGH);
+L459:            {
+L460:                playvc = false;
+L461:            }
+L462:        }
+L463:        if(voicecomsounds > 0 && playvc) audiomgr.playsound(s, SP_HIGH);
+L464:        last = lastmillis;
+L465:    }
+L466:}
+L467:
+L468:COMMAND(voicecom, "ss");
+L469:
+L470:void soundtest()
+L471:{
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/audiomanager.cpp:472: loopi(S_NULL) audiomgr.playsound(i, rnd(SP_HIGH+1));
+L468:COMMAND(voicecom, "ss");
+L469:
+L470:void soundtest()
+L471:{
+L472:    loopi(S_NULL) audiomgr.playsound(i, rnd(SP_HIGH+1));
+L473:}
+L474:
+L475:COMMAND(soundtest, "");
+L476:
+L477:// sound configuration
+L478:
+L479:soundconfig::soundconfig(sbuffer *b, int vol, int maxuses, bool loop, int audibleradius)
+L480:{
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/audiomanager.cpp:513: location *audiomanager::_playsound(int n, const worldobjreference &r, int priority, float offset, bool loop)
+L509:
+L510:
+L511:VARP(maxsoundsatonce, 0, 32, 100);
+L512:
+L513:location *audiomanager::_playsound(int n, const worldobjreference &r, int priority, float offset, bool loop)
+L514:{
+L515:    if(nosound || !soundvol) return NULL;
+L516:    if(soundmuted(n)) return NULL;
+L517:    DEBUGVAR(n);
+L518:    DEBUGVAR(priority);
+L519:
+L520:    if(r.type!=worldobjreference::WR_ENTITY)
+L521:    {
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/audiomanager.cpp:545: void audiomanager::playsound(int n, int priority) { _playsound(n, camerareference(), priority); }
+L541:
+L542:    return loc;
+L543:}
+L544:
+L545:void audiomanager::playsound(int n, int priority) { _playsound(n, camerareference(), priority); }
+L546:void audiomanager::playsound(int n, physent *p, int priority) { if(p) _playsound(n, physentreference(p), priority); }
+L547:void audiomanager::playsound(int n, entity *e, int priority) { if(e) _playsound(n, entityreference(e), priority); }
+L548:void audiomanager::playsound(int n, const vec *v, int priority) { if(v) _playsound(n, staticreference(*v), priority); }
+L549:
+L550:void audiomanager::playsoundname(char *s, const vec *loc, int vol)
+L551:{
+L552:    if(!nosound) return;
+L553:
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/audiomanager.cpp:546: void audiomanager::playsound(int n, physent *p, int priority) { if(p) _playsound(n, physentreference(p), priority); }
+L542:    return loc;
+L543:}
+L544:
+L545:void audiomanager::playsound(int n, int priority) { _playsound(n, camerareference(), priority); }
+L546:void audiomanager::playsound(int n, physent *p, int priority) { if(p) _playsound(n, physentreference(p), priority); }
+L547:void audiomanager::playsound(int n, entity *e, int priority) { if(e) _playsound(n, entityreference(e), priority); }
+L548:void audiomanager::playsound(int n, const vec *v, int priority) { if(v) _playsound(n, staticreference(*v), priority); }
+L549:
+L550:void audiomanager::playsoundname(char *s, const vec *loc, int vol)
+L551:{
+L552:    if(!nosound) return;
+L553:
+L554:    if(vol <= 0) vol = 100;
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/audiomanager.cpp:547: void audiomanager::playsound(int n, entity *e, int priority) { if(e) _playsound(n, entityreference(e), priority); }
+L543:}
+L544:
+L545:void audiomanager::playsound(int n, int priority) { _playsound(n, camerareference(), priority); }
+L546:void audiomanager::playsound(int n, physent *p, int priority) { if(p) _playsound(n, physentreference(p), priority); }
+L547:void audiomanager::playsound(int n, entity *e, int priority) { if(e) _playsound(n, entityreference(e), priority); }
+L548:void audiomanager::playsound(int n, const vec *v, int priority) { if(v) _playsound(n, staticreference(*v), priority); }
+L549:
+L550:void audiomanager::playsoundname(char *s, const vec *loc, int vol)
+L551:{
+L552:    if(!nosound) return;
+L553:
+L554:    if(vol <= 0) vol = 100;
+L555:    int id = findsound(s, vol, gamesounds);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/audiomanager.cpp:548: void audiomanager::playsound(int n, const vec *v, int priority) { if(v) _playsound(n, staticreference(*v), priority); }
+L544:
+L545:void audiomanager::playsound(int n, int priority) { _playsound(n, camerareference(), priority); }
+L546:void audiomanager::playsound(int n, physent *p, int priority) { if(p) _playsound(n, physentreference(p), priority); }
+L547:void audiomanager::playsound(int n, entity *e, int priority) { if(e) _playsound(n, entityreference(e), priority); }
+L548:void audiomanager::playsound(int n, const vec *v, int priority) { if(v) _playsound(n, staticreference(*v), priority); }
+L549:
+L550:void audiomanager::playsoundname(char *s, const vec *loc, int vol)
+L551:{
+L552:    if(!nosound) return;
+L553:
+L554:    if(vol <= 0) vol = 100;
+L555:    int id = findsound(s, vol, gamesounds);
+L556:    if(id < 0) id = addsound(s, vol, 0, false, gamesounds, true, 0);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/audiomanager.cpp:557: playsound(id, loc, SP_NORMAL);
+L553:
+L554:    if(vol <= 0) vol = 100;
+L555:    int id = findsound(s, vol, gamesounds);
+L556:    if(id < 0) id = addsound(s, vol, 0, false, gamesounds, true, 0);
+L557:    playsound(id, loc, SP_NORMAL);
+L558:}
+L559:
+L560:void audiomanager::playsoundc(int n, physent *p, int priority)
+L561:{
+L562:    if(p && p!=player1) playsound(n, p, priority);
+L563:    else
+L564:    {
+L565:        addmsg(SV_SOUND, "i", n);
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/audiomanager.cpp:562: if(p && p!=player1) playsound(n, p, priority);
+L558:}
+L559:
+L560:void audiomanager::playsoundc(int n, physent *p, int priority)
+L561:{
+L562:    if(p && p!=player1) playsound(n, p, priority);
+L563:    else
+L564:    {
+L565:        addmsg(SV_SOUND, "i", n);
+L566:        playsound(n, priority);
+L567:    }
+L568:}
+L569:
+L570:void audiomanager::stopsound()
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/audiomanager.cpp:566: playsound(n, priority);
+L562:    if(p && p!=player1) playsound(n, p, priority);
+L563:    else
+L564:    {
+L565:        addmsg(SV_SOUND, "i", n);
+L566:        playsound(n, priority);
+L567:    }
+L568:}
+L569:
+L570:void audiomanager::stopsound()
+L571:{
+L572:    if(nosound) return;
+L573:    DELETEA(musicdonecmd);
+L574:    if(gamemusic) gamemusic->reset();
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/audiomanager.cpp:646: _playsound(sound, entref, SP_LOW, 0.0f, true);
+L642:            location *loc = locations.find(sound, &entref, mapsounds);
+L643:
+L644:            if(hearable && !loc) // play
+L645:            {
+L646:                _playsound(sound, entref, SP_LOW, 0.0f, true);
+L647:            }
+L648:            else if(!hearable && loc) // stop
+L649:            {
+L650:                loc->drop();
+L651:            }
+L652:        }
+L653:        lastmapsound = totalmillis;
+L654:    }
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/audiomanager.cpp:801: audiomgr.playsound(*n, priority);
+L797:
+L798:COMMANDF(sound, "is", (int *n, char *priorityname)
+L799:{
+L800:    int priority = getlistindex(priorityname, soundprioritynames, true, SP_NORMAL);
+L801:    audiomgr.playsound(*n, priority);
+L802:});
+L803:
+L804:COMMANDF(applymapsoundchanges, "", (){
+L805:    if(m_coop || !multiplayer("applymapsoundchanges")) audiomgr.applymapsoundchanges();
+L806:});
+L807:
+L808:COMMANDF(unmuteallsounds, "", () {
+L809:    audiomgr.unmuteallsounds();
+
+---
+/Users/francesco03/Documents/GitHub/AssaultCube Server/AC/source/src/main.cpp:420: if(!mapshot && imagepath) audiomgr.playsound(S_CAMERA);
+L416:        }
+L417:    }
+L418:    entropy_add_block(tmpdst, tmpdstsize);
+L419:    delete[] tmpdst;
+L420:    if(!mapshot && imagepath) audiomgr.playsound(S_CAMERA);
+L421:
+L422:    switch(fileformat)
+L423:    {
+L424:        case 0: // bmp
+L425:        {
+L426:            stream *file = openfile(imagepath, "wb");
+L427:            if(!file) conoutf("failed to create: %s", imagepath);
+L428:            else
+
+---
