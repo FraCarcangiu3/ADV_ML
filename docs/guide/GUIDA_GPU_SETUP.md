@@ -393,3 +393,4 @@ watch -n 2 nvidia-smi        # Uso GPU (altro terminale)
 **Autore:** Francesco Carcangiu  
 **Ultimo aggiornamento:** 2025-12-02
 
+#test 
