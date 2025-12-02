@@ -1,0 +1,22 @@
+Model: resnet18_mel96
+Run: 20251202_144555
+Config: feat_type=mel_ipd, feat_cfg={'n_mels': 96, 'n_fft': 2048, 'hop_length': 1024}, model_cfg={'dropout': 0.25}, epochs=18, batch=6, lr=0.0003, wd=0.0001, note=
+[INFO] resnet18_mel96 fold 1/9: joint=0.6759, angle=0.9167, dist=0.7500, mae=31.99
+[INFO] resnet18_mel96 fold 2/9: joint=0.3796, angle=0.9259, dist=0.4259, mae=27.05
+[INFO] resnet18_mel96 fold 3/9: joint=0.7593, angle=0.9444, dist=0.8148, mae=26.58
+[INFO] resnet18_mel96 fold 4/9: joint=0.7963, angle=0.9630, dist=0.8148, mae=16.97
+[INFO] resnet18_mel96 fold 5/9: joint=0.6667, angle=0.9352, dist=0.7222, mae=24.97
+[INFO] resnet18_mel96 fold 6/9: joint=0.2963, angle=0.7778, dist=0.3796, mae=35.35
+[INFO] resnet18_mel96 fold 7/9: joint=0.5185, angle=0.9074, dist=0.5370, mae=16.66
+[INFO] resnet18_mel96 fold 8/9: joint=0.4112, angle=0.8879, dist=0.4673, mae=20.21
+[INFO] resnet18_mel96 fold 9/9: joint=0.8224, angle=0.9813, dist=0.8411, mae=13.37
+Angle confusion matrix:
+[[209  11   0  22]
+ [ 22 218   1   1]
+ [ 21  44 149  29]
+ [ 78  37  14 114]]
+Distance confusion matrix:
+[[259  27  37]
+ [182  82  59]
+ [108  79 137]]
+Means: joint=0.5918, angle=0.9155, dist=0.6392, mae=23.68, duration_min=105.73
