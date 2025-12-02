@@ -2204,3 +2204,26 @@ DA AGGIUNGERE
 - Parte realizzata offline script python per l'aggiunta dei rumori 
 - Tutti gli script presenti in ADV_ML/scripts 
 - gli script principali audio_effects.py, offline_perturb.py
+- tutta la parte del classificatore dentro COLLEAGUE... realizzata con il mio collega
+- tutta la parte aggiunta da me anche per i test ovvero: 1️⃣ Script Principale
+File: COLLEAGUE_BSc_Thesis/model_classifier/run_best_models_perturb_sweep.py
+Testa entrambi i modelli best (crnn_mel80_best_angle.pt e resnet18_mel96_best_dist_angle_weighted.pt)
+Applica TUTTE le perturbazioni a 3 livelli (LOW/MEDIUM/HIGH)
+Calcola metriche complete + confusion matrices
+Salva tutto in CSV strutturato
+Perturbazioni testate:
+Pitch shift (positivo/negativo): ±75, ±150, ±200 cents
+White noise: SNR 42, 40, 38 dB
+Pink noise: SNR 22, 20, 18 dB
+EQ tilt (boost/cut): vari livelli dB
+High-pass filter: 150, 200, 250 Hz
+Low-pass filter: 12k, 10k, 8k Hz
+Combo: pink+EQ, pink+HP
+Totale test: ~56 combinazioni (modello × perturbazione × livello)
+2️⃣ Script di Analisi
+File: COLLEAGUE_BSc_Thesis/model_classifier/analyze_perturbation_results.py
+Analizza il CSV generato
+Identifica perturbazioni più/meno efficaci
+Ranking per tipo
+Raccomandazioni per tesi
+- test accurency con i rumori base aggiunti fin ora 

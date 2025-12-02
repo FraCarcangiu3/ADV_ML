@@ -1,0 +1,57 @@
+model,model_desc,perturbation,level,config,n_test,angle_base,angle_pert,angle_drop,dist_base,dist_pert,dist_drop,joint_base,joint_pert,joint_drop,mae_base,mae_pert,mae_increase
+crnn_angle,CRNN MEL80 (best angle),pitch_pos,LOW,"{'type': 'pitch', 'cents': 75.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),pitch_pos,MEDIUM,"{'type': 'pitch', 'cents': 150.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),pitch_pos,HIGH,"{'type': 'pitch', 'cents': 200.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),pitch_neg,LOW,"{'type': 'pitch', 'cents': -75.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),pitch_neg,MEDIUM,"{'type': 'pitch', 'cents': -150.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),pitch_neg,HIGH,"{'type': 'pitch', 'cents': -200.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),white_noise,LOW,"{'type': 'white_noise', 'snr_db': 42.0}",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),white_noise,MEDIUM,"{'type': 'white_noise', 'snr_db': 40.0}",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),white_noise,HIGH,"{'type': 'white_noise', 'snr_db': 38.0}",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),pink_noise,LOW,"{'type': 'pink_noise', 'snr_db': 22.0}",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),pink_noise,MEDIUM,"{'type': 'pink_noise', 'snr_db': 20.0}",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),pink_noise,HIGH,"{'type': 'pink_noise', 'snr_db': 18.0}",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),eq_boost,LOW,"{'type': 'eq_tilt', 'tilt_db': 3.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),eq_boost,MEDIUM,"{'type': 'eq_tilt', 'tilt_db': 4.5}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),eq_boost,HIGH,"{'type': 'eq_tilt', 'tilt_db': 6.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),eq_cut,LOW,"{'type': 'eq_tilt', 'tilt_db': -3.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),eq_cut,MEDIUM,"{'type': 'eq_tilt', 'tilt_db': -6.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),eq_cut,HIGH,"{'type': 'eq_tilt', 'tilt_db': -9.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),highpass,LOW,"{'type': 'highpass', 'cutoff_hz': 150}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),highpass,MEDIUM,"{'type': 'highpass', 'cutoff_hz': 200}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),highpass,HIGH,"{'type': 'highpass', 'cutoff_hz': 250}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),lowpass,LOW,"{'type': 'lowpass', 'cutoff_hz': 12000}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),lowpass,MEDIUM,"{'type': 'lowpass', 'cutoff_hz': 10000}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),lowpass,HIGH,"{'type': 'lowpass', 'cutoff_hz': 8000}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),combo_pink_eq,MEDIUM,"[{'type': 'pink_noise', 'snr_db': 20.0}, {'type': 'eq_tilt', 'tilt_db': 4.5}]",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),combo_pink_eq,HIGH,"[{'type': 'pink_noise', 'snr_db': 18.0}, {'type': 'eq_tilt', 'tilt_db': 6.0}]",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),combo_pink_hp,MEDIUM,"[{'type': 'pink_noise', 'snr_db': 20.0}, {'type': 'highpass', 'cutoff_hz': 200}]",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+crnn_angle,CRNN MEL80 (best angle),combo_pink_hp,HIGH,"[{'type': 'pink_noise', 'snr_db': 18.0}, {'type': 'highpass', 'cutoff_hz': 250}]",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),pitch_pos,LOW,"{'type': 'pitch', 'cents': 75.0}",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),pitch_pos,MEDIUM,"{'type': 'pitch', 'cents': 150.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),pitch_pos,HIGH,"{'type': 'pitch', 'cents': 200.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),pitch_neg,LOW,"{'type': 'pitch', 'cents': -75.0}",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),pitch_neg,MEDIUM,"{'type': 'pitch', 'cents': -150.0}",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),pitch_neg,HIGH,"{'type': 'pitch', 'cents': -200.0}",5,1.0,1.0,0.0,0.8,0.4,0.4,0.8,0.4,0.4,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),white_noise,LOW,"{'type': 'white_noise', 'snr_db': 42.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),white_noise,MEDIUM,"{'type': 'white_noise', 'snr_db': 40.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),white_noise,HIGH,"{'type': 'white_noise', 'snr_db': 38.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),pink_noise,LOW,"{'type': 'pink_noise', 'snr_db': 22.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),pink_noise,MEDIUM,"{'type': 'pink_noise', 'snr_db': 20.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),pink_noise,HIGH,"{'type': 'pink_noise', 'snr_db': 18.0}",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),eq_boost,LOW,"{'type': 'eq_tilt', 'tilt_db': 3.0}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),eq_boost,MEDIUM,"{'type': 'eq_tilt', 'tilt_db': 4.5}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),eq_boost,HIGH,"{'type': 'eq_tilt', 'tilt_db': 6.0}",5,1.0,1.0,0.0,0.8,0.4,0.4,0.8,0.4,0.4,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),eq_cut,LOW,"{'type': 'eq_tilt', 'tilt_db': -3.0}",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),eq_cut,MEDIUM,"{'type': 'eq_tilt', 'tilt_db': -6.0}",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),eq_cut,HIGH,"{'type': 'eq_tilt', 'tilt_db': -9.0}",5,1.0,1.0,0.0,0.8,0.4,0.4,0.8,0.4,0.4,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),highpass,LOW,"{'type': 'highpass', 'cutoff_hz': 150}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),highpass,MEDIUM,"{'type': 'highpass', 'cutoff_hz': 200}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),highpass,HIGH,"{'type': 'highpass', 'cutoff_hz': 250}",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),lowpass,LOW,"{'type': 'lowpass', 'cutoff_hz': 12000}",5,1.0,1.0,0.0,0.8,0.4,0.4,0.8,0.4,0.4,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),lowpass,MEDIUM,"{'type': 'lowpass', 'cutoff_hz': 10000}",5,1.0,1.0,0.0,0.8,0.4,0.4,0.8,0.4,0.4,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),lowpass,HIGH,"{'type': 'lowpass', 'cutoff_hz': 8000}",5,1.0,1.0,0.0,0.8,0.4,0.4,0.8,0.4,0.4,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),combo_pink_eq,MEDIUM,"[{'type': 'pink_noise', 'snr_db': 20.0}, {'type': 'eq_tilt', 'tilt_db': 4.5}]",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),combo_pink_eq,HIGH,"[{'type': 'pink_noise', 'snr_db': 18.0}, {'type': 'eq_tilt', 'tilt_db': 6.0}]",5,1.0,1.0,0.0,0.8,0.4,0.4,0.8,0.4,0.4,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),combo_pink_hp,MEDIUM,"[{'type': 'pink_noise', 'snr_db': 20.0}, {'type': 'highpass', 'cutoff_hz': 200}]",5,1.0,1.0,0.0,0.8,0.6,0.20000000000000007,0.8,0.6,0.20000000000000007,0.0,0.0,0.0
+resnet_dist,ResNet18 MEL96 (best dist+angle weighted),combo_pink_hp,HIGH,"[{'type': 'pink_noise', 'snr_db': 18.0}, {'type': 'highpass', 'cutoff_hz': 250}]",5,1.0,1.0,0.0,0.8,0.8,0.0,0.8,0.8,0.0,0.0,0.0,0.0
