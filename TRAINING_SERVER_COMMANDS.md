@@ -65,6 +65,40 @@ pip install torch torchvision torchaudio
 
 ---
 
+## Step 2.5 – Verificare che i dati siano presenti
+
+Prima di lanciare il training, assicurati che i file di dati siano presenti nelle cartelle corrette.
+
+```bash
+cd COLLEAGUE_BSc_Thesis
+
+# Verifica che esistano le cartelle
+ls -la Data/csv/audio_loopback_csv/ | head -5
+ls -la Data/csv/labels_csv/ | head -5
+
+# Conta quanti file audio CSV ci sono
+echo "File audio CSV trovati:"
+ls Data/csv/audio_loopback_csv/audio_event_*.csv 2>/dev/null | wc -l
+
+# Conta quanti file label CSV ci sono
+echo "File label CSV trovati:"
+ls Data/csv/labels_csv/*.csv 2>/dev/null | wc -l
+```
+
+**Cosa mi aspetto:**
+- La cartella `Data/csv/audio_loopback_csv/` contiene file tipo `audio_event_<uuid>.csv`
+- La cartella `Data/csv/labels_csv/` contiene file tipo `<uuid>.csv` o `labels_<uuid>.csv`
+- Il numero di file audio dovrebbe essere simile al numero di file label (devono essere accoppiati)
+
+**Se i dati non ci sono:**
+- I dati potrebbero essere in un'altra posizione sul server
+- Potresti dover copiare/scaricare i dati dal Mac o da un'altra fonte
+- Verifica il percorso completo: il codice cerca i dati in `COLLEAGUE_BSc_Thesis/Data/csv/audio_loopback_csv/` e `COLLEAGUE_BSc_Thesis/Data/csv/labels_csv/`
+
+**Nota:** Se i dati sono in un'altra posizione, puoi usare variabili d'ambiente per indicare al codice dove trovarli (vedi troubleshooting).
+
+---
+
 ## Step 3 – Lanciare il training 9-fold
 
 ### Versione base (foreground):
@@ -133,6 +167,24 @@ ls -lh model_classifier/result_*.txt
 - Riduci il numero di worker: `CLASSIFIER_LOAD_WORKERS=2 python -m model_classifier.deep_cv`
 - Oppure riduci il batch size modificando `deep_cv.py` (ma non è consigliato per ora)
 
+### Errore "No (audio,label) pairs found":
+- **Causa:** I file di dati non sono presenti nelle cartelle attese
+- **Soluzione 1:** Verifica che i dati esistano (vedi Step 2.5)
+- **Soluzione 2:** Se i dati sono in un'altra posizione, puoi usare variabili d'ambiente:
+  ```bash
+  # Esempio: se hai un solo file di test
+  CLASSIFIER_AUDIO_FILE=/path/to/audio_event_test.csv \
+  CLASSIFIER_LABEL_FILE=/path/to/labels_test.csv \
+  python -m model_classifier.deep_cv
+  ```
+- **Soluzione 3:** Crea i link simbolici se i dati sono altrove:
+  ```bash
+  cd COLLEAGUE_BSc_Thesis
+  mkdir -p Data/csv
+  ln -s /path/to/real/audio_loopback_csv Data/csv/audio_loopback_csv
+  ln -s /path/to/real/labels_csv Data/csv/labels_csv
+  ```
+
 ### Non vedo i checkpoint nella cartella:
 - Verifica che la cartella `checkpoints/` esista: `mkdir -p COLLEAGUE_BSc_Thesis/model_classifier/checkpoints`
 - Controlla i log per eventuali errori: `cat COLLEAGUE_BSc_Thesis/logs_deep_cv.txt | grep -i error`
@@ -158,6 +210,11 @@ cd COLLEAGUE_BSc_Thesis
 pip install -r requirements.txt
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 pip install librosa soundfile scipy
+
+# Verifica dati (IMPORTANTE prima del training)
+cd COLLEAGUE_BSc_Thesis
+ls Data/csv/audio_loopback_csv/audio_event_*.csv | wc -l
+ls Data/csv/labels_csv/*.csv | wc -l
 
 # Training (ogni volta che vuoi riallenare)
 cd COLLEAGUE_BSc_Thesis
