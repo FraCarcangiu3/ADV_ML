@@ -1,0 +1,15 @@
+nohup: ignoring input
+[INFO] Runtime configured: threads=96, device=cuda, cudnn_benchmark=True
+[INFO] Loaded 970 samples | angle bins=4, dist bins=3 thresholds=(np.float64(28.399999618530273), np.float64(51.619998931884766))
+[INFO] Device: cuda | folds=9
+[INFO] resnet18_mel96: workers=96, train_batches=144, val_batches=18
+[INFO] resnet18_mel96 fold 1/9: joint=0.6759, angle=0.9167, dist=0.7500, mae=31.99
+[INFO] resnet18_mel96: workers=96, train_batches=144, val_batches=18
+[INFO] resnet18_mel96 fold 2/9: joint=0.3796, angle=0.9259, dist=0.4259, mae=27.05
+[INFO] resnet18_mel96: workers=96, train_batches=144, val_batches=18
+[INFO] resnet18_mel96 fold 3/9: joint=0.7593, angle=0.9444, dist=0.8148, mae=26.58
+[INFO] resnet18_mel96: workers=96, train_batches=144, val_batches=18
+[INFO] resnet18_mel96 fold 4/9: joint=0.7963, angle=0.9630, dist=0.8148, mae=16.97
+[INFO] resnet18_mel96: workers=96, train_batches=144, val_batches=18
+[INFO] resnet18_mel96 fold 5/9: joint=0.6667, angle=0.9352, dist=0.7222, mae=24.97
+[INFO] resnet18_mel96: workers=96, train_batches=144, val_batches=18

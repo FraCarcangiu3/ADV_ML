@@ -28,10 +28,6 @@ Thumbs.db
 *.log
 
 # Model files - escludi modelli addestrati (sono molto grandi)
-*.pth
-*.pt
-*.h5
-*.ckpt
 
 
 
