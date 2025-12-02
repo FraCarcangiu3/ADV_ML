@@ -33,15 +33,7 @@ Thumbs.db
 *.h5
 *.ckpt
 
-# File CSV molto grandi (dati audio) - saranno aggiunti separatamente con Git LFS
-COLLEAGUE_BSc_Thesis/Data/csv/audio_loopback_csv/*.csv
 
-# File audio grandi (WAV, FLAC) - ora tracciati con Git LFS
-# *.wav  # Commentato perché tracciato con Git LFS
-# *.flac  # Commentato perché tracciato con Git LFS
-# COLLEAGUE_BSc_Thesis/Data/audio/**/*.flac  # Tracciato con Git LFS
-# ADV_ML/demo_audio_for_professors/**/*.wav  # Tracciato con Git LFS
-# .cursor-output/**/*.wav  # Tracciato con Git LFS
 
 # Screenshot PNG grandi
 COLLEAGUE_BSc_Thesis/Data/screenshots/**/*.png
