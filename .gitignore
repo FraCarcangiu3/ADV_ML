@@ -35,3 +35,13 @@ Thumbs.db
 
 # File CSV molto grandi (dati audio) - saranno aggiunti separatamente con Git LFS
 COLLEAGUE_BSc_Thesis/Data/csv/audio_loopback_csv/*.csv
+
+# File audio grandi (WAV, FLAC) - saranno aggiunti separatamente
+*.wav
+*.flac
+COLLEAGUE_BSc_Thesis/Data/audio/**/*.flac
+ADV_ML/demo_audio_for_professors/**/*.wav
+.cursor-output/**/*.wav
+
+# Screenshot PNG grandi
+COLLEAGUE_BSc_Thesis/Data/screenshots/**/*.png
