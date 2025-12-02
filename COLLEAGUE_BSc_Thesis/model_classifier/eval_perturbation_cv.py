@@ -40,6 +40,7 @@ from model_classifier.deep_cv import (
     DIST_NUM_BINS,
     ANGLE_LABELS,
     DESIRED_FOLDS,
+    Config,
     set_seed,
     load_pairs,
     load_labels,
