@@ -17,6 +17,7 @@ import math
 import os
 import sys
 import time
+import contextlib
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -58,6 +59,7 @@ AUDIO_DIR = BASE_DIR / "Data/csv/audio_loopback_csv"
 LABEL_DIR = BASE_DIR / "Data/csv/labels_csv"
 OVERRIDE_AUDIO = os.environ.get("CLASSIFIER_AUDIO_FILE")
 OVERRIDE_LABEL = os.environ.get("CLASSIFIER_LABEL_FILE")
+CHECKPOINT_DIR = BASE_DIR / "model_classifier" / "checkpoints"
 
 # Constants / env
 AUDIO_SR = 96_000
@@ -67,6 +69,13 @@ DIST_NUM_BINS = int(os.environ.get("CLASSIFIER_DIST_BINS", "3"))
 MAX_FILES_ENV = os.environ.get("CLASSIFIER_MAX_FILES")
 MAX_FILES = int(MAX_FILES_ENV) if MAX_FILES_ENV and MAX_FILES_ENV.isdigit() else None
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+REQUIRE_CUDA = os.environ.get("CLASSIFIER_REQUIRE_CUDA", "0") == "1"
+DIST_LOSS_SCALE = float(os.environ.get("CLASSIFIER_DIST_LOSS_SCALE", "1.3"))
+DIST_THRESHOLDS_ENV = os.environ.get("CLASSIFIER_DIST_THRESHOLDS")  # comma-separated absolute thresholds
+DIST_QUANTILES_ENV = os.environ.get("CLASSIFIER_DIST_QUANTILES")    # comma-separated quantiles (0-1) for thresholds
+DEFAULT_DIST_QUANTILES = (0.3, 0.7)  # 30/70 fallback when no env is provided
+MICRO_ANGLE_CLASSES = 12  # 30° bins
+MICRO_DIST_CLASSES = 9    # finer-grained distance bins for confusion
 SEED = int(os.environ.get("CLASSIFIER_SEED", "42"))
 PENALTY_SCALE = float(os.environ.get("CLASSIFIER_ANGLE_PENALTY", "0.5"))
 LOAD_WORKERS_ENV = os.environ.get("CLASSIFIER_LOAD_WORKERS")
@@ -88,7 +97,32 @@ def configure_runtime():
         pass
     if torch.cuda.is_available():
         torch.backends.cudnn.benchmark = True
-    print(f"[INFO] Runtime configured: threads={threads}, device={DEVICE}, cudnn_benchmark={torch.backends.cudnn.benchmark if torch.cuda.is_available() else False}")
+        try:
+            gpu_name = torch.cuda.get_device_name(0)
+        except Exception:
+            gpu_name = "unknown"
+        print(f"[INFO] Runtime configured: threads={threads}, device={DEVICE}, gpu={gpu_name}, cudnn_benchmark={torch.backends.cudnn.benchmark}")
+    else:
+        print(f"[INFO] Runtime configured: threads={threads}, device={DEVICE}, cudnn_benchmark=False")
+
+
+def make_grad_scaler(use_amp: bool):
+    # Prefer torch.amp.GradScaler if available; fall back to torch.cuda.amp for older versions.
+    if not use_amp or DEVICE.type != "cuda":
+        return torch.cuda.amp.GradScaler(enabled=False)
+    try:
+        return torch.amp.GradScaler("cuda")
+    except Exception:
+        return torch.cuda.amp.GradScaler(enabled=True)
+
+
+def autocast_ctx(use_amp: bool):
+    if not use_amp or DEVICE.type != "cuda":
+        return contextlib.nullcontext()
+    try:
+        return torch.amp.autocast("cuda")
+    except Exception:
+        return torch.cuda.amp.autocast()
 
 
 def get_audio_uuid(path: Path) -> str:
@@ -113,6 +147,23 @@ def angle_penalty_matrix(num_classes: int) -> torch.Tensor:
             diff = abs((ci - cj + 180.0) % 360.0 - 180.0)
             mat[i, j] = 1.0 + PENALTY_SCALE * (diff / 180.0)
     return torch.from_numpy(mat)
+
+
+def micro_angle_labels() -> List[str]:
+    step = 360 // MICRO_ANGLE_CLASSES
+    return [f"{i*step}-{(i+1)*step}" for i in range(MICRO_ANGLE_CLASSES)]
+
+
+def micro_dist_labels() -> List[str]:
+    return [f"d{i}" for i in range(MICRO_DIST_CLASSES)]
+
+
+def parse_thresholds(env_val: str, expected: int, kind: str) -> Tuple[float, ...]:
+    parts = [p.strip() for p in env_val.split(",") if p.strip()]
+    vals = tuple(float(p) for p in parts)
+    if len(vals) != expected:
+        raise ValueError(f"{kind} expects {expected} values (got {len(vals)})")
+    return vals
 
 
 def load_pairs() -> List[Tuple[Path, Path]]:
@@ -183,6 +234,7 @@ def compute_mel_ipd_ild(
     n_fft: int,
     hop_length: int,
     ref_ch: int = 0,
+    ild_gain: float = 1.5,
 ) -> np.ndarray:
     """Compute log-Mel + IPD + ILD maps stacked on channel dimension."""
     def _resample_spec(spec: np.ndarray, target_bins: int) -> np.ndarray:
@@ -235,7 +287,7 @@ def compute_mel_ipd_ild(
         cur_mag = np.abs(cur_spec) + 1e-8
         cur_phase = np.angle(cur_spec)
         ipd = np.sin(cur_phase - ref_phase).astype(np.float32)
-        ild = np.log((cur_mag / ref_mag)).astype(np.float32)
+        ild = (np.log((cur_mag / ref_mag))).astype(np.float32) * ild_gain
         ipd_maps.append(ipd)
         ild_maps.append(ild)
 
@@ -269,12 +321,14 @@ class AudioFeatureDataset(torch.utils.data.Dataset):
         feature_cfg: dict,
         dist_thresholds: Tuple[float, ...],
         dist_bins: int,
+        train_mode: bool = False,
     ):
         self.pairs = pairs
         self.feature_type = feature_type
         self.feature_cfg = feature_cfg
         self.dist_thresholds = dist_thresholds
         self.dist_bins = dist_bins
+        self.train_mode = train_mode
 
     def __len__(self) -> int:
         return len(self.pairs)
@@ -294,12 +348,27 @@ class AudioFeatureDataset(torch.utils.data.Dataset):
                 n_fft=self.feature_cfg["n_fft"],
                 hop_length=self.feature_cfg["hop_length"],
                 ref_ch=0,
+                ild_gain=self.feature_cfg.get("ild_gain", 1.5),
             )  # (C', M, T)
             feats_tensor = torch.from_numpy(feats)
+            if self.train_mode:
+                # Small time shift and channel gain jitter on spectrograms
+                if np.random.rand() < 0.5:
+                    shift = np.random.randint(-2, 3)
+                    feats_tensor = torch.roll(feats_tensor, shifts=shift, dims=-1)
+                gains = torch.empty(feats_tensor.shape[0]).uniform_(0.9, 1.1)
+                feats_tensor = feats_tensor * gains[:, None, None]
         elif self.feature_type == "raw1d":
             dsr = self.feature_cfg["target_sr"]
             audio_ds = downsample_wave(audio_mat, dsr)
             feats_tensor = torch.from_numpy(audio_ds.T)  # (C, L)
+            if self.train_mode:
+                # Small time shift and per-channel gain jitter
+                if np.random.rand() < 0.5:
+                    shift = np.random.randint(-int(0.01 * feats_tensor.shape[1]), int(0.01 * feats_tensor.shape[1]) + 1)
+                    feats_tensor = torch.roll(feats_tensor, shifts=shift, dims=-1)
+                gains = torch.empty(feats_tensor.shape[0]).uniform_(0.9, 1.1)
+                feats_tensor = feats_tensor * gains[:, None]
         else:
             raise ValueError(f"Unknown feature type {self.feature_type}")
 
@@ -450,6 +519,9 @@ class Config:
     weight_decay: float = 1e-4
     patience: int = 3
     note: str = ""
+    use_amp: bool = True
+    label_smooth: float = 0.05
+    augment: bool = True
 
 
 def build_model(cfg: Config, in_ch: int, angle_classes: int, dist_classes: int) -> nn.Module:
@@ -462,9 +534,9 @@ def build_model(cfg: Config, in_ch: int, angle_classes: int, dist_classes: int) 
     raise ValueError(f"Unknown model name {cfg.name}")
 
 
-def multitask_loss(angle_logits, dist_logits, vec_pred, angle_cls, dist_cls, ang_vec, penalty_mat: torch.Tensor) -> torch.Tensor:
-    ce_angle = F.cross_entropy(angle_logits, angle_cls)
-    ce_dist = F.cross_entropy(dist_logits, dist_cls)
+def multitask_loss(angle_logits, dist_logits, vec_pred, angle_cls, dist_cls, ang_vec, penalty_mat: torch.Tensor, dist_weight: torch.Tensor, label_smooth: float, dist_loss_scale: float = 1.0) -> torch.Tensor:
+    ce_angle = F.cross_entropy(angle_logits, angle_cls, label_smoothing=label_smooth)
+    ce_dist = F.cross_entropy(dist_logits, dist_cls, weight=dist_weight, label_smoothing=label_smooth) * dist_loss_scale
     l1_vec = F.l1_loss(vec_pred, ang_vec)
     with torch.no_grad():
         penalty = penalty_mat.to(angle_logits.device)
@@ -474,23 +546,48 @@ def multitask_loss(angle_logits, dist_logits, vec_pred, angle_cls, dist_cls, ang
     return ce_angle + ce_dist + 0.3 * l1_vec + PENALTY_SCALE * penalty_vals
 
 
-def evaluate(model, loader, device, collect_preds: bool = False):
+def evaluate(
+    model,
+    loader,
+    device,
+    collect_preds: bool = False,
+    penalty_mat: torch.Tensor | None = None,
+    dist_bins: int = DIST_NUM_BINS,
+):
     model.eval()
     angle_correct = 0
     dist_correct = 0
     joint_correct = 0
     total = 0
     angle_mae_list: List[float] = []
+    severity_scores: List[float] = []
+    dist_angle_weighted_sum = 0.0
+    micro_angle_true: List[int] = []
+    micro_angle_pred: List[int] = []
+    micro_dist_true: List[int] = []
+    micro_dist_pred: List[int] = []
+    micro_angle_severity: List[float] = []
+    micro_dist_severity: List[float] = []
     y_true_angle: List[int] = []
     y_pred_angle: List[int] = []
     y_true_dist: List[int] = []
     y_pred_dist: List[int] = []
+    if penalty_mat is not None:
+        penalty = penalty_mat.to(device)
+        pen_min = float(penalty.min().item())
+        pen_max = float(penalty.max().item())
+        denom = (pen_max - pen_min) if pen_max > pen_min else 1.0
+    else:
+        penalty = None
+        pen_min = 0.0
+        denom = 1.0
     with torch.no_grad():
         for feats, angle_cls, dist_cls, ang_vec in loader:
-            feats = feats.to(device)
-            angle_cls = angle_cls.to(device)
-            dist_cls = dist_cls.to(device)
-            ang_vec = ang_vec.to(device)
+            nb = device.type == "cuda"
+            feats = feats.to(device, non_blocking=nb)
+            angle_cls = angle_cls.to(device, non_blocking=nb)
+            dist_cls = dist_cls.to(device, non_blocking=nb)
+            ang_vec = ang_vec.to(device, non_blocking=nb)
             if feats.dim() == 3:  # raw1d -> (B, C, L)
                 pass
             else:  # mel_ipd -> (B, C, F, T)
@@ -506,6 +603,38 @@ def evaluate(model, loader, device, collect_preds: bool = False):
             true_angle_rad = torch.atan2(ang_vec[:, 0], ang_vec[:, 1])
             diff = torch.remainder(pred_angle_rad - true_angle_rad + math.pi, 2 * math.pi) - math.pi
             angle_mae_list.append(torch.abs(diff).cpu().numpy())
+            if penalty is not None:
+                sev = 1.0 - ((penalty[angle_cls, angle_pred] - pen_min) / denom)
+                severity_scores.append(sev.detach().cpu().numpy())
+
+            # Micro-angle confusion (12 classes, 30° bins)
+            true_angle_deg = torch.remainder(true_angle_rad * 180.0 / math.pi + 360.0, 360.0)
+            pred_angle_deg = torch.remainder(pred_angle_rad * 180.0 / math.pi + 360.0, 360.0)
+            true_micro_a = torch.div(true_angle_deg, 360.0 / MICRO_ANGLE_CLASSES, rounding_mode="floor").to(torch.int64).clamp(0, MICRO_ANGLE_CLASSES - 1)
+            pred_micro_a = torch.div(pred_angle_deg, 360.0 / MICRO_ANGLE_CLASSES, rounding_mode="floor").to(torch.int64).clamp(0, MICRO_ANGLE_CLASSES - 1)
+            micro_angle_true.extend(true_micro_a.cpu().tolist())
+            micro_angle_pred.extend(pred_micro_a.cpu().tolist())
+            # Severity for micro-angles: circular distance normalized to [0,1]
+            ang_diff = torch.remainder(pred_micro_a - true_micro_a + MICRO_ANGLE_CLASSES, MICRO_ANGLE_CLASSES)
+            ang_diff = torch.minimum(ang_diff, MICRO_ANGLE_CLASSES - ang_diff).float()
+            micro_angle_severity.append((1.0 - ang_diff / (MICRO_ANGLE_CLASSES / 2)).clamp(min=0.0).cpu().numpy())
+
+            # Micro-distance confusion (9 classes) via scaled class expectation
+            dist_probs = F.softmax(dist_logits, dim=1)
+            cls_idx = torch.arange(dist_logits.size(1), device=device, dtype=torch.float32)
+            expected_dist = (dist_probs * cls_idx).sum(dim=1)  # in [0, num_dist_classes-1]
+            pred_micro_d = torch.round(
+                (expected_dist / max(dist_logits.size(1) - 1, 1e-6)) * (MICRO_DIST_CLASSES - 1)
+            ).to(torch.int64).clamp(0, MICRO_DIST_CLASSES - 1)
+            true_micro_d = torch.round(
+                (dist_cls.float() / max(dist_logits.size(1) - 1, 1e-6)) * (MICRO_DIST_CLASSES - 1)
+            ).to(torch.int64).clamp(0, MICRO_DIST_CLASSES - 1)
+            micro_dist_true.extend(true_micro_d.cpu().tolist())
+            micro_dist_pred.extend(pred_micro_d.cpu().tolist())
+            dist_diff = (pred_micro_d - true_micro_d).abs().float()
+            micro_dist_severity.append((1.0 - dist_diff / (MICRO_DIST_CLASSES - 1)).clamp(min=0.0).cpu().numpy())
+            # Distance accuracy weighted by angle severity reward
+            dist_angle_weighted_sum += float((dist_pred == dist_cls).float().mul(sev if penalty is not None else 1.0).sum().item())
             if collect_preds:
                 y_true_angle.extend(angle_cls.cpu().tolist())
                 y_pred_angle.extend(angle_pred.cpu().tolist())
@@ -520,17 +649,43 @@ def evaluate(model, loader, device, collect_preds: bool = False):
         "dist_acc": dist_correct / total,
         "joint_acc": joint_correct / total,
         "angle_mae": angle_mae,
+        "angle_severity_acc": float(np.mean(np.concatenate(severity_scores))) if severity_scores else 0.0,
+        "micro_angle_severity_acc": float(np.mean(np.concatenate(micro_angle_severity))) if micro_angle_severity else 0.0,
+        "micro_dist_severity_acc": float(np.mean(np.concatenate(micro_dist_severity))) if micro_dist_severity else 0.0,
+        "dist_acc_angle_weighted": dist_angle_weighted_sum / total if total > 0 else 0.0,
     }
-    return (metrics, y_true_angle, y_pred_angle, y_true_dist, y_pred_dist) if collect_preds else metrics
+    if collect_preds:
+        return (
+            metrics,
+            y_true_angle,
+            y_pred_angle,
+            y_true_dist,
+            y_pred_dist,
+            micro_angle_true,
+            micro_angle_pred,
+            micro_dist_true,
+            micro_dist_pred,
+        )
+    return metrics
 
 
-def train_one_fold(cfg: Config, train_pairs, val_pairs, angle_classes_count: int, dist_classes_count: int, dist_thresholds: Tuple[float, ...], fold_idx: int = 0):
-    train_ds = AudioFeatureDataset(train_pairs, cfg.feature_type, cfg.feature_cfg, dist_thresholds, dist_classes_count)
-    val_ds = AudioFeatureDataset(val_pairs, cfg.feature_type, cfg.feature_cfg, dist_thresholds, dist_classes_count)
+def train_one_fold(cfg: Config, train_pairs, val_pairs, angle_classes_count: int, dist_classes_count: int, dist_thresholds: Tuple[float, ...], train_dist_classes: np.ndarray):
+    train_ds = AudioFeatureDataset(train_pairs, cfg.feature_type, cfg.feature_cfg, dist_thresholds, dist_classes_count, train_mode=True)
+    val_ds = AudioFeatureDataset(val_pairs, cfg.feature_type, cfg.feature_cfg, dist_thresholds, dist_classes_count, train_mode=False)
+    # Oversample minority distance bins
+    counts = np.bincount(train_dist_classes, minlength=dist_classes_count)
+    weights = np.zeros_like(train_dist_classes, dtype=np.float32)
+    for cls_idx in range(dist_classes_count):
+        cls_mask = train_dist_classes == cls_idx
+        if counts[cls_idx] > 0:
+            weights[cls_mask] = 1.0 / counts[cls_idx]
+    sampler = torch.utils.data.WeightedRandomSampler(weights.tolist(), num_samples=len(weights), replacement=True)
+
     train_loader = torch.utils.data.DataLoader(
         train_ds,
         batch_size=cfg.batch_size,
-        shuffle=True,
+        shuffle=False,
+        sampler=sampler,
         drop_last=False,
         num_workers=LOAD_WORKERS,
         pin_memory=True,
@@ -551,67 +706,101 @@ def train_one_fold(cfg: Config, train_pairs, val_pairs, angle_classes_count: int
     optimizer = torch.optim.AdamW(model.parameters(), lr=cfg.lr, weight_decay=cfg.weight_decay)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="max", patience=2, factor=0.5)
     penalty_mat = angle_penalty_matrix(angle_classes_count).to(DEVICE)
+    # Distance class weights for imbalance
+    class_counts = np.bincount(train_dist_classes, minlength=dist_classes_count)
+    inv_counts = np.where(class_counts > 0, 1.0 / class_counts, 0.0)
+    dist_weight = torch.tensor(inv_counts, dtype=torch.float32, device=DEVICE)
+    scaler = make_grad_scaler(cfg.use_amp and DEVICE.type == "cuda")
 
     best_joint = -1.0
     best_metrics: Dict[str, float] = {}
+    best_state: Dict[str, torch.Tensor] | None = None
+    best_epoch = 0
     patience_ctr = 0
 
-    print(f"[INFO] {cfg.name}: workers={LOAD_WORKERS}, train_batches={len(train_loader)}, val_batches={len(val_loader)}")
+    print(f"[INFO] {cfg.name}: workers={LOAD_WORKERS}, train_batches={len(train_loader)}, val_batches={len(val_loader)}, dist_loss_scale={DIST_LOSS_SCALE}")
     for epoch in range(1, cfg.epochs + 1):
         model.train()
         epoch_loss = 0.0
         for feats, angle_cls, dist_cls, ang_vec in train_loader:
-            feats = feats.to(DEVICE)
-            angle_cls = angle_cls.to(DEVICE)
-            dist_cls = dist_cls.to(DEVICE)
-            ang_vec = ang_vec.to(DEVICE)
-            optimizer.zero_grad()
-            angle_logits, dist_logits, vec_pred = model(feats)
-            loss = multitask_loss(angle_logits, dist_logits, vec_pred, angle_cls, dist_cls, ang_vec, penalty_mat)
-            loss.backward()
+            nb = DEVICE.type == "cuda"
+            feats = feats.to(DEVICE, non_blocking=nb)
+            angle_cls = angle_cls.to(DEVICE, non_blocking=nb)
+            dist_cls = dist_cls.to(DEVICE, non_blocking=nb)
+            ang_vec = ang_vec.to(DEVICE, non_blocking=nb)
+            optimizer.zero_grad(set_to_none=True)
+            with autocast_ctx(cfg.use_amp and DEVICE.type == "cuda"):
+                angle_logits, dist_logits, vec_pred = model(feats)
+                loss = multitask_loss(
+                    angle_logits,
+                    dist_logits,
+                    vec_pred,
+                    angle_cls,
+                    dist_cls,
+                    ang_vec,
+                    penalty_mat,
+                    dist_weight,
+                    cfg.label_smooth,
+                    DIST_LOSS_SCALE,
+                )
+            scaler.scale(loss).backward()
             nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0)
-            optimizer.step()
+            scaler.step(optimizer)
+            scaler.update()
             epoch_loss += loss.item() * angle_cls.size(0)
         epoch_loss /= len(train_ds)
 
-        val_metrics = evaluate(model, val_loader, DEVICE, collect_preds=False)
+        val_metrics = evaluate(model, val_loader, DEVICE, collect_preds=False, penalty_mat=penalty_mat)
         scheduler.step(val_metrics["joint_acc"])
 
         if val_metrics["joint_acc"] > best_joint:
             best_joint = val_metrics["joint_acc"]
             best_metrics = {"loss": epoch_loss, **val_metrics}
+            best_state = {k: v.detach().cpu() for k, v in model.state_dict().items()}
+            best_epoch = epoch
             patience_ctr = 0
         else:
             patience_ctr += 1
             if patience_ctr >= cfg.patience:
                 break
 
+    if best_state is not None:
+        model.load_state_dict(best_state)
+    else:
+        best_state = {k: v.detach().cpu() for k, v in model.state_dict().items()}
+        best_epoch = cfg.epochs
+        best_metrics = {"loss": epoch_loss, **evaluate(model, val_loader, DEVICE, collect_preds=False)}
+
     # Final evaluation with predictions for confusion matrices
-    final_metrics, y_true_angle, y_pred_angle, y_true_dist, y_pred_dist = evaluate(
-        model, val_loader, DEVICE, collect_preds=True
+    final_eval = evaluate(model, val_loader, DEVICE, collect_preds=True, penalty_mat=penalty_mat)
+    (
+        final_metrics,
+        y_true_angle,
+        y_pred_angle,
+        y_true_dist,
+        y_pred_dist,
+        y_true_micro_angle,
+        y_pred_micro_angle,
+        y_true_micro_dist,
+        y_pred_micro_dist,
+    ) = final_eval
+    metrics_out = {**final_metrics, "loss": best_metrics.get("loss", final_metrics.get("loss", 0.0)), "best_epoch": best_epoch}
+    return (
+        metrics_out,
+        y_true_angle,
+        y_pred_angle,
+        y_true_dist,
+        y_pred_dist,
+        y_true_micro_angle,
+        y_pred_micro_angle,
+        y_true_micro_dist,
+        y_pred_micro_dist,
+        best_state,
+        in_ch,
     )
-    
-    # Salva checkpoint per questo fold (per valutazione con perturbazione)
-    # Modifica minimale: salva checkpoint solo se fold_idx > 0 (evita salvataggio se chiamato senza fold)
-    if fold_idx > 0:
-        checkpoint_dir = BASE_DIR / "model_classifier" / "checkpoints"
-        checkpoint_dir.mkdir(exist_ok=True)
-        checkpoint_path = checkpoint_dir / f"{cfg.name}_fold{fold_idx}.pth"
-        torch.save({
-            'model_state_dict': model.state_dict(),
-            'best_metrics': best_metrics if best_metrics else final_metrics,
-            'fold_idx': fold_idx,
-            'config': cfg,
-            'feature_type': cfg.feature_type,
-            'feature_cfg': cfg.feature_cfg,
-            'model_cfg': cfg.model_cfg,
-            'dist_thresholds': dist_thresholds,
-        }, checkpoint_path)
-    
-    return best_metrics if best_metrics else final_metrics, y_true_angle, y_pred_angle, y_true_dist, y_pred_dist
 
 
-def run_cv(cfg: Config, pairs: List[Tuple[Path, Path]], angle_classes: np.ndarray, dist_classes: np.ndarray, dist_thresholds: Tuple[float, ...]) -> Dict[str, float]:
+def run_cv(cfg: Config, pairs: List[Tuple[Path, Path]], angle_classes: np.ndarray, dist_classes: np.ndarray, dist_thresholds: Tuple[float, ...], run_id: str, run_ckpt_dir: Path) -> Dict[str, float]:
     joint_classes = angle_classes * DIST_NUM_BINS + dist_classes
     skf = StratifiedKFold(n_splits=DESIRED_FOLDS, shuffle=True, random_state=SEED)
     fold_metrics: List[Dict[str, float]] = []
@@ -619,42 +808,162 @@ def run_cv(cfg: Config, pairs: List[Tuple[Path, Path]], angle_classes: np.ndarra
     all_pred_angle: List[int] = []
     all_true_dist: List[int] = []
     all_pred_dist: List[int] = []
+    all_true_micro_angle: List[int] = []
+    all_pred_micro_angle: List[int] = []
+    all_true_micro_dist: List[int] = []
+    all_pred_micro_dist: List[int] = []
     per_fold_logs: List[str] = []
+    best_fold_metrics: Dict[str, float] | None = None
+    best_fold_state: Dict[str, torch.Tensor] | None = None
+    best_fold_idx = -1
+    best_in_ch = NUM_CHANNELS
+    best_angle_state: Dict[str, torch.Tensor] | None = None
+    best_distw_state: Dict[str, torch.Tensor] | None = None
+    best_angle_in_ch = NUM_CHANNELS
+    best_distw_in_ch = NUM_CHANNELS
+    best_angle_fold_idx = -1
+    best_angle_metrics: Dict[str, float] | None = None
+    best_distw_fold_idx = -1
+    best_distw_metrics: Dict[str, float] | None = None
     for fold_idx, (train_idx, val_idx) in enumerate(skf.split(pairs, joint_classes), start=1):
         train_pairs = [pairs[i] for i in train_idx]
         val_pairs = [pairs[i] for i in val_idx]
-        metrics, y_true_a, y_pred_a, y_true_d, y_pred_d = train_one_fold(
-            cfg, train_pairs, val_pairs, len(ANGLE_LABELS), DIST_NUM_BINS, dist_thresholds, fold_idx=fold_idx
-        )
+        (
+            metrics,
+            y_true_a,
+            y_pred_a,
+            y_true_d,
+            y_pred_d,
+            y_true_micro_a,
+            y_pred_micro_a,
+            y_true_micro_d,
+            y_pred_micro_d,
+            best_state,
+            in_ch,
+        ) = train_one_fold(cfg, train_pairs, val_pairs, len(ANGLE_LABELS), DIST_NUM_BINS, dist_thresholds, dist_classes[train_idx])
         fold_metrics.append(metrics)
         all_true_angle.extend(y_true_a)
         all_pred_angle.extend(y_pred_a)
         all_true_dist.extend(y_true_d)
         all_pred_dist.extend(y_pred_d)
+        all_true_micro_angle.extend(y_true_micro_a)
+        all_pred_micro_angle.extend(y_pred_micro_a)
+        all_true_micro_dist.extend(y_true_micro_d)
+        all_pred_micro_dist.extend(y_pred_micro_d)
+        if best_fold_metrics is None or metrics.get("joint_acc", 0.0) > best_fold_metrics.get("joint_acc", -1.0):
+            best_fold_metrics = metrics
+            best_fold_state = best_state
+            best_fold_idx = fold_idx
+            best_in_ch = in_ch
+        if best_angle_metrics is None or metrics.get("angle_severity_acc", 0.0) > best_angle_metrics.get("angle_severity_acc", -1.0):
+            best_angle_metrics = metrics
+            best_angle_fold_idx = fold_idx
+            best_angle_state = best_state
+            best_angle_in_ch = in_ch
+        if best_distw_metrics is None or metrics.get("dist_acc_angle_weighted", 0.0) > best_distw_metrics.get("dist_acc_angle_weighted", -1.0):
+            best_distw_metrics = metrics
+            best_distw_fold_idx = fold_idx
+            best_distw_state = best_state
+            best_distw_in_ch = in_ch
         msg = (
             f"[INFO] {cfg.name} fold {fold_idx}/{DESIRED_FOLDS}: "
             f"joint={metrics.get('joint_acc', 0):.4f}, angle={metrics.get('angle_acc', 0):.4f}, "
-            f"dist={metrics.get('dist_acc', 0):.4f}, mae={metrics.get('angle_mae', 0):.2f}"
+            f"dist={metrics.get('dist_acc', 0):.4f}, mae={metrics.get('angle_mae', 0):.2f}, "
+            f"sev_ang={metrics.get('angle_severity_acc', 0):.4f}, "
+            f"sev_dist={metrics.get('micro_dist_severity_acc', 0):.4f}"
         )
         per_fold_logs.append(msg)
         print(msg)
 
+    if best_fold_state is None or best_fold_metrics is None:
+        raise RuntimeError(f"No best fold found for {cfg.name}")
+    if best_angle_metrics is None:
+        best_angle_metrics = best_fold_metrics
+        best_angle_fold_idx = best_fold_idx
+    if best_angle_state is None:
+        best_angle_state = best_fold_state
+    if best_angle_in_ch is None:
+        best_angle_in_ch = best_in_ch
+    if best_distw_metrics is None:
+        best_distw_metrics = best_fold_metrics
+        best_distw_fold_idx = best_fold_idx
+    if best_distw_state is None:
+        best_distw_state = best_fold_state
+    if best_distw_in_ch is None:
+        best_distw_in_ch = best_in_ch
+
     angle_cm = confusion_matrix(all_true_angle, all_pred_angle, labels=list(range(len(ANGLE_LABELS))))
     dist_cm = confusion_matrix(all_true_dist, all_pred_dist, labels=list(range(DIST_NUM_BINS)))
+    joint_true = [a * DIST_NUM_BINS + d for a, d in zip(all_true_angle, all_true_dist)]
+    joint_pred = [a * DIST_NUM_BINS + d for a, d in zip(all_pred_angle, all_pred_dist)]
+    joint_labels = list(range(len(ANGLE_LABELS) * DIST_NUM_BINS))
+    joint_cm = confusion_matrix(joint_true, joint_pred, labels=joint_labels)
+    micro_angle_cm = confusion_matrix(all_true_micro_angle, all_pred_micro_angle, labels=list(range(MICRO_ANGLE_CLASSES)))
+    micro_dist_cm = confusion_matrix(all_true_micro_dist, all_pred_micro_dist, labels=list(range(MICRO_DIST_CLASSES)))
+    dist_labels = get_distance_labels(DIST_NUM_BINS)
+
+    run_ckpt_dir.mkdir(parents=True, exist_ok=True)
+
+    def _save_ckpt(path: Path, state: Dict[str, torch.Tensor], fold_id: int, metrics: Dict[str, float], tag: str, in_ch_val: int):
+        torch.save(
+            {
+                "model_state": state,
+                "config": cfg,
+                "fold": fold_id,
+                "run_id": run_id,
+                "tag": tag,
+                "input_channels": in_ch_val,
+                "angle_labels": ANGLE_LABELS,
+                "dist_labels": dist_labels,
+                "dist_thresholds": dist_thresholds,
+                "metrics": metrics,
+            },
+            path,
+        )
+
+    joint_ckpt_path = run_ckpt_dir / f"{cfg.name}_best_joint.pt"
+    angle_ckpt_path = run_ckpt_dir / f"{cfg.name}_best_angle.pt"
+    distw_ckpt_path = run_ckpt_dir / f"{cfg.name}_best_dist_angle_weighted.pt"
+
+    _save_ckpt(joint_ckpt_path, best_fold_state, best_fold_idx, best_fold_metrics, "best_joint", best_in_ch)
+    _save_ckpt(angle_ckpt_path, best_angle_state, best_angle_fold_idx, best_angle_metrics, "best_angle_severity", best_angle_in_ch)
+    _save_ckpt(distw_ckpt_path, best_distw_state, best_distw_fold_idx, best_distw_metrics, "best_dist_angle_weighted", best_distw_in_ch)
+
+    print(f"[INFO] Saved best checkpoints for {cfg.name}: joint={joint_ckpt_path}, angle={angle_ckpt_path}, dist_aw={distw_ckpt_path}")
+
     summary = {
         "config": cfg,
         "mean_joint": float(np.mean([m["joint_acc"] for m in fold_metrics])),
         "mean_angle": float(np.mean([m["angle_acc"] for m in fold_metrics])),
         "mean_dist": float(np.mean([m["dist_acc"] for m in fold_metrics])),
         "mean_mae": float(np.mean([m["angle_mae"] for m in fold_metrics])),
+        "mean_severity": float(np.mean([m.get("angle_severity_acc", 0.0) for m in fold_metrics])),
+        "mean_micro_angle_severity": float(np.mean([m.get("micro_angle_severity_acc", 0.0) for m in fold_metrics])),
+        "mean_micro_dist_severity": float(np.mean([m.get("micro_dist_severity_acc", 0.0) for m in fold_metrics])),
         "angle_cm": angle_cm,
         "dist_cm": dist_cm,
+        "joint_cm": joint_cm,
+        "micro_angle_cm": micro_angle_cm,
+        "micro_dist_cm": micro_dist_cm,
+        "micro_angle_labels": micro_angle_labels(),
+        "micro_dist_labels": micro_dist_labels(),
         "fold_logs": per_fold_logs,
+        "checkpoint": joint_ckpt_path,
+        "checkpoint_angle": angle_ckpt_path,
+        "checkpoint_dist_angle": distw_ckpt_path,
+        "best_fold": best_fold_idx,
+        "best_fold_metrics": best_fold_metrics,
+        "best_angle_fold": best_angle_fold_idx,
+        "best_angle_fold_metrics": best_angle_metrics,
+        "best_distw_fold": best_distw_fold_idx,
+        "best_distw_fold_metrics": best_distw_metrics,
     }
     return summary
 
 
 def main():
+    if REQUIRE_CUDA and not torch.cuda.is_available():
+        raise RuntimeError("CLASSIFIER_REQUIRE_CUDA=1 but no CUDA device is available")
     set_seed(SEED)
     configure_runtime()
     pairs = load_pairs()
@@ -667,7 +976,16 @@ def main():
     angles = np.array(angles, dtype=np.float32)
     dists = np.array(dists, dtype=np.float32)
     angle_classes = angle_deg_to_class(angles)
-    dist_classes, dist_thresholds = dist_to_class(dists, num_bins=DIST_NUM_BINS)
+    dist_thresholds_override: Tuple[float, ...] | None = None
+    if DIST_THRESHOLDS_ENV:
+        dist_thresholds_override = parse_thresholds(DIST_THRESHOLDS_ENV, DIST_NUM_BINS - 1, "CLASSIFIER_DIST_THRESHOLDS")
+    elif DIST_QUANTILES_ENV:
+        qs = parse_thresholds(DIST_QUANTILES_ENV, DIST_NUM_BINS - 1, "CLASSIFIER_DIST_QUANTILES")
+        dist_thresholds_override = tuple(np.quantile(dists, qs))
+    elif DIST_NUM_BINS == 3:
+        dist_thresholds_override = tuple(np.quantile(dists, DEFAULT_DIST_QUANTILES))
+
+    dist_classes, dist_thresholds = dist_to_class(dists, thresholds=dist_thresholds_override, num_bins=DIST_NUM_BINS)
     dist_labels = get_distance_labels(DIST_NUM_BINS)
     print(f"[INFO] Loaded {len(pairs)} samples | angle bins={len(ANGLE_LABELS)}, dist bins={len(dist_labels)} thresholds={dist_thresholds}")
     print(f"[INFO] Device: {DEVICE} | folds={DESIRED_FOLDS}")
@@ -676,21 +994,21 @@ def main():
         Config(
             name="resnet18_mel96",
             feature_type="mel_ipd",
-            feature_cfg={"n_mels": 96, "n_fft": 2048, "hop_length": 1024},
-            model_cfg={"dropout": 0.25},
-            epochs=18,
+            feature_cfg={"n_mels": 96, "n_fft": 2048, "hop_length": 768, "ild_gain": 1.6},
+            model_cfg={"dropout": 0.3},
+            epochs=20,
             batch_size=6,
-            lr=3e-4,
+            lr=3.2e-4,
             weight_decay=1e-4,
         ),
         Config(
             name="crnn_mel80",
             feature_type="mel_ipd",
-            feature_cfg={"n_mels": 80, "n_fft": 2048, "hop_length": 960},
-            model_cfg={"hidden": 160, "dropout": 0.2},
-            epochs=16,
+            feature_cfg={"n_mels": 80, "n_fft": 2048, "hop_length": 720, "ild_gain": 1.6},
+            model_cfg={"hidden": 192, "dropout": 0.22},
+            epochs=18,
             batch_size=6,
-            lr=4e-4,
+            lr=4.5e-4,
             weight_decay=1e-4,
         ),
         Config(
@@ -698,21 +1016,21 @@ def main():
             feature_type="raw1d",
             feature_cfg={"target_sr": 48_000},
             model_cfg={"dropout": 0.12},
-            epochs=14,
+            epochs=16,
             batch_size=4,
-            lr=5e-4,
+            lr=6e-4,
             weight_decay=1e-4,
         ),
     ]
 
     summaries: List[Dict[str, float]] = []
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
-    run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+    run_ckpt_dir = CHECKPOINT_DIR  # Salva direttamente in checkpoints invece che in sottocartella
     results_path = BASE_DIR / "model_classifier" / f"results_{run_id}.txt"
 
     for cfg in configs:
         start = time.time()
-        summary = run_cv(cfg, pairs, angle_classes, dist_classes, dist_thresholds)
+        summary = run_cv(cfg, pairs, angle_classes, dist_classes, dist_thresholds, run_id, run_ckpt_dir)
         summary["duration_min"] = (time.time() - start) / 60.0
         summaries.append(summary)
         print(f"[INFO] Confusion matrix (angle) for {cfg.name}:\n{summary['angle_cm']}")
@@ -730,15 +1048,49 @@ def main():
             mf.write(f"Config: feat_type={cfg.feature_type}, feat_cfg={cfg.feature_cfg}, model_cfg={cfg.model_cfg}, epochs={cfg.epochs}, batch={cfg.batch_size}, lr={cfg.lr}, wd={cfg.weight_decay}, note={cfg.note}\n")
             for line in summary["fold_logs"]:
                 mf.write(line + "\n")
-            mf.write(f"Angle confusion matrix:\n{summary['angle_cm']}\n")
-            mf.write(f"Distance confusion matrix:\n{summary['dist_cm']}\n")
+            mf.write(f"Angle confusion matrix (labels={ANGLE_LABELS}):\n{summary['angle_cm']}\n")
+            mf.write(f"Distance confusion matrix (labels={get_distance_labels(DIST_NUM_BINS)}):\n{summary['dist_cm']}\n")
+            joint_labels_named = [f"{ANGLE_LABELS[a]}-{get_distance_labels(DIST_NUM_BINS)[d]}" for a in range(len(ANGLE_LABELS)) for d in range(DIST_NUM_BINS)]
+            mf.write(f"Joint confusion matrix (angle x distance) labels={joint_labels_named}:\n{summary['joint_cm']}\n")
+            mf.write(f"Micro-angle confusion matrix (12 classes, 30° bins): labels={summary['micro_angle_labels']}\n{summary['micro_angle_cm']}\n")
+            mf.write(f"Micro-distance confusion matrix (9 classes): labels={summary['micro_dist_labels']}\n{summary['micro_dist_cm']}\n")
             mf.write(
-                f"Means: joint={summary['mean_joint']:.4f}, angle={summary['mean_angle']:.4f}, dist={summary['mean_dist']:.4f}, mae={summary['mean_mae']:.2f}, duration_min={summary['duration_min']:.2f}\n"
+                f"Means: joint={summary['mean_joint']:.4f}, angle={summary['mean_angle']:.4f}, dist={summary['mean_dist']:.4f}, mae={summary['mean_mae']:.2f}, "
+                f"sev_acc={summary['mean_severity']:.4f}, micro_ang_sev={summary['mean_micro_angle_severity']:.4f}, micro_dist_sev={summary['mean_micro_dist_severity']:.4f}, "
+                f"duration_min={summary['duration_min']:.2f}\n"
+            )
+            best_fold_metrics = summary.get("best_fold_metrics", {})
+            mf.write(
+                "Best fold summary:\n"
+                f"  fold={summary.get('best_fold')} | checkpoint={summary.get('checkpoint')}\n"
+                f"  joint_acc={best_fold_metrics.get('joint_acc', 0):.4f} | angle_acc={best_fold_metrics.get('angle_acc', 0):.4f} | "
+                f"dist_acc={best_fold_metrics.get('dist_acc', 0):.4f} | angle_mae={best_fold_metrics.get('angle_mae', 0):.2f} | "
+                f"angle_sev={best_fold_metrics.get('angle_severity_acc', 0):.4f} | "
+                f"micro_ang_sev={best_fold_metrics.get('micro_angle_severity_acc', 0):.4f} | "
+                f"micro_dist_sev={best_fold_metrics.get('micro_dist_severity_acc', 0):.4f} | "
+                f"best_epoch={best_fold_metrics.get('best_epoch', 0)} | loss={best_fold_metrics.get('loss', 0):.4f}\n"
+            )
+            best_angle_metrics = summary.get("best_angle_fold_metrics", {})
+            mf.write(
+                "Best fold (angle severity):\n"
+                f"  fold={summary.get('best_angle_fold')} | checkpoint={summary.get('checkpoint_angle')}\n"
+                f"  angle_acc={best_angle_metrics.get('angle_acc', 0):.4f} | angle_sev={best_angle_metrics.get('angle_severity_acc', 0):.4f} | "
+                f"joint_acc={best_angle_metrics.get('joint_acc', 0):.4f} | dist_acc={best_angle_metrics.get('dist_acc', 0):.4f}\n"
+            )
+            best_distw_metrics = summary.get("best_distw_fold_metrics", {})
+            mf.write(
+                "Best fold (dist weighted by angle):\n"
+                f"  fold={summary.get('best_distw_fold')} | checkpoint={summary.get('checkpoint_dist_angle')}\n"
+                f"  dist_acc_angle_weighted={best_distw_metrics.get('dist_acc_angle_weighted', 0):.4f} | dist_acc={best_distw_metrics.get('dist_acc', 0):.4f} | "
+                f"angle_sev={best_distw_metrics.get('angle_severity_acc', 0):.4f} | joint_acc={best_distw_metrics.get('joint_acc', 0):.4f}\n"
             )
         print(f"[INFO] Per-model log written to {model_log}")
 
-    # Sort and pick best by joint accuracy
-    best = sorted(summaries, key=lambda s: s["mean_joint"], reverse=True)[0]
+    # Sort and pick best by joint/angle/dist accuracy
+    sorted_joint = sorted(summaries, key=lambda s: s["mean_joint"], reverse=True)
+    best_joint = sorted_joint[0]
+    best_angle = sorted(summaries, key=lambda s: s["mean_angle"], reverse=True)[0]
+    best_dist = sorted(summaries, key=lambda s: s["mean_dist"], reverse=True)[0]
 
     with open(results_path, "w", encoding="utf-8") as f:
         f.write(f"Run {run_id}\n")
@@ -747,21 +1099,77 @@ def main():
         for s in summaries:
             cfg = s["config"]
             f.write(
-            f"{cfg.name}: joint={s['mean_joint']:.4f}, angle={s['mean_angle']:.4f}, "
-            f"dist={s['mean_dist']:.4f}, mae={s['mean_mae']:.2f}, "
-            f"epochs={cfg.epochs}, batch={cfg.batch_size}, lr={cfg.lr}, wd={cfg.weight_decay}, "
-            f"feat={cfg.feature_type}, feat_cfg={cfg.feature_cfg}, model_cfg={cfg.model_cfg}, "
-            f"duration_min={s['duration_min']:.2f}\n"
-        )
-        f.write(f"  angle_cm:\n{s['angle_cm']}\n")
-        f.write(f"  dist_cm:\n{s['dist_cm']}\n")
+                f"{cfg.name}: joint={s['mean_joint']:.4f}, angle={s['mean_angle']:.4f}, "
+                f"dist={s['mean_dist']:.4f}, mae={s['mean_mae']:.2f}, sev_acc={s.get('mean_severity', 0):.4f}, "
+                f"micro_ang_sev={s.get('mean_micro_angle_severity', 0):.4f}, micro_dist_sev={s.get('mean_micro_dist_severity', 0):.4f}, "
+                f"epochs={cfg.epochs}, batch={cfg.batch_size}, lr={cfg.lr}, wd={cfg.weight_decay}, "
+                f"feat={cfg.feature_type}, feat_cfg={cfg.feature_cfg}, model_cfg={cfg.model_cfg}, "
+                f"duration_min={s['duration_min']:.2f}, best_fold={s.get('best_fold')}, checkpoint={s.get('checkpoint')}, "
+                f"checkpoint_angle={s.get('checkpoint_angle')}, checkpoint_dist_angle={s.get('checkpoint_dist_angle')}\n"
+            )
+            f.write(f"  angle_cm:\n{s['angle_cm']}\n")
+            f.write(f"  dist_cm:\n{s['dist_cm']}\n")
+            joint_labels_named = [f"{ANGLE_LABELS[a]}-{get_distance_labels(DIST_NUM_BINS)[d]}" for a in range(len(ANGLE_LABELS)) for d in range(DIST_NUM_BINS)]
+            f.write(f"  joint_cm (angle x distance) labels={joint_labels_named}:\n{s['joint_cm']}\n")
+            f.write(f"  micro_angle_cm (labels={s['micro_angle_labels']}):\n{s['micro_angle_cm']}\n")
+            f.write(f"  micro_dist_cm (labels={s['micro_dist_labels']}):\n{s['micro_dist_cm']}\n")
+        f.write("CHECKPOINTS (best fold per config):\n")
+        for s in summaries:
+            bfm = s.get("best_fold_metrics", {})
+            f.write(
+                f"- {s['config'].name}: fold={s.get('best_fold')} | ckpt_joint={s.get('checkpoint')} | "
+                f"joint={bfm.get('joint_acc', 0):.4f}, angle={bfm.get('angle_acc', 0):.4f}, "
+                f"dist={bfm.get('dist_acc', 0):.4f}, mae={bfm.get('angle_mae', 0):.2f}, "
+                f"best_epoch={bfm.get('best_epoch', 0)}, loss={bfm.get('loss', 0):.4f}\n"
+            )
+            baf = s.get("best_angle_fold_metrics", {})
+            f.write(
+                f"  angle_best: fold={s.get('best_angle_fold')} | ckpt_angle={s.get('checkpoint_angle')} | "
+                f"angle_sev={baf.get('angle_severity_acc', 0):.4f}, angle_acc={baf.get('angle_acc', 0):.4f}, "
+                f"joint={baf.get('joint_acc', 0):.4f}, dist={baf.get('dist_acc', 0):.4f}\n"
+            )
+            bdf = s.get("best_distw_fold_metrics", {})
+            f.write(
+                f"  dist_aw_best: fold={s.get('best_distw_fold')} | ckpt_dist_angle={s.get('checkpoint_dist_angle')} | "
+                f"dist_acc_angle_weighted={bdf.get('dist_acc_angle_weighted', 0):.4f}, dist_acc={bdf.get('dist_acc', 0):.4f}, "
+                f"angle_sev={bdf.get('angle_severity_acc', 0):.4f}, joint={bdf.get('joint_acc', 0):.4f}\n"
+            )
         f.write(
-            f"BEST => {best['config'].name}: joint={best['mean_joint']:.4f}, "
-            f"angle={best['mean_angle']:.4f}, dist={best['mean_dist']:.4f}, mae={best['mean_mae']:.2f}\n"
+            f"BEST JOINT => {best_joint['config'].name}: joint={best_joint['mean_joint']:.4f}, "
+            f"angle={best_joint['mean_angle']:.4f}, dist={best_joint['mean_dist']:.4f}, mae={best_joint['mean_mae']:.2f}, "
+            f"sev_acc={best_joint.get('mean_severity', 0):.4f}, micro_ang_sev={best_joint.get('mean_micro_angle_severity', 0):.4f}, "
+            f"micro_dist_sev={best_joint.get('mean_micro_dist_severity', 0):.4f}, "
+            f"checkpoint={best_joint.get('checkpoint')}\n"
+        )
+        f.write(
+            f"BEST ANGLE (severity) => {best_angle['config'].name}: angle={best_angle['mean_angle']:.4f}, "
+            f"angle_sev={best_angle.get('mean_severity', 0):.4f}, joint={best_angle['mean_joint']:.4f}, dist={best_angle['mean_dist']:.4f}, mae={best_angle['mean_mae']:.2f}, "
+            f"micro_ang_sev={best_angle.get('mean_micro_angle_severity', 0):.4f}, micro_dist_sev={best_angle.get('mean_micro_dist_severity', 0):.4f}, "
+            f"checkpoint={best_angle.get('checkpoint')}\n"
+        )
+        f.write(
+            f"BEST DIST (angle-weighted) => {best_dist['config'].name}: dist={best_dist['mean_dist']:.4f}, "
+            f"dist_ang_weighted={best_dist.get('mean_micro_dist_severity', 0):.4f}, joint={best_dist['mean_joint']:.4f}, angle={best_dist['mean_angle']:.4f}, mae={best_dist['mean_mae']:.2f}, "
+            f"sev_acc={best_dist.get('mean_severity', 0):.4f}, micro_ang_sev={best_dist.get('mean_micro_angle_severity', 0):.4f}, "
+            f"checkpoint={best_dist.get('checkpoint')}\n"
         )
 
     print(f"[INFO] Results written to {results_path}")
-    print(f"[INFO] Best model: {best['config'].name} | joint={best['mean_joint']:.4f} angle={best['mean_angle']:.4f} dist={best['mean_dist']:.4f}")
+    print(
+        f"[INFO] Best joint: {best_joint['config'].name} | joint={best_joint['mean_joint']:.4f} angle={best_joint['mean_angle']:.4f} dist={best_joint['mean_dist']:.4f} "
+        f"sev={best_joint.get('mean_severity', 0):.4f} micro_ang_sev={best_joint.get('mean_micro_angle_severity', 0):.4f} micro_dist_sev={best_joint.get('mean_micro_dist_severity', 0):.4f} "
+        f"| checkpoint={best_joint.get('checkpoint')} fold={best_joint.get('best_fold')}"
+    )
+    print(
+        f"[INFO] Best angle (severity): {best_angle['config'].name} | angle={best_angle['mean_angle']:.4f} joint={best_angle['mean_joint']:.4f} dist={best_angle['mean_dist']:.4f} "
+        f"angle_sev={best_angle.get('mean_severity', 0):.4f} micro_ang_sev={best_angle.get('mean_micro_angle_severity', 0):.4f} micro_dist_sev={best_angle.get('mean_micro_dist_severity', 0):.4f} "
+        f"| checkpoint={best_angle.get('checkpoint')} fold={best_angle.get('best_angle_fold') or best_angle.get('best_fold')}"
+    )
+    print(
+        f"[INFO] Best dist (angle-weighted): {best_dist['config'].name} | dist={best_dist['mean_dist']:.4f} joint={best_dist['mean_joint']:.4f} angle={best_dist['mean_angle']:.4f} "
+        f"dist_ang_weighted={best_dist.get('mean_micro_dist_severity', 0):.4f} sev={best_dist.get('mean_severity', 0):.4f} "
+        f"| checkpoint={best_dist.get('checkpoint')} fold={best_dist.get('best_distw_fold') or best_dist.get('best_fold')}"
+    )
 
 
 if __name__ == "__main__":
