@@ -113,11 +113,11 @@ def apply_perturbation_waveform(
     
     elif pert_type == "white_noise":
         snr_db = config["snr_db"]
-        perturbed = audio_effects.add_white_noise(waveform, sr, snr_db)
+        perturbed = audio_effects.add_white_noise(waveform, snr_db)
     
     elif pert_type == "pink_noise":
         snr_db = config["snr_db"]
-        perturbed = audio_effects.add_pink_noise(waveform, sr, snr_db)
+        perturbed = audio_effects.add_pink_noise(waveform, snr_db)
     
     elif pert_type == "eq_tilt":
         tilt_db = config["tilt_db"]
