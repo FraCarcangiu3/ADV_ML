@@ -1,0 +1,203 @@
+nohup: ignoring input
+================================================================================
+SWEEP PERTURBAZIONI SU MODELLI MIGLIORI
+================================================================================
+Max samples per test: tutti
+Device: cuda
+================================================================================
+
+[1/4] Caricamento dataset...
+   → Test set: 194 campioni
+   → Dist thresholds: (np.float64(28.399999618530273), np.float64(51.619998931884766))
+
+
+================================================================================
+[2/4] Testando modello: CRNN MEL80 (best angle)
+================================================================================
+
+✅ Caricato modello: crnn_mel80_best_angle.pt
+   Feature type: mel_ipd, cfg: {'n_mels': 80, 'n_fft': 2048, 'hop_length': 720, 'ild_gain': 1.6}
+
+   → Baseline (no perturbation)...
+      Baseline: angle_acc=0.9948, dist_acc=0.7010, joint_acc=0.6959, MAE=0.46°
+
+[3/4] Testando perturbazioni singole...
+
+   → Perturbazione: pitch_pos
+      Livello: LOW - {'type': 'pitch', 'cents': 75.0}
+         Pert: angle_acc=0.9948 (drop=+0.0000), joint_acc=0.6649 (drop=+0.0309), MAE=0.46° (+0.00°)
+      Livello: MEDIUM - {'type': 'pitch', 'cents': 150.0}
+         Pert: angle_acc=1.0000 (drop=-0.0052), joint_acc=0.6907 (drop=+0.0052), MAE=0.00° (+-0.46°)
+      Livello: HIGH - {'type': 'pitch', 'cents': 200.0}
+         Pert: angle_acc=0.9948 (drop=+0.0000), joint_acc=0.6856 (drop=+0.0103), MAE=0.46° (+0.00°)
+
+   → Perturbazione: pitch_neg
+      Livello: LOW - {'type': 'pitch', 'cents': -75.0}
+         Pert: angle_acc=0.9948 (drop=+0.0000), joint_acc=0.6495 (drop=+0.0464), MAE=0.46° (+0.00°)
+      Livello: MEDIUM - {'type': 'pitch', 'cents': -150.0}
+         Pert: angle_acc=0.9897 (drop=+0.0052), joint_acc=0.6289 (drop=+0.0670), MAE=0.93° (+0.46°)
+      Livello: HIGH - {'type': 'pitch', 'cents': -200.0}
+         Pert: angle_acc=0.9897 (drop=+0.0052), joint_acc=0.6289 (drop=+0.0670), MAE=0.93° (+0.46°)
+
+   → Perturbazione: white_noise
+      Livello: LOW - {'type': 'white_noise', 'snr_db': 42.0}
+         Pert: angle_acc=0.9845 (drop=+0.0103), joint_acc=0.4330 (drop=+0.2629), MAE=1.39° (+0.93°)
+      Livello: MEDIUM - {'type': 'white_noise', 'snr_db': 40.0}
+         Pert: angle_acc=0.9845 (drop=+0.0103), joint_acc=0.4485 (drop=+0.2474), MAE=1.39° (+0.93°)
+      Livello: HIGH - {'type': 'white_noise', 'snr_db': 38.0}
+         Pert: angle_acc=0.9845 (drop=+0.0103), joint_acc=0.4691 (drop=+0.2268), MAE=1.39° (+0.93°)
+
+   → Perturbazione: pink_noise
+      Livello: LOW - {'type': 'pink_noise', 'snr_db': 22.0}
+         Pert: angle_acc=0.9794 (drop=+0.0155), joint_acc=0.4691 (drop=+0.2268), MAE=1.86° (+1.39°)
+      Livello: MEDIUM - {'type': 'pink_noise', 'snr_db': 20.0}
+         Pert: angle_acc=0.9536 (drop=+0.0412), joint_acc=0.4948 (drop=+0.2010), MAE=4.18° (+3.71°)
+      Livello: HIGH - {'type': 'pink_noise', 'snr_db': 18.0}
+         Pert: angle_acc=0.9124 (drop=+0.0825), joint_acc=0.5309 (drop=+0.1649), MAE=7.89° (+7.42°)
+
+   → Perturbazione: eq_boost
+      Livello: LOW - {'type': 'eq_tilt', 'tilt_db': 3.0}
+         Pert: angle_acc=0.9948 (drop=+0.0000), joint_acc=0.7268 (drop=-0.0309), MAE=0.46° (+0.00°)
+      Livello: MEDIUM - {'type': 'eq_tilt', 'tilt_db': 4.5}
+         Pert: angle_acc=0.9948 (drop=+0.0000), joint_acc=0.7320 (drop=-0.0361), MAE=0.46° (+0.00°)
+      Livello: HIGH - {'type': 'eq_tilt', 'tilt_db': 6.0}
+         Pert: angle_acc=0.9948 (drop=+0.0000), joint_acc=0.7526 (drop=-0.0567), MAE=0.46° (+0.00°)
+
+   → Perturbazione: eq_cut
+      Livello: LOW - {'type': 'eq_tilt', 'tilt_db': -3.0}
+         Pert: angle_acc=1.0000 (drop=-0.0052), joint_acc=0.6907 (drop=+0.0052), MAE=0.00° (+-0.46°)
+      Livello: MEDIUM - {'type': 'eq_tilt', 'tilt_db': -6.0}
+         Pert: angle_acc=0.9948 (drop=+0.0000), joint_acc=0.6701 (drop=+0.0258), MAE=0.46° (+0.00°)
+      Livello: HIGH - {'type': 'eq_tilt', 'tilt_db': -9.0}
+         Pert: angle_acc=0.9897 (drop=+0.0052), joint_acc=0.6340 (drop=+0.0619), MAE=0.93° (+0.46°)
+
+   → Perturbazione: highpass
+      Livello: LOW - {'type': 'highpass', 'cutoff_hz': 150}
+         Pert: angle_acc=1.0000 (drop=-0.0052), joint_acc=0.6959 (drop=+0.0000), MAE=0.00° (+-0.46°)
+      Livello: MEDIUM - {'type': 'highpass', 'cutoff_hz': 200}
+         Pert: angle_acc=1.0000 (drop=-0.0052), joint_acc=0.6804 (drop=+0.0155), MAE=0.00° (+-0.46°)
+      Livello: HIGH - {'type': 'highpass', 'cutoff_hz': 250}
+         Pert: angle_acc=1.0000 (drop=-0.0052), joint_acc=0.6649 (drop=+0.0309), MAE=0.00° (+-0.46°)
+
+   → Perturbazione: lowpass
+      Livello: LOW - {'type': 'lowpass', 'cutoff_hz': 12000}
+         Pert: angle_acc=0.9794 (drop=+0.0155), joint_acc=0.6134 (drop=+0.0825), MAE=1.86° (+1.39°)
+      Livello: MEDIUM - {'type': 'lowpass', 'cutoff_hz': 10000}
+         Pert: angle_acc=0.9794 (drop=+0.0155), joint_acc=0.5876 (drop=+0.1082), MAE=1.86° (+1.39°)
+      Livello: HIGH - {'type': 'lowpass', 'cutoff_hz': 8000}
+         Pert: angle_acc=0.9742 (drop=+0.0206), joint_acc=0.5670 (drop=+0.1289), MAE=2.32° (+1.86°)
+
+[4/4] Testando perturbazioni combo...
+
+   → Combo: pink_eq
+      Livello: MEDIUM - [{'type': 'pink_noise', 'snr_db': 20.0}, {'type': 'eq_tilt', 'tilt_db': 4.5}]
+         Pert: angle_acc=0.8918 (drop=+0.1031), joint_acc=0.5773 (drop=+0.1186), MAE=9.74° (+9.28°)
+      Livello: HIGH - [{'type': 'pink_noise', 'snr_db': 18.0}, {'type': 'eq_tilt', 'tilt_db': 6.0}]
+         Pert: angle_acc=0.8557 (drop=+0.1392), joint_acc=0.5412 (drop=+0.1546), MAE=12.99° (+12.53°)
+
+   → Combo: pink_hp
+      Livello: MEDIUM - [{'type': 'pink_noise', 'snr_db': 20.0}, {'type': 'highpass', 'cutoff_hz': 200}]
+         Pert: angle_acc=0.9639 (drop=+0.0309), joint_acc=0.4897 (drop=+0.2062), MAE=3.25° (+2.78°)
+      Livello: HIGH - [{'type': 'pink_noise', 'snr_db': 18.0}, {'type': 'highpass', 'cutoff_hz': 250}]
+         Pert: angle_acc=0.8969 (drop=+0.0979), joint_acc=0.4897 (drop=+0.2062), MAE=9.28° (+8.81°)
+
+================================================================================
+[2/4] Testando modello: ResNet18 MEL96 (best dist+angle weighted)
+================================================================================
+
+✅ Caricato modello: resnet18_mel96_best_dist_angle_weighted.pt
+   Feature type: mel_ipd, cfg: {'n_mels': 96, 'n_fft': 2048, 'hop_length': 768, 'ild_gain': 1.6}
+
+   → Baseline (no perturbation)...
+      Baseline: angle_acc=1.0000, dist_acc=0.7062, joint_acc=0.7062, MAE=0.00°
+
+[3/4] Testando perturbazioni singole...
+
+   → Perturbazione: pitch_pos
+      Livello: LOW - {'type': 'pitch', 'cents': 75.0}
+         Pert: angle_acc=0.9948 (drop=+0.0052), joint_acc=0.6289 (drop=+0.0773), MAE=0.46° (+0.46°)
+      Livello: MEDIUM - {'type': 'pitch', 'cents': 150.0}
+         Pert: angle_acc=1.0000 (drop=+0.0000), joint_acc=0.6082 (drop=+0.0979), MAE=0.00° (+0.00°)
+      Livello: HIGH - {'type': 'pitch', 'cents': 200.0}
+         Pert: angle_acc=1.0000 (drop=+0.0000), joint_acc=0.6186 (drop=+0.0876), MAE=0.00° (+0.00°)
+
+   → Perturbazione: pitch_neg
+      Livello: LOW - {'type': 'pitch', 'cents': -75.0}
+         Pert: angle_acc=0.9948 (drop=+0.0052), joint_acc=0.5464 (drop=+0.1598), MAE=0.46° (+0.46°)
+      Livello: MEDIUM - {'type': 'pitch', 'cents': -150.0}
+         Pert: angle_acc=1.0000 (drop=+0.0000), joint_acc=0.4897 (drop=+0.2165), MAE=0.00° (+0.00°)
+      Livello: HIGH - {'type': 'pitch', 'cents': -200.0}
+         Pert: angle_acc=1.0000 (drop=+0.0000), joint_acc=0.4691 (drop=+0.2371), MAE=0.00° (+0.00°)
+
+   → Perturbazione: white_noise
+      Livello: LOW - {'type': 'white_noise', 'snr_db': 42.0}
+         Pert: angle_acc=0.9433 (drop=+0.0567), joint_acc=0.5155 (drop=+0.1907), MAE=5.10° (+5.10°)
+      Livello: MEDIUM - {'type': 'white_noise', 'snr_db': 40.0}
+         Pert: angle_acc=0.8969 (drop=+0.1031), joint_acc=0.5103 (drop=+0.1959), MAE=9.28° (+9.28°)
+      Livello: HIGH - {'type': 'white_noise', 'snr_db': 38.0}
+         Pert: angle_acc=0.8814 (drop=+0.1186), joint_acc=0.4897 (drop=+0.2165), MAE=10.67° (+10.67°)
+
+   → Perturbazione: pink_noise
+      Livello: LOW - {'type': 'pink_noise', 'snr_db': 22.0}
+         Pert: angle_acc=0.8299 (drop=+0.1701), joint_acc=0.4794 (drop=+0.2268), MAE=16.70° (+16.70°)
+      Livello: MEDIUM - {'type': 'pink_noise', 'snr_db': 20.0}
+         Pert: angle_acc=0.7887 (drop=+0.2113), joint_acc=0.4536 (drop=+0.2526), MAE=20.88° (+20.88°)
+      Livello: HIGH - {'type': 'pink_noise', 'snr_db': 18.0}
+         Pert: angle_acc=0.7423 (drop=+0.2577), joint_acc=0.4536 (drop=+0.2526), MAE=26.91° (+26.91°)
+
+   → Perturbazione: eq_boost
+      Livello: LOW - {'type': 'eq_tilt', 'tilt_db': 3.0}
+         Pert: angle_acc=1.0000 (drop=+0.0000), joint_acc=0.7784 (drop=-0.0722), MAE=0.00° (+0.00°)
+      Livello: MEDIUM - {'type': 'eq_tilt', 'tilt_db': 4.5}
+         Pert: angle_acc=1.0000 (drop=+0.0000), joint_acc=0.7732 (drop=-0.0670), MAE=0.00° (+0.00°)
+      Livello: HIGH - {'type': 'eq_tilt', 'tilt_db': 6.0}
+         Pert: angle_acc=1.0000 (drop=+0.0000), joint_acc=0.7423 (drop=-0.0361), MAE=0.00° (+0.00°)
+
+   → Perturbazione: eq_cut
+      Livello: LOW - {'type': 'eq_tilt', 'tilt_db': -3.0}
+         Pert: angle_acc=1.0000 (drop=+0.0000), joint_acc=0.6134 (drop=+0.0928), MAE=0.00° (+0.00°)
+      Livello: MEDIUM - {'type': 'eq_tilt', 'tilt_db': -6.0}
+         Pert: angle_acc=1.0000 (drop=+0.0000), joint_acc=0.4794 (drop=+0.2268), MAE=0.00° (+0.00°)
+      Livello: HIGH - {'type': 'eq_tilt', 'tilt_db': -9.0}
+         Pert: angle_acc=0.9948 (drop=+0.0052), joint_acc=0.3866 (drop=+0.3196), MAE=0.46° (+0.46°)
+
+   → Perturbazione: highpass
+      Livello: LOW - {'type': 'highpass', 'cutoff_hz': 150}
+         Pert: angle_acc=1.0000 (drop=+0.0000), joint_acc=0.7268 (drop=-0.0206), MAE=0.00° (+0.00°)
+      Livello: MEDIUM - {'type': 'highpass', 'cutoff_hz': 200}
+         Pert: angle_acc=0.9948 (drop=+0.0052), joint_acc=0.7268 (drop=-0.0206), MAE=0.46° (+0.46°)
+      Livello: HIGH - {'type': 'highpass', 'cutoff_hz': 250}
+         Pert: angle_acc=0.9948 (drop=+0.0052), joint_acc=0.7113 (drop=-0.0052), MAE=0.46° (+0.46°)
+
+   → Perturbazione: lowpass
+      Livello: LOW - {'type': 'lowpass', 'cutoff_hz': 12000}
+         Pert: angle_acc=1.0000 (drop=+0.0000), joint_acc=0.4175 (drop=+0.2887), MAE=0.00° (+0.00°)
+      Livello: MEDIUM - {'type': 'lowpass', 'cutoff_hz': 10000}
+         Pert: angle_acc=1.0000 (drop=+0.0000), joint_acc=0.4021 (drop=+0.3041), MAE=0.00° (+0.00°)
+      Livello: HIGH - {'type': 'lowpass', 'cutoff_hz': 8000}
+         Pert: angle_acc=0.9948 (drop=+0.0052), joint_acc=0.3763 (drop=+0.3299), MAE=0.46° (+0.46°)
+
+[4/4] Testando perturbazioni combo...
+
+   → Combo: pink_eq
+      Livello: MEDIUM - [{'type': 'pink_noise', 'snr_db': 20.0}, {'type': 'eq_tilt', 'tilt_db': 4.5}]
+         Pert: angle_acc=0.7216 (drop=+0.2784), joint_acc=0.4639 (drop=+0.2423), MAE=29.23° (+29.23°)
+      Livello: HIGH - [{'type': 'pink_noise', 'snr_db': 18.0}, {'type': 'eq_tilt', 'tilt_db': 6.0}]
+         Pert: angle_acc=0.6804 (drop=+0.3196), joint_acc=0.3969 (drop=+0.3093), MAE=32.47° (+32.47°)
+
+   → Combo: pink_hp
+      Livello: MEDIUM - [{'type': 'pink_noise', 'snr_db': 20.0}, {'type': 'highpass', 'cutoff_hz': 200}]
+         Pert: angle_acc=0.7680 (drop=+0.2320), joint_acc=0.4794 (drop=+0.2268), MAE=22.73° (+22.73°)
+      Livello: HIGH - [{'type': 'pink_noise', 'snr_db': 18.0}, {'type': 'highpass', 'cutoff_hz': 250}]
+         Pert: angle_acc=0.7629 (drop=+0.2371), joint_acc=0.5103 (drop=+0.1959), MAE=25.05° (+25.05°)
+
+================================================================================
+SWEEP COMPLETATO!
+================================================================================
+Risultati salvati in:
+  - CSV riassuntivo: /home/francesco/ADV_ML/COLLEAGUE_BSc_Thesis/model_classifier/results/summary_perturbations_best_models.csv
+  - Confusion matrices: /home/francesco/ADV_ML/COLLEAGUE_BSc_Thesis/model_classifier/results/confusion_matrices/
+
+Totale righe CSV: 56
+================================================================================
+
