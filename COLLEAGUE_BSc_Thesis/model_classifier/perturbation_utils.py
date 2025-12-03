@@ -66,6 +66,30 @@ PERTURB_PRESETS = {
     "lp_8000": {"type": "lowpass", "cutoff_hz": 8000},
     "lp_10000": {"type": "lowpass", "cutoff_hz": 10000},
     "lp_12000": {"type": "lowpass", "cutoff_hz": 12000},
+    
+    # ========================================================================
+    # NUOVI EFFETTI SPAZIALI (per disturbare IPD/ILD)
+    # ========================================================================
+    
+    # Spatial delay — micro-delay tra canali (disturba IPD)
+    "spatial_delay_light": {"type": "spatial_delay", "max_samples": 2},    # ~0.02ms @ 96kHz
+    "spatial_delay_medium": {"type": "spatial_delay", "max_samples": 5},   # ~0.05ms @ 96kHz
+    "spatial_delay_strong": {"type": "spatial_delay", "max_samples": 10},  # ~0.1ms @ 96kHz
+    
+    # Channel gain jitter — variazioni di gain per canale (disturba ILD)
+    "gain_jitter_light": {"type": "gain_jitter", "max_db": 0.5},   # Molto sottile
+    "gain_jitter_medium": {"type": "gain_jitter", "max_db": 1.0},  # Sottile
+    "gain_jitter_strong": {"type": "gain_jitter", "max_db": 1.5},  # Percettibile
+    
+    # Multi-channel white noise — rumore indipendente per canale
+    "multi_white_light": {"type": "multi_noise", "noise_subtype": "white", "snr_db": 42.0},
+    "multi_white_medium": {"type": "multi_noise", "noise_subtype": "white", "snr_db": 40.0},
+    "multi_white_strong": {"type": "multi_noise", "noise_subtype": "white", "snr_db": 38.0},
+    
+    # Multi-channel pink noise — rumore indipendente per canale
+    "multi_pink_light": {"type": "multi_noise", "noise_subtype": "pink", "snr_db": 22.0},
+    "multi_pink_medium": {"type": "multi_noise", "noise_subtype": "pink", "snr_db": 20.0},
+    "multi_pink_strong": {"type": "multi_noise", "noise_subtype": "pink", "snr_db": 18.0},
 }
 
 
@@ -130,6 +154,19 @@ def apply_perturbation_waveform(
     elif pert_type == "lowpass":
         cutoff_hz = config["cutoff_hz"]
         perturbed = audio_effects.apply_lowpass(waveform, sr, cutoff_hz)
+    
+    elif pert_type == "spatial_delay":
+        max_samples = config["max_samples"]
+        perturbed = audio_effects.apply_spatial_delay(waveform, sr, max_samples)
+    
+    elif pert_type == "gain_jitter":
+        max_db = config["max_db"]
+        perturbed = audio_effects.apply_channel_gain_jitter(waveform, max_db)
+    
+    elif pert_type == "multi_noise":
+        snr_db = config["snr_db"]
+        noise_subtype = config.get("noise_subtype", "white")
+        perturbed = audio_effects.apply_multi_channel_noise(waveform, snr_db, noise_subtype)
     
     else:
         raise ValueError(f"Tipo di perturbazione sconosciuto: {pert_type}")

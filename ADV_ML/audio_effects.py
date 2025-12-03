@@ -453,6 +453,200 @@ def apply_lowpass(signal: np.ndarray, sr: int, cutoff_hz: float) -> np.ndarray:
 
 
 # ========================================================================
+# NUOVI EFFETTI SPAZIALI (per disturbare IPD/ILD dei modelli ML)
+# ========================================================================
+
+def apply_spatial_delay(
+    signal: np.ndarray,
+    sr: int,
+    max_samples: int,
+    seed: int | None = None
+) -> np.ndarray:
+    """
+    Applica spatial delay — micro-delay tra canali per disturbare IPD.
+    
+    Ogni canale viene shiftato di un numero casuale di samples (±max_samples).
+    Questo sporca le relazioni di fase tra canali senza introdurre click.
+    
+    Replica la logica del client C++.
+    
+    Args:
+        signal: Array numpy audio [frames, channels] o [frames]
+        sr: Sample rate in Hz (non usato, ma tenuto per compatibilità API)
+        max_samples: Massimo delay in samples (±)
+        seed: Seed per RNG (None = random)
+    
+    Returns:
+        Segnale con spatial delay applicato (stessa shape di input)
+    """
+    if max_samples <= 0:
+        return signal.copy()
+    
+    # Gestisci mono (nessun effetto spaziale)
+    if signal.ndim == 1:
+        return signal.copy()
+    
+    frames, channels = signal.shape
+    if channels < 2:
+        return signal.copy()
+    
+    rng = np.random.RandomState(seed) if seed is not None else np.random
+    
+    # Genera delay casuale per ogni canale (±max_samples)
+    delays = rng.randint(-max_samples, max_samples + 1, size=channels)
+    
+    # Applica delay per canale usando shift con zero-padding
+    result = np.zeros_like(signal)
+    for ch in range(channels):
+        delay = delays[ch]
+        if delay == 0:
+            result[:, ch] = signal[:, ch]
+        elif delay > 0:
+            # Delay positivo = shift avanti (ritardo)
+            result[delay:, ch] = signal[:-delay, ch]
+            # Primi 'delay' samples = zero (padding)
+        else:
+            # Delay negativo = shift indietro (anticipo)
+            result[:delay, ch] = signal[-delay:, ch]
+            # Ultimi abs(delay) samples = zero (padding)
+    
+    return result
+
+
+def apply_channel_gain_jitter(
+    signal: np.ndarray,
+    max_db: float,
+    seed: int | None = None
+) -> np.ndarray:
+    """
+    Applica channel gain jitter — piccole variazioni di gain per canale per disturbare ILD.
+    
+    Ogni canale viene moltiplicato per un fattore casuale entro ±max_db.
+    
+    Replica la logica del client C++.
+    
+    Args:
+        signal: Array numpy audio [frames, channels] o [frames]
+        max_db: Massima variazione di gain in dB (±)
+        seed: Seed per RNG (None = random)
+    
+    Returns:
+        Segnale con gain jitter applicato (stessa shape di input)
+    """
+    if max_db < 0.01:
+        return signal.copy()
+    
+    # Gestisci mono (nessun effetto spaziale)
+    if signal.ndim == 1:
+        return signal.copy()
+    
+    frames, channels = signal.shape
+    if channels < 2:
+        return signal.copy()
+    
+    rng = np.random.RandomState(seed) if seed is not None else np.random
+    
+    # Genera gain factor casuale per ogni canale
+    db_variations = rng.uniform(-max_db, max_db, size=channels)
+    gains = np.power(10.0, db_variations / 20.0)  # dB → linear gain
+    
+    # Applica gain per canale
+    result = signal.copy()
+    for ch in range(channels):
+        result[:, ch] *= gains[ch]
+    
+    return result
+
+
+def apply_multi_channel_noise(
+    signal: np.ndarray,
+    snr_db: float,
+    noise_type: Literal["white", "pink"] = "white",
+    seed: int | None = None
+) -> np.ndarray:
+    """
+    Applica multi-channel noise — rumore indipendente per ogni canale.
+    
+    A differenza del white/pink noise normale (stesso rumore su tutti i canali),
+    questo genera rumore DIVERSO per ogni canale, disturbando le correlazioni
+    spaziali (IPD e ILD).
+    
+    Replica la logica del client C++.
+    
+    Args:
+        signal: Array numpy audio [frames, channels] o [frames]
+        snr_db: Target SNR in dB
+        noise_type: "white" o "pink"
+        seed: Seed per RNG (None = random)
+    
+    Returns:
+        Segnale con multi-channel noise applicato (stessa shape di input)
+    """
+    if snr_db <= 0.0:
+        return signal.copy()
+    
+    # Gestisci mono (applica rumore normale)
+    if signal.ndim == 1:
+        if noise_type == "white":
+            return add_white_noise(signal, snr_db, seed)
+        else:
+            return add_pink_noise(signal, snr_db, seed)
+    
+    frames, channels = signal.shape
+    if channels < 2:
+        # Se mono, applica rumore normale
+        if noise_type == "white":
+            return add_white_noise(signal, snr_db, seed)
+        else:
+            return add_pink_noise(signal, snr_db, seed)
+    
+    # Calcola RMS del segnale (media su tutti i canali)
+    rms_signal = calculate_rms(signal)
+    if rms_signal < 1e-6:
+        return signal.copy()
+    
+    # Target RMS del rumore: RMS_noise = RMS_signal / (10^(SNR/20))
+    target_rms_noise = rms_signal / (10.0 ** (snr_db / 20.0))
+    
+    # RMS teorico di rumore uniforme = 1/√3 ≈ 0.577
+    rms_uniform = 1.0 / np.sqrt(3.0)
+    noise_amplitude = target_rms_noise / rms_uniform
+    
+    rng = np.random.RandomState(seed) if seed is not None else np.random
+    
+    result = signal.copy()
+    
+    # Genera rumore per ogni canale INDIPENDENTEMENTE
+    for ch in range(channels):
+        if noise_type == "pink":
+            # Pink noise: filtro IIR 1/f
+            white_samples = rng.uniform(-1.0, 1.0, size=frames)
+            pink_samples = np.zeros(frames)
+            y_prev = 0.0
+            alpha = 0.99
+            
+            for i in range(frames):
+                y_prev = alpha * y_prev + (1.0 - alpha) * white_samples[i]
+                pink_samples[i] = y_prev
+            
+            # Normalizza e scala
+            pink_rms = np.sqrt(np.mean(pink_samples ** 2))
+            if pink_rms > 1e-6:
+                pink_samples = pink_samples * (target_rms_noise / pink_rms)
+            
+            result[:, ch] += pink_samples
+        else:
+            # White noise
+            white_samples = rng.uniform(-1.0, 1.0, size=frames) * noise_amplitude
+            result[:, ch] += white_samples
+    
+    # Clip to [-1, 1]
+    result = np.clip(result, -1.0, 1.0)
+    
+    return result
+
+
+# ========================================================================
 # Funzioni di Randomizzazione (replica logica client C++)
 # ========================================================================
 

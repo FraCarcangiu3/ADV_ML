@@ -28,6 +28,15 @@ Ogni perturbazione viene testata a **3 livelli di intensità**: LOW, MEDIUM, HIG
 | **High-Pass Filter** | 150 Hz | 200 Hz | 250 Hz | Taglia basse frequenze |
 | **Low-Pass Filter** | 12 kHz | 10 kHz | 8 kHz | Taglia alte frequenze |
 
+### Nuovi Effetti Spaziali (disturbare IPD/ILD)
+
+| Tipo | LOW | MEDIUM | HIGH | Note |
+|------|-----|--------|------|------|
+| **Spatial Delay** | ±2 samples | ±5 samples | ±10 samples | Micro-delay tra canali (~0.02-0.1ms @ 96kHz), disturba IPD |
+| **Channel Gain Jitter** | ±0.5 dB | ±1.0 dB | ±1.5 dB | Variazioni gain per canale, disturba ILD |
+| **Multi-Channel White Noise** | SNR 42 dB | SNR 40 dB | SNR 38 dB | Rumore indipendente per canale |
+| **Multi-Channel Pink Noise** | SNR 22 dB | SNR 20 dB | SNR 18 dB | Pink noise indipendente per canale |
+
 ### Perturbazioni Combo
 
 Combinazioni di più perturbazioni applicate in sequenza:

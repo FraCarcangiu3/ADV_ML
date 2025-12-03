@@ -2227,3 +2227,5 @@ Identifica perturbazioni più/meno efficaci
 Ranking per tipo
 Raccomandazioni per tesi
 - test accurency con i rumori base aggiunti fin ora 
+-risultati ottenuti
+-aggiunta dei 3 nuovi rumori spaziali 

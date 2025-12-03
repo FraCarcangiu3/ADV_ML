@@ -136,6 +136,38 @@ PERTURBATION_LEVELS = {
         "MEDIUM": {"type": "lowpass", "cutoff_hz": 10000},
         "HIGH": {"type": "lowpass", "cutoff_hz": 8000},
     },
+    
+    # ========================================================================
+    # NUOVI EFFETTI SPAZIALI (per disturbare IPD/ILD)
+    # ========================================================================
+    
+    # Spatial delay — micro-delay tra canali (disturba IPD)
+    "spatial_delay": {
+        "LOW": {"type": "spatial_delay", "max_samples": 2},      # ~0.02ms @ 96kHz
+        "MEDIUM": {"type": "spatial_delay", "max_samples": 5},   # ~0.05ms @ 96kHz
+        "HIGH": {"type": "spatial_delay", "max_samples": 10},    # ~0.1ms @ 96kHz
+    },
+    
+    # Channel gain jitter — variazioni di gain per canale (disturba ILD)
+    "gain_jitter": {
+        "LOW": {"type": "gain_jitter", "max_db": 0.5},          # Molto sottile
+        "MEDIUM": {"type": "gain_jitter", "max_db": 1.0},       # Sottile
+        "HIGH": {"type": "gain_jitter", "max_db": 1.5},         # Percettibile
+    },
+    
+    # Multi-channel white noise — rumore indipendente per canale
+    "multi_white_noise": {
+        "LOW": {"type": "multi_noise", "noise_subtype": "white", "snr_db": 42.0},
+        "MEDIUM": {"type": "multi_noise", "noise_subtype": "white", "snr_db": 40.0},
+        "HIGH": {"type": "multi_noise", "noise_subtype": "white", "snr_db": 38.0},
+    },
+    
+    # Multi-channel pink noise — rumore indipendente per canale
+    "multi_pink_noise": {
+        "LOW": {"type": "multi_noise", "noise_subtype": "pink", "snr_db": 22.0},
+        "MEDIUM": {"type": "multi_noise", "noise_subtype": "pink", "snr_db": 20.0},
+        "HIGH": {"type": "multi_noise", "noise_subtype": "pink", "snr_db": 18.0},
+    },
 }
 
 # Combo perturbations (applicate in sequenza)
@@ -160,6 +192,27 @@ COMBO_PERTURBATIONS = {
             {"type": "highpass", "cutoff_hz": 250},
         ],
     },
+    # Nuove combo con effetti spaziali
+    "spatial_gain": {
+        "MEDIUM": [
+            {"type": "spatial_delay", "max_samples": 5},
+            {"type": "gain_jitter", "max_db": 1.0},
+        ],
+        "HIGH": [
+            {"type": "spatial_delay", "max_samples": 10},
+            {"type": "gain_jitter", "max_db": 1.5},
+        ],
+    },
+    "multi_pink_spatial": {
+        "MEDIUM": [
+            {"type": "multi_noise", "noise_subtype": "pink", "snr_db": 20.0},
+            {"type": "spatial_delay", "max_samples": 5},
+        ],
+        "HIGH": [
+            {"type": "multi_noise", "noise_subtype": "pink", "snr_db": 18.0},
+            {"type": "spatial_delay", "max_samples": 10},
+        ],
+    },
 }
 
 
@@ -181,6 +234,13 @@ def apply_combo_perturbation(waveform: np.ndarray, sr: int, combo_list: List[Dic
             result = audio_effects.apply_highpass(result, sr, config["cutoff_hz"])
         elif pert_type == "lowpass":
             result = audio_effects.apply_lowpass(result, sr, config["cutoff_hz"])
+        elif pert_type == "spatial_delay":
+            result = audio_effects.apply_spatial_delay(result, sr, config["max_samples"])
+        elif pert_type == "gain_jitter":
+            result = audio_effects.apply_channel_gain_jitter(result, config["max_db"])
+        elif pert_type == "multi_noise":
+            noise_subtype = config.get("noise_subtype", "white")
+            result = audio_effects.apply_multi_channel_noise(result, config["snr_db"], noise_subtype)
     
     return result
 
@@ -244,6 +304,13 @@ class AudioFeatureDatasetBestModels(torch.utils.data.Dataset):
                     audio_mat = audio_effects.apply_highpass(audio_mat, AUDIO_SR, self.perturbation_config["cutoff_hz"])
                 elif pert_type == "lowpass":
                     audio_mat = audio_effects.apply_lowpass(audio_mat, AUDIO_SR, self.perturbation_config["cutoff_hz"])
+                elif pert_type == "spatial_delay":
+                    audio_mat = audio_effects.apply_spatial_delay(audio_mat, AUDIO_SR, self.perturbation_config["max_samples"])
+                elif pert_type == "gain_jitter":
+                    audio_mat = audio_effects.apply_channel_gain_jitter(audio_mat, self.perturbation_config["max_db"])
+                elif pert_type == "multi_noise":
+                    noise_subtype = self.perturbation_config.get("noise_subtype", "white")
+                    audio_mat = audio_effects.apply_multi_channel_noise(audio_mat, self.perturbation_config["snr_db"], noise_subtype)
         
         # Feature extraction
         if self.feature_type == "mel_ipd":
