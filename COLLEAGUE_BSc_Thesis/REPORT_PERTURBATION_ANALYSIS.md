@@ -1,7 +1,7 @@
 # Report Analisi Perturbazioni Audio
 ## Sistema Anti-Cheat basato su Audio Spaziale
 
-**Data:** 03/12/2025 18:13
+**Data:** 04/12/2025 17:39
 **Autore:** Francesco Carcangiu
 **Campioni testati:** 194
 **Totale test eseguiti:** 88
@@ -255,4 +255,4 @@ Analisi delle matrici di confusione per casi chiave:
 
 ---
 
-*Report generato automaticamente il 03/12/2025 alle 18:13*
+*Report generato automaticamente il 04/12/2025 alle 17:39*
