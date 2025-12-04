@@ -1,10 +1,10 @@
 # Report Analisi Perturbazioni Audio
 ## Sistema Anti-Cheat basato su Audio Spaziale
 
-**Data:** 03/12/2025 15:52
+**Data:** 03/12/2025 18:13
 **Autore:** Francesco Carcangiu
 **Campioni testati:** 194
-**Totale test eseguiti:** 56
+**Totale test eseguiti:** 88
 
 ---
 
@@ -13,13 +13,13 @@
 Questo report presenta i risultati dell'analisi sperimentale volta a valutare l'efficacia di diverse perturbazioni audio nel degradare le performance di modelli di machine learning per la localizzazione audio spaziale. L'obiettivo è identificare perturbazioni che, pur rimanendo percettivamente accettabili per il giocatore, compromettano significativamente la capacità di sistemi di cheating basati su ML.
 
 **Risultati chiave:**
-- Perturbazione più efficace: **lowpass** (livello HIGH)
-  - Degradazione joint accuracy: **33.0%**
-  - Aumento MAE: **0.46°**
+- Perturbazione più efficace: **multi_pink_noise** (livello LOW)
+  - Degradazione joint accuracy: **61.9%**
+  - Aumento MAE: **92.78°**
 - Perturbazione meno efficace: **eq_boost** (livello LOW)
   - Degradazione joint accuracy: **-7.2%**
 
-- Degradazione media (livello HIGH): **14.5%**
+- Degradazione media (livello HIGH): **19.9%**
 
 ---
 
@@ -86,16 +86,16 @@ Le perturbazioni più efficaci nel degradare le performance dei modelli:
 
 | # | Modello | Perturbazione | Livello | Joint Drop | Dist Drop | MAE Increase |
 |---|---------|---------------|---------|------------|-----------|--------------|
-| 1 | ResNet | lowpass | HIGH | **33.0%** | 32.5% | 0.5° |
-| 2 | ResNet | eq cut | HIGH | **32.0%** | 32.0% | 0.5° |
-| 3 | ResNet | pink eq | HIGH | **30.9%** | 8.8% | 32.5° |
-| 4 | ResNet | lowpass | MEDIUM | **30.4%** | 30.4% | 0.0° |
-| 5 | ResNet | lowpass | LOW | **28.9%** | 28.9% | 0.0° |
-| 6 | CRNN | white noise | LOW | **26.3%** | 25.8% | 0.9° |
-| 7 | ResNet | pink noise | MEDIUM | **25.3%** | 17.0% | 20.9° |
-| 8 | ResNet | pink noise | HIGH | **25.3%** | 16.5% | 26.9° |
-| 9 | CRNN | white noise | MEDIUM | **24.7%** | 24.2% | 0.9° |
-| 10 | ResNet | pink eq | MEDIUM | **24.2%** | 6.2% | 29.2° |
+| 1 | CRNN | multi pink noise | LOW | **61.9%** | 36.6% | 92.8° |
+| 2 | CRNN | multi pink noise | MEDIUM | **61.9%** | 36.6% | 92.8° |
+| 3 | CRNN | multi pink noise | HIGH | **61.9%** | 36.6% | 93.2° |
+| 4 | CRNN | multi pink spatial | MEDIUM | **61.9%** | 36.6% | 92.8° |
+| 5 | CRNN | multi pink spatial | HIGH | **61.9%** | 36.6% | 93.2° |
+| 6 | ResNet | multi pink noise | HIGH | **61.9%** | 37.1% | 72.4° |
+| 7 | ResNet | multi pink spatial | MEDIUM | **61.9%** | 36.6% | 71.9° |
+| 8 | ResNet | multi pink spatial | HIGH | **61.9%** | 37.1% | 74.2° |
+| 9 | ResNet | multi pink noise | MEDIUM | **60.8%** | 36.6% | 71.4° |
+| 10 | ResNet | multi pink noise | LOW | **59.3%** | 36.6% | 66.8° |
 
 **Osservazioni:**
 
@@ -117,15 +117,21 @@ Ranking perturbazioni (media su tutti i livelli e modelli):
 
 | Perturbazione | Joint Drop | Direction Drop | Distance Drop | MAE Increase |
 |---------------|------------|----------------|---------------|--------------|
-| White Noise | 22.3% | 5.2% | 20.0% | 4.6° |
-| Pink Noise | 22.1% | 13.0% | 16.6% | 12.8° |
-| Pink Hp | 20.9% | 14.9% | 12.4% | 14.8° |
+| Multi Pink Spatial | 61.9% | 73.6% | 36.7% | 83.0° |
+| Multi Pink Noise | 61.3% | 72.6% | 36.7% | 81.6° |
+| Multi White Noise | 52.4% | 47.0% | 36.9% | 53.3° |
+| White Noise | 21.7% | 5.4% | 19.3% | 4.9° |
+| Pink Noise | 21.6% | 13.1% | 16.1% | 12.8° |
 | Lowpass | 20.7% | 0.9% | 20.3% | 0.9° |
-| Pink Eq | 20.6% | 21.0% | 5.4% | 20.9° |
+| Pink Hp | 20.5% | 15.2% | 12.4% | 15.2° |
+| Pink Eq | 19.5% | 20.2% | 5.3% | 20.3° |
 | Pitch Neg | 13.2% | 0.3% | 13.1% | 0.2° |
 | Eq Cut | 12.2% | 0.1% | 12.3% | 0.1° |
 | Pitch Pos | 5.2% | 0.0% | 5.2% | 0.0° |
+| Spatial Delay | 0.1% | 0.0% | 0.1% | 0.0° |
 | Highpass | 0.0% | -0.1% | 0.1% | -0.1° |
+| Gain Jitter | -0.3% | 0.1% | -0.3% | 0.1° |
+| Spatial Gain | -0.5% | 0.1% | -0.6% | 0.1° |
 | Eq Boost | -5.0% | 0.0% | -5.0% | 0.0° |
 
 **Insight chiave:**
@@ -143,9 +149,9 @@ Analisi dell'impatto crescente dei livelli LOW → MEDIUM → HIGH:
 
 | Livello | Joint Drop (media) | Joint Drop (std) | MAE Increase (media) | MAE Increase (std) |
 |---------|-------------------|------------------|----------------------|-------------------|
-| **LOW** | 9.8% | ±11.4% | 1.6° | ±4.2° |
-| **MEDIUM** | 13.2% | ±11.4% | 5.0° | ±8.9° |
-| **HIGH** | 14.5% | ±12.0% | 6.4° | ±10.2° |
+| **LOW** | 15.7% | ±21.1% | 12.0° | ±26.5° |
+| **MEDIUM** | 19.0% | ±22.0% | 16.7° | ±29.6° |
+| **HIGH** | 19.9% | ±21.9% | 17.9° | ±29.9° |
 
 **Trend osservato:**
 
@@ -168,16 +174,16 @@ Analisi delle matrici di confusione per casi chiave:
 | **S (180°)** | 0 | 48 | 0 | 0 |
 | **E (90°)** | 0 | 0 | 49 | 0 |
 
-### 6.2 Worst Case CRNN (white_noise LOW, Direction)
+### 6.2 Worst Case CRNN (multi_pink_noise LOW, Direction)
 
 | True \ Pred | N (0°) | W (270°) | S (180°) | E (90°) |
 |--------------|---------|-----------|-----------|----------|
 | **N (0°)** | 0 | 1 | 2 | 3 |
-| **W (270°)** | 46 | 0 | 0 | 2 |
-| **S (180°)** | 0 | 48 | 0 | 0 |
-| **E (90°)** | 0 | 0 | 49 | 0 |
+| **W (270°)** | 0 | 45 | 3 | 0 |
+| **S (180°)** | 0 | 45 | 3 | 0 |
+| **E (90°)** | 0 | 49 | 0 | 0 |
 
-**Degradazione:** joint accuracy da 69.6% a 43.3% (drop 26.3%)
+**Degradazione:** joint accuracy da 69.6% a 7.7% (drop 61.9%)
 
 ### 6.3 Baseline ResNet (Distance)
 
@@ -187,15 +193,15 @@ Analisi delle matrici di confusione per casi chiave:
 | **Medium** | 34 | 27 | 3 |
 | **Far** | 2 | 45 | 18 |
 
-### 6.4 Worst Case ResNet (lowpass HIGH, Distance)
+### 6.4 Worst Case ResNet (multi_pink_noise HIGH, Distance)
 
 | True \ Pred | Near | Medium | Far |
 |--------------|-------|---------|------|
 | **Near** | 0 | 1 | 2 |
-| **Medium** | 2 | 26 | 36 |
-| **Far** | 0 | 7 | 58 |
+| **Medium** | 0 | 0 | 64 |
+| **Far** | 0 | 1 | 64 |
 
-**Degradazione:** joint accuracy da 70.6% a 37.6% (drop 33.0%)
+**Degradazione:** joint accuracy da 70.6% a 8.8% (drop 61.9%)
 
 ---
 
@@ -249,4 +255,4 @@ Analisi delle matrici di confusione per casi chiave:
 
 ---
 
-*Report generato automaticamente il 03/12/2025 alle 15:52*
+*Report generato automaticamente il 03/12/2025 alle 18:13*
